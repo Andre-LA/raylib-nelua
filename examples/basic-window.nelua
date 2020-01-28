@@ -7,15 +7,15 @@ require 'raylib'
 local screenWidth: integer <comptime> = 800
 local screenHeight: integer <comptime> = 450
 
-Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window")
-Raylib.SetTargetFPS(60)
+InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window")
+SetTargetFPS(60)
 
 
-while not Raylib.WindowShouldClose() do
-   Raylib.BeginDrawing()
-      Raylib.ClearBackground(RaylibColors.Raywhite)
-      Raylib.DrawText("Congrats! You created your first window!", 190, 200, 20, RaylibColors.Lightgray)
-   Raylib.EndDrawing()
+while not WindowShouldClose() do
+   BeginDrawing()
+      ClearBackground(RaylibColors.Raywhite)
+      DrawText("Congrats! You created your first window!", 190, 200, 20, RaylibColors.Lightgray)
+   EndDrawing()
 end
 
-Raylib.CloseWindow()
+CloseWindow()
