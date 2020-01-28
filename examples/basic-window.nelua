@@ -1,0 +1,21 @@
+## strict = true
+
+require 'raylib'
+
+local screenWidth: integer <comptime> = 800
+local screenHeight: integer <comptime> = 450
+
+Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window")
+Raylib.SetTargetFPS(60)
+
+local a: string = "new"
+local b = @record {}
+
+while not Raylib.WindowShouldClose() do
+   Raylib.BeginDrawing()
+      Raylib.ClearBackground(RaylibColors.Raywhite)
+      Raylib.DrawText("Congrats! You created your first window!", 190, 200, 20, RaylibColors.Lightgray)
+   Raylib.EndDrawing()
+end
+
+Raylib.CloseWindow()
