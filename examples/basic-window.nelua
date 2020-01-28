@@ -1,4 +1,6 @@
-## strict = true
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
 require 'raylib'
 
@@ -8,8 +10,6 @@ local screenHeight: integer <comptime> = 450
 Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window")
 Raylib.SetTargetFPS(60)
 
-local a: string = "new"
-local b = @record {}
 
 while not Raylib.WindowShouldClose() do
    Raylib.BeginDrawing()
