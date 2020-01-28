@@ -5,57 +5,19 @@
 ## strict = true
 ## modname = 'raylib'
 
-
 -- import structs
 global Vector2         <cimport, nodecl> = @record{x: float32, y: float32}                                           -- Vector2 type
 global Vector3         <cimport, nodecl> = @record{x: float32, y: float32, z: float32}                                           -- Vector3 type
 global Vector4         <cimport, nodecl> = @record{x: float32, y: float32, z: float32, w: float32}                                           -- Vector4 type
 global Quaternion      <cimport, nodecl> = @record{x: float32, y: float32, z: float32, w: float32}                                           -- Quaternion type
-global Matrix          <cimport, nodecl> = @record{m0: float32, m4: float32, m8 : float32, m12: float32,   -- Matrix type (OpenGL style 4x4)
-                                                   m1: float32, m5: float32, m9 : float32, m13: float32,
-                                                   m2: float32, m6: float32, m10: float32, m14: float32,
-                                                   m3: float32, m7: float32, m11: float32, m15: float32
-                                                  }
+global Matrix          <cimport, nodecl> = @record{ -- Matrix type (OpenGL style 4x4)
+   m0: float32, m4: float32, m8 : float32, m12: float32,
+   m1: float32, m5: float32, m9 : float32, m13: float32,
+   m2: float32, m6: float32, m10: float32, m14: float32,
+   m3: float32, m7: float32, m11: float32, m15: float32
+}
 global Color           <cimport, nodecl> = @record{r: cuchar, g: cuchar, b: cuchar, a: cuchar} -- Color type, RGBA (32bit)
 global Rectangle       <cimport, nodecl> = @record{x: float32, y: float32, width: float32, height: float32}                                           -- Rectangle type
-
---[[
-global Image           <cimport, nodecl> = @record{data: pointer, width: cint, height: cint, mipmaps: cint, format: cint}                                           -- Image type (multiple pixel formats supported)
-                                                                                              -- NOTE: Data stored in CPU memory (RAM)
-global Texture2D       <cimport, nodecl> = @record{id: cuint, width: cint, height: cint, mipmaps: cint, format: cint}                                           -- Texture type (multiple internal formats supported)
-                                                                                              -- NOTE: Data stored in GPU memory (VRAM)
-global Texture         <cimport, nodecl> = @record{id: cuint, width: cint, height: cint, mipmaps: cint, format: cint}                                           -- Texture type (multiple internal formats supported)
-global TextureCubemap  <cimport, nodecl> = @record{id: cuint, width: cint, height: cint, mipmaps: cint, format: cint}                                           -- Texture type (multiple internal formats supported)
-
-global RenderTexture2D <cimport, nodecl> = @record{id: cuint, texture: Texture2D, depth: Texture2D, depthTexture: boolean}                                           -- RenderTexture type, for texture rendering
-global RenderTexture   <cimport, nodecl> = @record{id: cuint, texture: Texture2D, depth: Texture2D, depthTexture: boolean}                                           -- RenderTexture type, for texture rendering
-global NPatchInfo      <cimport, nodecl> = @record{sourceRec: Rectangle, left: cint, top: cint, right: cint, bottom: cint, type: cint}                                           -- N-Patch layout info
-global CharInfo        <cimport, nodecl> = @record{value: cint, offsetX: cint, offsetY: cint, advanceX: cint, image: Image}                                           -- Font character info
-global Font            <cimport, nodecl> = @record{baseSize: cint, charsCount: cint, texture: Texture2D, recs: Rectangle*, chars: CharInfo*}                                           -- Font type, includes texture and chars data
-
-global Camera3D        <cimport, nodecl> = @record{position: Vector3, target: Vector3, up: Vector3, fovy: float32, type: cint}                                           -- Camera type, defines 3d camera position/orientation
-global Camera          <cimport, nodecl> = @record{position: Vector3, target: Vector3, up: Vector3, fovy: float32, type: cint}                                           -- Camera type, defines 3d camera position/orientation
-global Camera2D        <cimport, nodecl> = @record{offset: Vector2, target: Vector2, rotation: float32, zoom: float32}                                           -- Camera2D type, defines a 2d camera
-global Mesh            <cimport, nodecl> = @record{}                                           -- Vertex data definning a mesh
-global Shader          <cimport, nodecl> = @record{id: cuint, locs: cint*}                                           -- Shader type (generic shader)
-global MaterialMap     <cimport, nodecl> = @record{texture: Texture2D, color: Color, value: float32}                                           -- Material texture map
-global Material        <cimport, nodecl> = @record{shader: Shader, maps: MaterialMap*, params: float32*}                                           -- Material type
-global Model           <cimport, nodecl> = @record{transform: Matrix, meshCount: cint, meshes: Mesh*, materialCount: cint, materials: Material*, meshMaterial: cint*, boneCount: cint, bones: BoneInfo*, bindPose: Transform*}                                           -- Basic 3d Model type
-global Transform       <cimport, nodecl> = @record{translation: Vector3, rotation: Quaternion, scale: Vector3}                                           -- Transformation (used for bones)
-global BoneInfo        <cimport, nodecl> = @record{name: char[32], parent: cint}                                           -- Bone information
-global ModelAnimation  <cimport, nodecl> = @record{boneCount: cint, bones: BoneInfo*, frameCount: cint, framePoses: Transform**}                                           -- Model animation data (bones and frames)
-global Ray             <cimport, nodecl> = @record{position: Vector3, direction: Vector3}                                           -- Ray type (useful for raycast)
-global RayHitInfo      <cimport, nodecl> = @record{hit: boolean, distance: float32, position: Vector3, normal: Vector3}                                           -- Raycast hit information
-global BoundingBox     <cimport, nodecl> = @record{min: Vector3, max: Vector3}                                           -- Bounding box type for 3d mesh
-
-global Wave            <cimport, nodecl> = @record{sampleCount: cuint, sampleRate: cuint, sampleSize: cuint, channels: cuint, data: pointer}                                           -- Wave type, defines audio wave data
-global Music           <cimport, nodecl> = @record{}                                           -- Music type (file streaming from memory)
-global AudioStream     <cimport, nodecl> = @record{sampleRate: cuint, sampleSize: cuint, channels: cuint, buffer: pointer}                                           -- Raw audio stream type
-global Sound           <cimport, nodecl> = @record{sampleCount: cuint, stream: AudioStream}                                           -- Basic Sound source and buffer
-
-global VrDeviceInfo    <cimport, nodecl> = @record{}                                           -- VR device parameters
---]]
-
 
 -- Image type, bpp always RGBA (32bit)
 -- NOTE: Data stored in CPU memory (RAM)
@@ -78,10 +40,10 @@ global Texture2D <cimport, nodecl> = @record{
 }
 
 -- Texture type, same as Texture2D
---global Texture: type <cimport, nodecl> = @Texture2D
+global Texture: type = @Texture2D
 
 -- TextureCubemap type, actually, same as Texture2D
---global TextureCubemap: type <cimport, nodecl> = @Texture2D
+global TextureCubemap: type = @Texture2D
 
 -- RenderTexture2D type, for texture rendering
 global RenderTexture2D <cimport, nodecl> = @record{
@@ -92,7 +54,7 @@ global RenderTexture2D <cimport, nodecl> = @record{
 }
 
 -- RenderTexture type, same as RenderTexture2D
---global RenderTexture: type <cimport, nodecl> = @RenderTexture2D
+global RenderTexture: type = @RenderTexture2D
 
 -- N-Patch layout info
 global NPatchInfo <cimport, nodecl> = @record{
@@ -131,177 +93,175 @@ global Camera3D <cimport, nodecl> = @record{
    type:        cint  -- Camera type, defines projection type: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 }
 
---global Camera: type <cimport, nodecl> = @Camera3D -- Camera type fallback, defaults to Camera3D
+global Camera: type = @Camera3D -- Camera type fallback, defaults to Camera3D
 
---[==[
 
 -- Camera2D type, defines a 2d camera
 global Camera2D <cimport, nodecl> = @record{
-    Vector2 offset;         -- Camera offset (displacement from target)
-    Vector2 target;         -- Camera target (rotation and zoom origin)
-    float rotation;         -- Camera rotation in degrees
-    float zoom;             -- Camera zoom (scaling), should be 1.0f by default
-} Camera2D;
+   offset:   Vector2, -- Camera offset (displacement from target)
+   target:   Vector2, -- Camera target (rotation and zoom origin)
+   rotation: float32, -- Camera rotation in degrees
+   zoom:     float32  -- Camera zoom (scaling), should be 1.0f by default
+}
 
 -- Vertex data definning a mesh
 -- NOTE: Data stored in CPU memory (and GPU)
 global Mesh <cimport, nodecl> = @record{
-    vertexCount: cint;        -- Number of vertices stored in arrays
-    triangleCount: cint;      -- Number of triangles stored (indexed or not)
+   vertexCount:      cint, -- Number of vertices stored in arrays
+   triangleCount:    cint, -- Number of triangles stored (indexed or not)
 
-    -- Default vertex data
-    float *vertices;        -- Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-    float *texcoords;       -- Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-    float *texcoords2;      -- Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
-    float *normals;         -- Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-    float *tangents;        -- Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-    unsigned char *colors;  -- Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-    unsigned short *indices;// Vertex indices (in case vertex data comes indexed)
+   -- Default vertex data
+   vertices:     float32*, -- Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+   texcoords:    float32*, -- Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+   texcoords2:   float32*, -- Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
+   normals:      float32*, -- Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+   tangents:     float32*, -- Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+   colors:        cuchar*, -- Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+   indices:      cushort*, -- Vertex indices (in case vertex data comes indexed)
 
-    -- Animation vertex data
-    float *animVertices;    -- Animated vertex positions (after bones transformations)
-    float *animNormals;     -- Animated normals (after bones transformations)
-    *: cintboneIds;           -- Vertex bone ids, up to 4 bones influence by vertex (skinning)
-    float *boneWeights;     -- Vertex bone weight, up to 4 bones influence by vertex (skinning)
+   -- Animation vertex data
+   animVertices: float32*, -- Animated vertex positions (after bones transformations)
+   animNormals:  float32*, -- Animated normals (after bones transformations)
+   boneIds:         cint*, -- Vertex bone ids, up to 4 bones influence by vertex (skinning)
+   boneWeights:  float32*, -- Vertex bone weight, up to 4 bones influence by vertex (skinning)
 
-    -- OpenGL identifiers
-    unsigned vaoId: cint;     -- OpenGL Vertex Array Object id
-    unsigned *: cintvboId;    -- OpenGL Vertex Buffer Objects id (default vertex data)
-} Mesh;
+   -- OpenGL identifiers
+   vaoId:           cuint, -- OpenGL Vertex Array Object id
+   vboId:          cuint*  -- OpenGL Vertex Buffer Objects id (default vertex data)
+}
+
 
 -- Shader type (generic)
 global Shader <cimport, nodecl> = @record{
-    unsigned id: cint;        -- Shader program id
-    *: cintlocs;              -- Shader locations array (MAX_SHADER_LOCATIONS)
-} Shader;
+   id:   cuint, -- Shader program id
+   locs: cint*  -- Shader locations array (MAX_SHADER_LOCATIONS)
+}
 
 -- Material texture map
 global MaterialMap <cimport, nodecl> = @record{
-    Texture2D texture;      -- Material map texture
-    Color color;            -- Material map color
-    float value;            -- Material map value
-} MaterialMap;
+   texture: Texture2D, -- Material map texture
+   color:       Color, -- Material map color
+   value:     float32  -- Material map value
+}
 
 -- Material type (generic)
 global Material <cimport, nodecl> = @record{
-    Shader shader;          -- Material shader
-    MaterialMap *maps;      -- Material maps array (MAX_MATERIAL_MAPS)
-    float *params;          -- Material generic parameters (if required)
-} Material;
+   shader:       Shader, -- Material shader
+   maps:   MaterialMap*, -- Material maps array (MAX_MATERIAL_MAPS)
+   params:     float32*  -- Material generic parameters (if required)
+}
 
 -- Transformation properties
 global Transform <cimport, nodecl> = @record{
-    Vector3 translation;    -- Translation
-    Quaternion rotation;    -- Rotation
-    Vector3 scale;          -- Scale
-} Transform;
+   translation:    Vector3, -- Translation
+   rotation:    Quaternion, -- Rotation
+   scale:          Vector3  -- Scale
+}
 
 -- Bone information
 global BoneInfo <cimport, nodecl> = @record{
-    char name[32];          -- Bone name
-    parent: cint;             -- Bone parent
-} BoneInfo;
+   name:   cchar[32], -- Bone name
+   parent:      cint  -- Bone parent
+}
 
 -- Model type
 global Model <cimport, nodecl> = @record{
-    Matrix transform;       -- Local transform matrix
+   transform:        Matrix, -- Local transform matrix
 
-    meshCount: cint;          -- Number of meshes
-    Mesh *meshes;           -- Meshes array
+   meshCount:          cint, -- Number of meshes
+   meshes:            Mesh*, -- Meshes array
 
-    materialCount: cint;      -- Number of materials
-    Material *materials;    -- Materials array
-    *: cintmeshMaterial;      -- Mesh material number
+   materialCount:      cint, -- Number of materials
+   materials:     Material*, -- Materials array
+   meshMaterial:      cint*, -- Mesh material number
 
-    -- Animation data
-    boneCount: cint;          -- Number of bones
-    BoneInfo *bones;        -- Bones information (skeleton)
-    Transform *bindPose;    -- Bones base transformation (pose)
-} Model;
+   -- Animation data
+   boneCount:          cint, -- Number of bones
+   bones:         BoneInfo*, -- Bones information (skeleton)
+   bindPose:     Transform*  -- Bones base transformation (pose)
+}
 
 -- Model animation
 global ModelAnimation <cimport, nodecl> = @record{
-    boneCount: cint;          -- Number of bones
-    BoneInfo *bones;        -- Bones information (skeleton)
+   boneCount:         cint, -- Number of bones
+   bones:        BoneInfo*, -- Bones information (skeleton)
 
-    frameCount: cint;         -- Number of animation frames
-    Transform **framePoses; -- Poses array by frame
-} ModelAnimation;
+   frameCount:        cint, -- Number of animation frames
+   framePoses: Transform**  -- Poses array by frame
+}
 
 -- Ray type (useful for raycast)
 global Ray <cimport, nodecl> = @record{
-    Vector3 position;       -- Ray position (origin)
-    Vector3 direction;      -- Ray direction
-} Ray;
+   position:  Vector3, -- Ray position (origin)
+   direction: Vector3  -- Ray direction
+}
 
 -- Raycast hit information
 global RayHitInfo <cimport, nodecl> = @record{
-    bool hit;               -- Did the ray hit something?
-    float distance;         -- Distance to nearest hit
-    Vector3 position;       -- Position of nearest hit
-    Vector3 normal;         -- Surface normal of hit
-} RayHitInfo;
+   hit:      boolean, -- Did the ray hit something?
+   distance: float32, -- Distance to nearest hit
+   position: Vector3, -- Position of nearest hit
+   normal:   Vector3  -- Surface normal of hit
+}
 
 -- Bounding box type
 global BoundingBox <cimport, nodecl> = @record{
-    Vector3 min;            -- Minimum vertex box-corner
-    Vector3 max;            -- Maximum vertex box-corner
-} BoundingBox;
+   min: Vector3, -- Minimum vertex box-corner
+   max: Vector3  -- Maximum vertex box-corner
+}
 
 -- Wave type, defines audio wave data
 global Wave <cimport, nodecl> = @record{
-    unsigned sampleCount: cint;       -- Total number of samples
-    unsigned sampleRate: cint;        -- Frequency (samples per second)
-    unsigned sampleSize: cint;        -- Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-    unsigned channels: cint;          -- Number of channels (1-mono, 2-stereo)
-    void *data;                     -- Buffer data pointer
-} Wave;
+   sampleCount:   cuint, -- Total number of samples
+   sampleRate:    cuint, -- Frequency (samples per second)
+   sampleSize:    cuint, -- Bit depth (bits per sample): 8, 16, 32 (24 not supported)
+   channels:      cuint, -- Number of channels (1-mono, 2-stereo)
+   data:        pointer  -- Buffer data pointer
+}
 
-global rAudioBuffer <cimport, nodecl> = @recordrAudioBuffer;
+global rAudioBuffer <cimport, nodecl> = @record{}
 
 -- Audio stream type
 -- NOTE: Useful to create custom audio streams not bound to a specific file
 global AudioStream <cimport, nodecl> = @record{
-    unsigned sampleRate: cint;        -- Frequency (samples per second)
-    unsigned sampleSize: cint;        -- Bit depth (bits per sample): 8, 16, 32 (24 not supported)
-    unsigned channels: cint;          -- Number of channels (1-mono, 2-stereo)
+   sampleRate:         cuint, -- Frequency (samples per second)
+   sampleSize:         cuint, -- Bit depth (bits per sample): 8, 16, 32 (24 not supported)
+   channels:           cuint, -- Number of channels (1-mono, 2-stereo)
 
-    rAudioBuffer *buffer;           -- Pointer to internal data used by the audio system
-} AudioStream;
+   buffer:     rAudioBuffer*  -- Pointer to internal data used by the audio system
+}
 
 -- Sound source type
 global Sound <cimport, nodecl> = @record{
-    unsigned sampleCount: cint;       -- Total number of samples
-    AudioStream stream;             -- Audio stream
-} Sound;
+   sampleCount:       cuint, -- Total number of samples
+   stream:      AudioStream  -- Audio stream
+}
 
 -- Music stream type (audio file streaming from memory)
 -- NOTE: Anything longer than ~10 seconds should be streamed
 global Music <cimport, nodecl> = @record{
-    ctxType: cint;                    -- Type of music context (audio filetype)
-    void *ctxData;                  -- Audio context data, depends on type
+   ctxType:            cint, -- Type of music context (audio filetype)
+   ctxData:         pointer, -- Audio context data, depends on type
 
-    unsigned sampleCount: cint;       -- Total number of samples
-    unsigned loopCount: cint;         -- Loops count (times music will play), 0 means infinite loop
+   sampleCount:       cuint, -- Total number of samples
+   loopCount:         cuint, -- Loops count (times music will play), 0 means infinite loop
 
-    AudioStream stream;             -- Audio stream
-} Music;
+   stream:      AudioStream  -- Audio stream
+}
 
 -- Head-Mounted-Display device parameters
 global VrDeviceInfo <cimport, nodecl> = @record{
-    hResolution: cint;                -- HMD horizontal resolution in pixels
-    vResolution: cint;                -- HMD vertical resolution in pixels
-    float hScreenSize;              -- HMD horizontal size in meters
-    float vScreenSize;              -- HMD vertical size in meters
-    float vScreenCenter;            -- HMD screen center in meters
-    float eyeToScreenDistance;      -- HMD distance between eye and display in meters
-    float lensSeparationDistance;   -- HMD lens separation distance in meters
-    float interpupillaryDistance;   -- HMD IPD (distance between pupils) in meters
-    float lensDistortionValues[4];  -- HMD lens distortion constant parameters
-    float chromaAbCorrection[4];    -- HMD chromatic aberration correction parameters
-} VrDeviceInfo;
---]==]
-
+   hResolution:                  cint, -- HMD horizontal resolution in pixels
+   vResolution:                  cint, -- HMD vertical resolution in pixels
+   hScreenSize:               float32, -- HMD horizontal size in meters
+   vScreenSize:               float32, -- HMD vertical size in meters
+   vScreenCenter:             float32, -- HMD screen center in meters
+   eyeToScreenDistance:       float32, -- HMD distance between eye and display in meters
+   lensSeparationDistance:    float32, -- HMD lens separation distance in meters
+   interpupillaryDistance:    float32, -- HMD IPD (distance between pupils) in meters
+   lensDistortionValues:   float32[4], -- HMD lens distortion constant parameters
+   chromaAbCorrection:     float32[4]  -- HMD chromatic aberration correction parameters
+}
 
 -- import colors --[
 local LIGHTGRAY:  Color <cimport, nodecl>; local GRAY:       Color <cimport, nodecl>
