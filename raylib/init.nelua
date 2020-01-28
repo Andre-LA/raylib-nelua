@@ -21,19 +21,15 @@
 
 ## cinclude '<raylib.h>'
 
+global Raylib = @record{}
+
 require 'raylib.records'
+require 'raylib.core'
+require 'raylib.text'
 
 -- import Raylib subroutines
-local function InitWindow(width: cint, height: cint, title: cstring <const>) <cimport, nodecl> end
-local function SetTargetFPS(fps: cint) <cimport, nodecl> end
-local function WindowShouldClose(): boolean <cimport, nodecl> end
-local function BeginDrawing() <cimport, nodecl> end
-local function EndDrawing() <cimport, nodecl> end
-local function ClearBackground(color: Color) <cimport, nodecl> end
-local function DrawText(text: cstring <const>, posX: cint, posY: cint, fontSize: cint, color: Color) <cimport, nodecl> end
-local function CloseWindow() <cimport, nodecl> end
 
-global Raylib = @record{}
+--[=[
 
 function Raylib.InitWindow(width: cint, height: cint, title: cstring <const>) <inline>
    InitWindow(width, height, title)
@@ -59,5 +55,4 @@ end
 function Raylib.CloseWindow() <inline>
    CloseWindow()
 end
---[=[
 --]=]

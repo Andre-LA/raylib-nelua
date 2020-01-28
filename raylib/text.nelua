@@ -1,0 +1,37 @@
+-- Font loading/unloading functions
+global function GetFontDefault(): Font                                                                                             <cimport, nodecl> end -- Get the default Font
+global function LoadFont(fileName: cstring <const>): Font                                                                          <cimport, nodecl> end -- Load font from file into GPU memory (VRAM)
+global function LoadFontEx(fileName: cstring <const>, fontSize: cint, fontChars: cint*, charsCount: cint): Font                    <cimport, nodecl> end -- Load font from file with extended parameters
+global function LoadFontFromImage(image: Image, key: Color, firstChar: cint): Font                                                 <cimport, nodecl> end -- Load font from Image (XNA style)
+global function LoadFontData(fileName: cstring <const>, fontSize: cint, fontChars: cint*, charsCount: cint, type: cint): CharInfo* <cimport, nodecl> end -- Load font data for further use
+global function GenImageFontAtlas(chars: CharInfo*, charsCount: cint, fontSize: cint, padding: cint, packMethod: cint): Image      <cimport, nodecl> end -- Generate image font atlas using chars info
+global function UnloadFont(font: Font)                                                                                              <cimport, nodecl> end -- Unload Font from GPU memory (VRAM)
+
+-- Text drawing functions
+global function DrawFPS(posX: cint, posY: cint)                                                                                                    <cimport, nodecl> end -- Shows current FPS
+global function DrawText(text: cstring <const>, posX: cint, posY: cint, fontSize: cint, color: Color)                                              <cimport, nodecl> end -- Draw text (using default font)
+global function DrawTextEx(font: Font, text: cstring <const>, position: Vector2, fontSize: float32, spacing: float32, tint: Color)                  <cimport, nodecl> end -- Draw text using font and additional parameters
+global function DrawTextRec(font: Font, text: cstring <const>, rec: Rectangle, fontSize: float32, spacing: float32, wordWrap: boolean, tint: Color) <cimport, nodecl> end -- Draw text using font inside rectangle limits
+global function DrawTextRecEx(font: Font, text: cstring <const>, rec: Rectangle, fontSize: float32, spacing: float32, wordWrap: boolean, tint: Color, selectStart: cint, selectLength: cint, selectText: Color, selectBack: Color) <cimport, nodecl> end -- Draw text using font inside rectangle limits with support for text selection
+
+-- Text misc. functions
+global function MeasureText(text: cstring <const>, fontSize: cint): cint                                       <cimport, nodecl> end -- Measure string width for default font
+global function MeasureTextEx(font: Font, text: cstring <const>, fontSize: float32, spacing: float32): Vector2 <cimport, nodecl> end -- Measure string size for Font
+global function GetGlyphIndex(font: Font, character: cint): cint                                               <cimport, nodecl> end -- Get index position for a unicode character on font
+
+-- Text strings management functions
+-- NOTE: Some strings allocate memory internally for returned strings, just be careful!
+global function TextIsEqual(text1: cstring <const>, text2: cstring <const>): boolean                                           <cimport, nodecl> end -- Check if two text string are equal
+global function TextLength(text: cstring <const>): cuint                                                        <cimport, nodecl> end -- Get text length, checks for '\0' ending
+global function TextFormat(text: cstring <const>, ...): cstring --[[<const>]]                                                    <cimport, nodecl> end -- Text formatting with variables (sprintf style)
+global function TextSubtext(text: cstring <const>, position: cint, length: cint): cstring --[[<const>]]                              <cimport, nodecl> end -- Get a piece of a text string
+global function TextReplace(text: cstring, replace: cstring <const>, by: cstring <const>): cstring --[[<const>]]                         <cimport, nodecl> end -- Replace text string (memory should be freed!)
+global function TextInsert(text: cstring <const>, insert: cstring <const>, position: cint): cstring --[[<const>]]                       <cimport, nodecl> end -- Insert text in a position (memory should be freed!)
+global function TextJoin(textList: cstring* --[[cstring[] ]], count: cint, delimiter: cstring <const>): cstring --[[<const>]]                    <cimport, nodecl> end -- Join text strings with delimiter
+global function TextSplit(text: cstring <const>, delimiter: cchar, count: cint*): cstring* --[[cstring[] ]]                             <cimport, nodecl> end -- Split text into multiple strings
+global function TextAppend(text: cstring, append: cstring <const>, position: cint*)                                   <cimport, nodecl> end -- Append text at specific position and move cursor!
+global function TextFindIndex(text: cstring <const>, find: cstring <const>): cint                                            <cimport, nodecl> end -- Find first text occurrence within a string
+global function TextToUpper(text: cstring <const>): cstring --[[<const>]]                                                        <cimport, nodecl> end -- Get upper case version of provided string
+global function TextToLower(text: cstring <const>): cstring --[[<const>]]                                                        <cimport, nodecl> end -- Get lower case version of provided string
+global function TextToPascal(text: cstring <const>): cstring --[[<const>]]                                                       <cimport, nodecl> end -- Get Pascal case notation version of provided string
+global function TextToInteger(text: cstring <const>): cint                                                              <cimport, nodecl> end -- Get integer value from text (negative values not supported)

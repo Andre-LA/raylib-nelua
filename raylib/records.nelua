@@ -5,7 +5,7 @@
 ## strict = true
 ## modname = 'raylib'
 
--- import structs
+-- import structs from raylib.h [
 global Vector2         <cimport, nodecl> = @record{x: float32, y: float32}                                           -- Vector2 type
 global Vector3         <cimport, nodecl> = @record{x: float32, y: float32, z: float32}                                           -- Vector3 type
 global Vector4         <cimport, nodecl> = @record{x: float32, y: float32, z: float32, w: float32}                                           -- Vector4 type
@@ -262,6 +262,12 @@ global VrDeviceInfo <cimport, nodecl> = @record{
    lensDistortionValues:   float32[4], -- HMD lens distortion constant parameters
    chromaAbCorrection:     float32[4]  -- HMD chromatic aberration correction parameters
 }
+
+--]
+
+-- This is a callback, is used as parameter by "SetTraceLogCallback" (in core module)
+-- since is used as parameter type, I decided to declare it as record
+global TraceLogCallback <cimport, nodecl> = @record{}
 
 -- import colors --[
 local LIGHTGRAY:  Color <cimport, nodecl>; local GRAY:       Color <cimport, nodecl>

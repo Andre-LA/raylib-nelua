@@ -1,0 +1,167 @@
+## strict = true
+## modname = 'raylib'
+
+require 'raylib.records'
+
+-- Window-related functions
+global function InitWindow(width: cint, height: cint, title: cstring <const>)      <cimport, nodecl> end -- Initialize window and OpenGL context
+global function WindowShouldClose(): boolean                                       <cimport, nodecl> end -- Check if KEY_ESCAPE pressed or Close icon pressed
+global function CloseWindow()                                                      <cimport, nodecl> end -- Close window and unload OpenGL context
+global function IsWindowReady(): boolean                                           <cimport, nodecl> end -- Check if window has been initialized successfully
+global function IsWindowMinimized(): boolean                                       <cimport, nodecl> end -- Check if window has been minimized (or lost focus)
+global function IsWindowResized(): boolean                                         <cimport, nodecl> end -- Check if window has been resized
+global function IsWindowHidden(): boolean                                          <cimport, nodecl> end -- Check if window is currently hidden
+global function ToggleFullscreen()                                                 <cimport, nodecl> end -- Toggle fullscreen mode (only PLATFORM_DESKTOP)
+global function UnhideWindow()                                                     <cimport, nodecl> end -- Show the window
+global function HideWindow()                                                       <cimport, nodecl> end -- Hide the window
+global function SetWindowIcon(image: Image)                                        <cimport, nodecl> end -- Set icon for window (only PLATFORM_DESKTOP)
+global function SetWindowTitle(title: cstring <const>)                             <cimport, nodecl> end -- Set title for window (only PLATFORM_DESKTOP)
+global function SetWindowPosition(x: cint, y: cint)                                <cimport, nodecl> end -- Set window position on screen (only PLATFORM_DESKTOP)
+global function SetWindowMonitor(monitor: cint)                                    <cimport, nodecl> end -- Set monitor for the current window (fullscreen mode)
+global function SetWindowMinSize(width: cint, height: cint)                        <cimport, nodecl> end -- Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
+global function SetWindowSize(width: cint, height: cint)                           <cimport, nodecl> end -- Set window dimensions
+global function GetWindowHandle(): pointer                                         <cimport, nodecl> end -- Get native window handle
+global function GetScreenWidth(): cint                                             <cimport, nodecl> end -- Get current screen width
+global function GetScreenHeight(): cint                                            <cimport, nodecl> end -- Get current screen height
+global function GetMonitorCount(): cint                                            <cimport, nodecl> end -- Get number of connected monitors
+global function GetMonitorWidth(monitor: cint): cint                               <cimport, nodecl> end -- Get primary monitor width
+global function GetMonitorHeight(monitor: cint): cint                              <cimport, nodecl> end -- Get primary monitor height
+global function GetMonitorPhysicalWidth(monitor: cint): cint                       <cimport, nodecl> end -- Get primary monitor physical width in millimetres
+global function GetMonitorPhysicalHeight(monitor: cint): cint                      <cimport, nodecl> end -- Get primary monitor physical height in millimetres
+global function GetMonitorName(monitor: cint): cstring --[[<const>]]               <cimport, nodecl> end -- Get the human-readable, UTF-8 encoded name of the primary monitor
+global function GetClipboardText(): cstring --[[<const>]]                          <cimport, nodecl> end -- Get clipboard text content
+global function SetClipboardText(text: cstring <const>)                            <cimport, nodecl> end -- Set clipboard text content
+
+-- Cursor-related functions
+global function ShowCursor()              <cimport, nodecl> end -- Shows cursor
+global function HideCursor()              <cimport, nodecl> end -- Hides cursor
+global function IsCursorHidden(): boolean <cimport, nodecl> end -- Check if cursor is not visible
+global function EnableCursor()            <cimport, nodecl> end -- Enables cursor (unlock cursor)
+global function DisableCursor()           <cimport, nodecl> end -- Disables cursor (lock cursor)
+
+-- Drawing-related functions
+global function ClearBackground(color: Color)             <cimport, nodecl> end -- Set background color (framebuffer clear color)
+global function BeginDrawing()                            <cimport, nodecl> end -- Setup canvas (framebuffer) to start drawing
+global function EndDrawing()                              <cimport, nodecl> end -- End canvas drawing and swap buffers (double buffering)
+global function BeginMode2D(camera: Camera2D)             <cimport, nodecl> end -- Initialize 2D mode with custom camera (2D)
+global function EndMode2D()                               <cimport, nodecl> end -- Ends 2D mode with custom camera
+global function BeginMode3D(camera: Camera3D)             <cimport, nodecl> end -- Initializes 3D mode with custom camera (3D)
+global function EndMode3D()                               <cimport, nodecl> end -- Ends 3D mode and returns to default 2D orthographic mode
+global function BeginTextureMode(target: RenderTexture2D) <cimport, nodecl> end -- Initializes render texture for drawing
+global function EndTextureMode()                          <cimport, nodecl> end -- Ends drawing to render texture
+
+-- Screen-space-related functions
+global function GetMouseRay(mousePosition: Vector2, camera: Camera): Ray     <cimport, nodecl> end -- Returns a ray trace from mouse position
+global function GetWorldToScreen(position: Vector3, camera: Camera): Vector2 <cimport, nodecl> end -- Returns the screen space position for a 3d world space position
+global function GetCameraMatrix(camera: Camera): Matrix                      <cimport, nodecl> end -- Returns camera transform matrix (view matrix)
+
+-- Timing-related functions
+global function SetTargetFPS(fps: cint) <cimport, nodecl> end -- Set target FPS (maximum)
+global function GetFPS(): cint          <cimport, nodecl> end -- Returns current FPS
+global function GetFrameTime(): float32 <cimport, nodecl> end -- Returns time in seconds for last frame drawn
+global function GetTime(): float64      <cimport, nodecl> end -- Returns elapsed time in seconds since InitWindow()
+
+-- Color-related functions
+global function ColorToInt(color: Color): cint            <cimport, nodecl> end -- Returns hexadecimal value for a Color
+global function ColorNormalize(color: Color): Vector4     <cimport, nodecl> end -- Returns color normalized as float [0..1]
+global function ColorToHSV(color: Color): Vector3         <cimport, nodecl> end -- Returns HSV values for a Color
+global function ColorFromHSV(hsv: Vector3): Color         <cimport, nodecl> end -- Returns a Color from HSV values
+global function GetColor(hexValue: cint): Color           <cimport, nodecl> end -- Returns a Color struct from hexadecimal value
+global function Fade(color: Color, alpha: float32): Color <cimport, nodecl> end -- Color fade-in or fade-out, alpha goes from 0.0f to 1.0f
+
+-- Misc. functions
+global function SetConfigFlags(flags: cuchar)                       <cimport, nodecl> end -- Setup window configuration flags (view FLAGS)
+global function SetTraceLogLevel(logType: cint)                     <cimport, nodecl> end -- Set the current threshold (minimum) log level
+global function SetTraceLogExit(logType: cint)                      <cimport, nodecl> end -- Set the exit threshold (minimum) log level
+global function SetTraceLogCallback(callback: TraceLogCallback)     <cimport, nodecl> end -- Set a trace log callback to enable custom logging
+global function TraceLog(logType: cint, text: cstring <const>, ...) <cimport, nodecl> end -- Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR)
+global function TakeScreenshot(fileName: cstring <const>)           <cimport, nodecl> end -- Takes a screenshot of current screen (saved a .png)
+global function GetRandomValue(min: cint, max: cint): cint          <cimport, nodecl> end -- Returns a random value between min and max (both included)
+
+-- Files management functions
+global function FileExists(fileName: cstring <const>): boolean                                      <cimport, nodecl> end -- Check if file exists
+global function IsFileExtension(fileName: cstring <const>, ext: cstring <const>): boolean           <cimport, nodecl> end -- Check file extension
+global function GetExtension(fileName: cstring <const>): cstring --[[<const>]]                      <cimport, nodecl> end -- Get pointer to extension for a filename string
+global function GetFileName(filePath: cstring <const>): cstring --[[<const>]]                       <cimport, nodecl> end -- Get pointer to filename for a path string
+global function GetFileNameWithoutExt(filePath: cstring <const>): cstring --[[<const>]]             <cimport, nodecl> end -- Get filename string without extension (memory should be freed)
+global function GetDirectoryPath(fileName: cstring <const>): cstring --[[<const>]]                  <cimport, nodecl> end -- Get full path for a given fileName (uses static string)
+global function GetWorkingDirectory(): cstring --[[<const>]]                                        <cimport, nodecl> end -- Get current working directory (uses static string)
+global function GetDirectoryFiles(dirPath: cstring <const>, count: cint*): cstring* --[[cstring[] ]]<cimport, nodecl> end -- Get filenames in a directory path (memory should be freed)
+global function ClearDirectoryFiles()                                                               <cimport, nodecl> end -- Clear directory files paths buffers (free memory)
+global function ChangeDirectory(dir: cstring <const>): boolean                                      <cimport, nodecl> end -- Change working directory, returns true if success
+global function IsFileDropped(): boolean                                                            <cimport, nodecl> end -- Check if a file has been dropped into window
+global function GetDroppedFiles(count: cint*): cstring* --[[cstring[] ]]                             <cimport, nodecl> end -- Get dropped files names (memory should be freed)
+global function ClearDroppedFiles()                                                                 <cimport, nodecl> end -- Clear dropped files paths buffer (free memory)
+global function GetFileModTime(fileName: cstring <const>): clong                                    <cimport, nodecl> end -- Get file modification time (last write time)
+
+-- Persistent storage management
+global function StorageSaveValue(position: cint, value: cint)                                      <cimport, nodecl> end -- Save integer value to storage file (to defined position)
+global function StorageLoadValue(position: cint): cint                                             <cimport, nodecl> end -- Load integer value from storage file (from defined position)
+
+global function OpenURL(url: cstring <const>)                                                      <cimport, nodecl> end -- Open URL with default system browser (if available)
+
+--------------------------------------------------------------------------------------
+-- Input Handling Functions
+--------------------------------------------------------------------------------------
+
+-- Input-related functions: keyb
+global function IsKeyPressed(key: cint): boolean  <cimport, nodecl> end -- Detect if a key has been pressed once
+global function IsKeyDown(key: cint): boolean     <cimport, nodecl> end -- Detect if a key is being pressed
+global function IsKeyReleased(key: cint): boolean <cimport, nodecl> end -- Detect if a key has been released once
+global function IsKeyUp(key: cint): boolean       <cimport, nodecl> end -- Detect if a key is NOT being pressed
+global function GetKeyPressed(): cint             <cimport, nodecl> end -- Get latest key pressed
+global function SetExitKey(key: cint)             <cimport, nodecl> end -- Set a custom key to exit program (default is ESC)
+
+-- Input-related functions: gamepads
+global function IsGamepadAvailable(gamepad: cint): boolean                    <cimport, nodecl> end -- Detect if a gamepad is available
+global function IsGamepadName(gamepad: cint, name: cstring <const>): boolean  <cimport, nodecl> end -- Check gamepad name (if available)
+global function GetGamepadName(gamepad: cint): cstring --[[<const>]]          <cimport, nodecl> end -- Return gamepad internal name id
+global function IsGamepadButtonPressed(gamepad: cint, button: cint): boolean  <cimport, nodecl> end -- Detect if a gamepad button has been pressed once
+global function IsGamepadButtonDown(gamepad: cint, button: cint): boolean     <cimport, nodecl> end -- Detect if a gamepad button is being pressed
+global function IsGamepadButtonReleased(gamepad: cint, button: cint): boolean <cimport, nodecl> end -- Detect if a gamepad button has been released once
+global function IsGamepadButtonUp(gamepad: cint, button: cint): boolean       <cimport, nodecl> end -- Detect if a gamepad button is NOT being pressed
+global function GetGamepadButtonPressed(): cint                               <cimport, nodecl> end -- Get the last gamepad button pressed
+global function GetGamepadAxisCount(gamepad: cint): cint                      <cimport, nodecl> end -- Return gamepad axis count for a gamepad
+global function GetGamepadAxisMovement(gamepad: cint, axis: cint): float32    <cimport, nodecl> end -- Return axis movement value for a gamepad axis
+
+-- Input-related functions: mouse
+global function IsMouseButtonPressed(button: cint): boolean     <cimport, nodecl> end -- Detect if a mouse button has been pressed once
+global function IsMouseButtonDown(button: cint): boolean        <cimport, nodecl> end -- Detect if a mouse button is being pressed
+global function IsMouseButtonReleased(button: cint): boolean    <cimport, nodecl> end -- Detect if a mouse button has been released once
+global function IsMouseButtonUp(button: cint): boolean          <cimport, nodecl> end -- Detect if a mouse button is NOT being pressed
+global function GetMouseX(): cint                               <cimport, nodecl> end -- Returns mouse position X
+global function GetMouseY(): cint                               <cimport, nodecl> end -- Returns mouse position Y
+global function GetMousePosition(): Vector2                     <cimport, nodecl> end -- Returns mouse position XY
+global function SetMousePosition(x: cint, y: cint)              <cimport, nodecl> end -- Set mouse position XY
+global function SetMouseOffset(offsetX: cint, offsetY: cint)    <cimport, nodecl> end -- Set mouse offset
+global function SetMouseScale(scaleX: float32, scaleY: float32) <cimport, nodecl> end -- Set mouse scaling
+global function GetMouseWheelMove(): cint                       <cimport, nodecl> end -- Returns mouse wheel movement Y
+
+-- Input-related functions: touch
+global function GetTouchX(): cint                      <cimport, nodecl> end -- Returns touch position X for touch point 0 (relative to screen size)
+global function GetTouchY(): cint                      <cimport, nodecl> end -- Returns touch position Y for touch point 0 (relative to screen size)
+global function GetTouchPosition(index: cint): Vector2 <cimport, nodecl> end -- Returns touch position XY for a touch point index (relative to screen size)
+
+--------------------------------------------------------------------------------------
+-- Gestures and Touch Handling Functions (Module: gestures)
+--------------------------------------------------------------------------------------
+global function SetGesturesEnabled(gestureFlags: cuint)   <cimport, nodecl> end -- Enable a set of gestures using flags
+global function IsGestureDetected(gesture: cint): boolean <cimport, nodecl> end -- Check if a gesture have been detected
+global function GetGestureDetected(): cint                <cimport, nodecl> end -- Get latest detected gesture
+global function GetTouchPointsCount(): cint               <cimport, nodecl> end -- Get touch points count
+global function GetGestureHoldDuration(): float32         <cimport, nodecl> end -- Get gesture hold time in milliseconds
+global function GetGestureDragVector(): Vector2           <cimport, nodecl> end -- Get gesture drag vector
+global function GetGestureDragAngle(): float32            <cimport, nodecl> end -- Get gesture drag angle
+global function GetGesturePinchVector(): Vector2          <cimport, nodecl> end -- Get gesture pinch delta
+global function GetGesturePinchAngle(): float32           <cimport, nodecl> end -- Get gesture pinch angle
+
+--------------------------------------------------------------------------------------
+-- Camera System Functions (Module: camera)
+--------------------------------------------------------------------------------------
+global function SetCameraMode(camera: Camera, mode: cint) <cimport, nodecl> end -- Set camera mode (multiple camera modes available)
+global function UpdateCamera(camera: Camera*)             <cimport, nodecl> end -- Update camera position for selected mode
+
+global function SetCameraPanControl(panKey: cint)         <cimport, nodecl> end -- Set camera pan key to combine with mouse movement (free camera)
+global function SetCameraAltControl(altKey: cint)         <cimport, nodecl> end -- Set camera alt key to combine with mouse movement (free camera)
+global function SetCameraSmoothZoomControl(szKey: cint)   <cimport, nodecl> end -- Set camera smooth zoom key to combine with mouse (free camera)
+global function SetCameraMoveControls(frontKey: cint, backKey: cint, rightKey: cint, leftKey: cint, upKey: cint, downKey: cint) <cimport, nodecl> end -- Set camera move controls (1st person and 3rd person cameras)
