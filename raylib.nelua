@@ -401,7 +401,7 @@ local function Fade(color: Color, alpha: float32): Color <cimport, nodecl> end -
 local function SetConfigFlags(flags: cuchar)                       <cimport, nodecl> end -- Setup window configuration flags (view FLAGS)
 local function SetTraceLogLevel(logType: cint)                     <cimport, nodecl> end -- Set the current threshold (minimum) log level
 local function SetTraceLogExit(logType: cint)                      <cimport, nodecl> end -- Set the exit threshold (minimum) log level
-global function SetTraceLogCallback(callback: TraceLogCallback)    <cimport, nodecl> end -- Set a trace log callback to enable custom logging
+local function SetTraceLogCallback(callback: TraceLogCallback)    <cimport, nodecl> end -- Set a trace log callback to enable custom logging
 global function TraceLog(logType: cint, text: cstring, ...)         <cimport, nodecl> end -- Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR)
 local function TakeScreenshot(fileName: cstring)                   <cimport, nodecl> end -- Takes a screenshot of current screen (saved a .png)
 local function GetRandomValue(min: cint, max: cint): cint          <cimport, nodecl> end -- Returns a random value between min and max (both included)
@@ -569,8 +569,8 @@ function Raylib.Fade(color: Color, alpha: float32): Color <inline> return Fade(c
 function Raylib.SetConfigFlags(flags: cuchar)                   <inline>        SetConfigFlags(flags)         end
 function Raylib.SetTraceLogLevel(logType: cint)                 <inline>        SetTraceLogLevel(logType)     end
 function Raylib.SetTraceLogExit(logType: cint)                  <inline>        SetTraceLogExit(logType)      end
---function Raylib.SetTraceLogCallback(callback: TraceLogCallback) <inline>        SetTraceLogCallback(callback) end
--- function Raylib.TraceLog(logType: cint, text: cstring, ...)     <inline>        TraceLog(logType, text, ...)  end
+function Raylib.SetTraceLogCallback(callback: TraceLogCallback) <inline>        SetTraceLogCallback(callback) end
+--function Raylib.TraceLog(logType: cint, text: cstring, ...)     <inline>        TraceLog(logType, text, ...)  end
 function Raylib.TakeScreenshot(fileName: cstring)               <inline>        TakeScreenshot(fileName)      end
 function Raylib.GetRandomValue(min: cint, max: cint): cint      <inline> return GetRandomValue(min, max)      end
 
