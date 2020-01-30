@@ -1,8 +1,9 @@
 ## raylib-nelua
 
-This is a WIP [Raylib](raylib.com) bindings for [Nelua language](nelua.io)
+This is a WIP [Raylib](raylib.com) wrapper for [Nelua language](nelua.io)
 
-## Binded modules
+## Progress
+
 - [x] core
 - [ ] shapes
 - [ ] textures
