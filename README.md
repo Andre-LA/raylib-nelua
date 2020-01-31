@@ -5,7 +5,7 @@ This is a WIP [Raylib](raylib.com) wrapper for [Nelua language](nelua.io)
 ## Progress
 
 - [x] core
-- [ ] shapes
+- [x] shapes
 - [ ] textures
 - [x] text
 - [ ] models

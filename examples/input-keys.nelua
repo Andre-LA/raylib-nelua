@@ -1,0 +1,38 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+     
+-- This code is based on the "input keys" example by raysan5, available at: https://www.raylib.com/examples.html
+     
+## strict = true
+require 'raylib'
+
+local screenWidth: integer <comptime> = 800
+local screenHeight: integer <comptime> = 450
+local ballPosition = (@Vector2){x = (@float32)(screenWidth/2), y = (@float32)(screenHeight/2)}
+
+Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - keyboard input")
+Raylib.SetTargetFPS(60)
+    
+while (not Raylib.WindowShouldClose()) do
+   if Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) then
+      ballPosition.x = ballPosition.x + 2.0 
+   end
+   if Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
+      ballPosition.x = ballPosition.x - 2.0 
+   end
+   if Raylib.IsKeyDown(KeyboardKey.KEY_UP) then
+      ballPosition.y = ballPosition.y - 2.0 
+   end
+   if Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) then
+      ballPosition.y = ballPosition.y + 2.0 
+   end   
+
+   Raylib.BeginDrawing()
+      Raylib.ClearBackground(RaylibColors.Raywhite)
+      Raylib.DrawText("move the ball with arrow keys", 10, 10, 20, RaylibColors.Darkgray)
+      Raylib.DrawCircleV(ballPosition, 50, RaylibColors.Maroon)
+   Raylib.EndDrawing()
+end
+
+Raylib.CloseWindow()        
