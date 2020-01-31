@@ -1,6 +1,6 @@
 ## raylib-nelua
 
-This is a WIP [Raylib](https://www.raylib.com/) wrapper for [Nelua language](https://www.nelua.io/)
+This is a WIP [Raylib](https://raylib.com/) wrapper for [Nelua language](https://nelua.io/)
 
 ## Progress
 
