@@ -1186,9 +1186,184 @@ function Raylib.CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vec
 -- Raylib function definitions ] --
 -----------------------------------
 
-
 ------------------------------------------------------------------------------------------------------------------------
 -- === SHAPES MODULE === ]
+------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === TEXTURES MODULE === [
+------------------------------------------------------------------------------------------------------------------------
+
+-- Image/Texture2D data loading/unloading/saving functions
+local function LoadImage(fileName: cstring): Image                                                                                                <cimport, nodecl> end -- Load image from file into CPU memory (RAM)
+local function LoadImageEx(pixels: Color*, width: cint, height: cint): Image                                                                      <cimport, nodecl> end -- Load image from Color array data (RGBA - 32bit)
+local function LoadImagePro(data: pointer, width: cint , height: cint , format: cint ): Image                                                     <cimport, nodecl> end -- Load image from raw data with parameters
+local function LoadImageRaw(fileName: cstring, width: cint, height: cint, format: cint, headerSize: cint): Image                                  <cimport, nodecl> end -- Load image from RAW file data
+local function ExportImage(image: Image , fileName: cstring)                                                                                      <cimport, nodecl> end -- Export image data to file
+local function ExportImageAsCode(image: Image, fileName: cstring)                                                                                 <cimport, nodecl> end -- Export image as code file defining an array of bytes
+local function LoadTexture(fileName: cstring): Texture2D                                                                                          <cimport, nodecl> end -- Load texture from file into GPU memory (VRAM)
+local function LoadTextureFromImage(image: Image): Texture2D                                                                                      <cimport, nodecl> end -- Load texture from image data
+local function LoadTextureCubemap(image: Image, layoutType: cint): TextureCubemap                                                                 <cimport, nodecl> end -- Load cubemap from image, multiple image cubemap layouts supported
+local function LoadRenderTexture(width: cint, height: cint): RenderTexture2D                                                                      <cimport, nodecl> end -- Load texture for rendering (framebuffer)
+local function UnloadImage(image: Image )                                                                                                         <cimport, nodecl> end -- Unload image from CPU memory (RAM)
+local function UnloadTexture(texture: Texture2D)                                                                                                  <cimport, nodecl> end -- Unload texture from GPU memory (VRAM)
+local function UnloadRenderTexture(target: RenderTexture2D)                                                                                       <cimport, nodecl> end -- Unload render texture from GPU memory (VRAM)
+local function GetImageData(image: Image): Color*                                                                                                 <cimport, nodecl> end -- Get pixel data from image as a Color struct array
+local function GetImageDataNormalized(image: Image): Vector4 *                                                                                    <cimport, nodecl> end -- Get pixel data from image as Vector4 array (float normalized)
+local function GetImageAlphaBorder(image: Image, threshold: float32): Rectangle                                                                   <cimport, nodecl> end -- Get image alpha border rectangle
+local function GetPixelDataSize(width: cint, height: cint, format: cint): cint                                                                    <cimport, nodecl> end -- Get pixel data size in bytes (image or texture)
+local function GetTextureData(texture: Texture2D): Image                                                                                          <cimport, nodecl> end -- Get pixel data from GPU texture and return an Image
+local function GetScreenData(): Image                                                                                                             <cimport, nodecl> end -- Get pixel data from screen buffer and return an Image (screenshot)
+local function UpdateTexture(texture: Texture2D, pixels: pointer <const>)                                                                         <cimport, nodecl> end -- Update GPU texture with new data
+
+-- Image manipulation functions
+local function ImageCopy(image: Image): Image                                                                                                     <cimport, nodecl> end -- Create an image duplicate (useful for transformations)
+local function ImageFromImage(image: Image, rec: Rectangle): Image                                                                                <cimport, nodecl> end -- Create an image from another image piece
+local function ImageToPOT(image: Image*, fillColor: Color)                                                                                        <cimport, nodecl> end -- Convert image to POT (power-of-two)
+local function ImageFormat(image: Image*, newFormat: cint)                                                                                        <cimport, nodecl> end -- Convert image data to desired format
+local function ImageAlphaMask(image: Image*, alphaMask: Image)                                                                                    <cimport, nodecl> end -- Apply alpha mask to image
+local function ImageAlphaClear(image: Image*, color: Color, threshold: float32)                                                                   <cimport, nodecl> end -- Clear alpha channel to desired color
+local function ImageAlphaCrop(image: Image*, threshold: float32)                                                                                  <cimport, nodecl> end -- Crop image depending on alpha value
+local function ImageAlphaPremultiply(image: Image*)                                                                                               <cimport, nodecl> end -- Premultiply alpha channel
+local function ImageCrop(image: Image*, crop: Rectangle)                                                                                          <cimport, nodecl> end -- Crop an image to a defined rectangle
+local function ImageResize(image: Image*, newWidth: cint, newHeight: cint)                                                                        <cimport, nodecl> end -- Resize image (Bicubic scaling algorithm)
+local function ImageResizeNN(image: Image*, newWidth: cint, newHeight: cint)                                                                      <cimport, nodecl> end -- Resize image (Nearest-Neighbor scaling algorithm)
+local function ImageResizeCanvas(image: Image*, newWidth: cint, newHeight: cint, offsetX: cint, offsetY: cint, color: Color)                      <cimport, nodecl> end -- Resize canvas and fill with color
+local function ImageMipmaps(image: Image*)                                                                                                        <cimport, nodecl> end -- Generate all mipmap levels for a provided image
+local function ImageDither(image: Image*, rBpp: cint, gBpp: cint, bBpp: cint, aBpp: cint)                                                         <cimport, nodecl> end -- Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
+local function ImageExtractPalette(image: Image, maxPaletteSize: cint, extractCount: cint*): Color*                                               <cimport, nodecl> end -- Extract color palette from image to maximum size (memory should be freed)
+local function ImageText(text: cstring, fontSize: cint, color: Color): Image                                                                      <cimport, nodecl> end -- Create an image from text (default font)
+local function ImageTextEx(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image                                    <cimport, nodecl> end -- Create an image from text (custom sprite font)
+local function ImageDraw(dst: Image*, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color)                                              <cimport, nodecl> end -- Draw a source image within a destination image (tint applied to source)
+local function ImageDrawRectangle(dst: Image*, rec: Rectangle, color: Color)                                                                      <cimport, nodecl> end -- Draw rectangle within an image
+local function ImageDrawRectangleLines(dst: Image*, rec: Rectangle, thick: cint, color: Color)                                                    <cimport, nodecl> end -- Draw rectangle lines within an image
+local function ImageDrawText(dst: Image*, position: Vector2, text: cstring, fontSize: cint, color: Color)                                         <cimport, nodecl> end -- Draw text (default font) within an image (destination)
+local function ImageDrawTextEx(dst: Image*, position: Vector2, font: Font, text: cstring, fontSize: float32, spacing: float32, color: Color)      <cimport, nodecl> end -- Draw text (custom sprite font) within an image (destination)
+local function ImageFlipVertical(image: Image*)                                                                                                   <cimport, nodecl> end -- Flip image vertically
+local function ImageFlipHorizontal(image: Image*)                                                                                                 <cimport, nodecl> end -- Flip image horizontally
+local function ImageRotateCW(image: Image*)                                                                                                       <cimport, nodecl> end -- Rotate image clockwise 90deg
+local function ImageRotateCCW(image: Image*)                                                                                                      <cimport, nodecl> end -- Rotate image counter-clockwise 90deg
+local function ImageColorTint(image: Image*, color: Color)                                                                                        <cimport, nodecl> end -- Modify image color: tint
+local function ImageColorInvert(image: Image*)                                                                                                    <cimport, nodecl> end -- Modify image color: invert
+local function ImageColorGrayscale(image: Image*)                                                                                                 <cimport, nodecl> end -- Modify image color: grayscale
+local function ImageColorContrast(image: Image*, contrast: float32)                                                                               <cimport, nodecl> end -- Modify image color: contrast (-100 to 100)
+local function ImageColorBrightness(image: Image*, brightness: cint)                                                                              <cimport, nodecl> end -- Modify image color: brightness (-255 to 255)
+local function ImageColorReplace(image: Image*, color: Color, replace: Color)                                                                     <cimport, nodecl> end -- Modify image color: replace color
+
+-- Image generation functions
+local function GenImageColor(width: cint, height: cint, color: Color): Image                                                                      <cimport, nodecl> end -- Generate image: plain color
+local function GenImageGradientV(width: cint, height: cint, top: Color, bottom: Color): Image                                                     <cimport, nodecl> end -- Generate image: vertical gradient
+local function GenImageGradientH(width: cint, height: cint, left: Color, right: Color): Image                                                     <cimport, nodecl> end -- Generate image: horizontal gradient
+local function GenImageGradientRadial(width: cint, height: cint, density: float32, inner: Color, outer: Color): Image                             <cimport, nodecl> end -- Generate image: radial gradient
+local function GenImageChecked(width: cint, height: cint, checksX: cint, checksY: cint, col1: Color, col2: Color): Image                          <cimport, nodecl> end -- Generate image: checked
+local function GenImageWhiteNoise(width: cint, height: cint, factor: float32): Image                                                              <cimport, nodecl> end -- Generate image: white noise
+local function GenImagePerlinNoise(width: cint, height: cint, offsetX: cint, offsetY: cint, scale: float32): Image                                <cimport, nodecl> end -- Generate image: perlin noise
+local function GenImageCellular(width: cint, height: cint, tileSize: cint): Image                                                                 <cimport, nodecl> end -- Generate image: cellular algorithm. Bigger tileSize means bigger cells
+
+-- Texture2D configuration functions
+local function GenTextureMipmaps(texture: Texture2D*)                                                                                             <cimport, nodecl> end -- Generate GPU mipmaps for a texture
+local function SetTextureFilter(texture: Texture2D, filterMode: cint)                                                                             <cimport, nodecl> end -- Set texture scaling filter mode
+local function SetTextureWrap(texture: Texture2D, wrapMode: cint)                                                                                 <cimport, nodecl> end -- Set texture wrapping mode
+
+-- Texture2D drawing functions
+local function DrawTexture(texture: Texture2D, posX: cint, posY: cint, tint: Color)                                                               <cimport, nodecl> end -- Draw a Texture2D
+local function DrawTextureV(texture: Texture2D, position: Vector2, tint: Color)                                                                   <cimport, nodecl> end -- Draw a Texture2D with position defined as Vector2
+local function DrawTextureEx(texture: Texture2D, position: Vector2, rotation: float32, scale: float32, tint: Color)                               <cimport, nodecl> end -- Draw a Texture2D with extended parameters
+local function DrawTextureRec(texture: Texture2D, sourceRec: Rectangle, position: Vector2, tint: Color)                                           <cimport, nodecl> end -- Draw a part of a texture defined by a rectangle
+local function DrawTextureQuad(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color)                                <cimport, nodecl> end -- Draw texture quad with tiling and offset parameters
+local function DrawTexturePro(texture: Texture2D, sourceRec: Rectangle, destRec: Rectangle, origin: Vector2, rotation: float32, tint: Color)      <cimport, nodecl> end -- Draw a part of a texture defined by a rectangle with 'pro' parameters
+local function DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, destRec: Rectangle, origin: Vector2, rotation: float32, tint: Color) <cimport, nodecl> end -- Draws a texture (or part of it) that stretches or shrinks nicely
+
+-----------------------------------
+-- Raylib function definitions [ --
+-----------------------------------
+
+-- Image/Texture2D data loading/unloading/saving functions
+function Raylib.LoadImage(fileName: cstring): Image                                                                                                <inline> return LoadImage(fileName)                                                     end
+function Raylib.LoadImageEx(pixels: Color*, width: cint, height: cint): Image                                                                      <inline> return LoadImageEx(pixels, width, height)                                      end
+function Raylib.LoadImagePro(data: pointer, width: cint , height: cint , format: cint ): Image                                                     <inline> return LoadImagePro(data, width, height, format)                               end
+function Raylib.LoadImageRaw(fileName: cstring, width: cint, height: cint, format: cint, headerSize: cint): Image                                  <inline> return LoadImageRaw(fileName, width, height, format, headerSize)               end
+function Raylib.ExportImage(image: Image , fileName: cstring)                                                                                      <inline>        ExportImage(image, fileName)                                            end
+function Raylib.ExportImageAsCode(image: Image, fileName: cstring)                                                                                 <inline>        ExportImageAsCode(image, fileName)                                      end
+function Raylib.LoadTexture(fileName: cstring): Texture2D                                                                                          <inline> return LoadTexture(fileName)                                                   end
+function Raylib.LoadTextureFromImage(image: Image): Texture2D                                                                                      <inline> return LoadTextureFromImage(image)                                             end
+function Raylib.LoadTextureCubemap(image: Image, layoutType: cint): TextureCubemap                                                                 <inline> return LoadTextureCubemap(image, layoutType)                                   end
+function Raylib.LoadRenderTexture(width: cint, height: cint): RenderTexture2D                                                                      <inline> return LoadRenderTexture(width, height)                                        end
+function Raylib.UnloadImage(image: Image )                                                                                                         <inline>        UnloadImage(image)                                                      end
+function Raylib.UnloadTexture(texture: Texture2D)                                                                                                  <inline>        UnloadTexture(texture)                                                  end
+function Raylib.UnloadRenderTexture(target: RenderTexture2D)                                                                                       <inline>        UnloadRenderTexture(target)                                             end
+function Raylib.GetImageData(image: Image): Color*                                                                                                 <inline> return GetImageData(image)                                                     end
+function Raylib.GetImageDataNormalized(image: Image): Vector4*                                                                                     <inline> return GetImageDataNormalized(image)                                           end
+function Raylib.GetImageAlphaBorder(image: Image, threshold: float32): Rectangle                                                                   <inline> return GetImageAlphaBorder(image, threshold)                                   end
+function Raylib.GetPixelDataSize(width: cint, height: cint, format: cint): cint                                                                    <inline> return GetPixelDataSize(width, height, format)                                 end
+function Raylib.GetTextureData(texture: Texture2D): Image                                                                                          <inline> return GetTextureData(texture)                                                 end
+function Raylib.GetScreenData(): Image                                                                                                             <inline> return GetScreenData()                                                         end
+function Raylib.UpdateTexture(texture: Texture2D, pixels: pointer <const>)                                                                         <inline>        UpdateTexture(texture, pixels)                                          end
+
+-- Image manipulation functions
+function Raylib.ImageCopy(image: Image): Image                                                                                                     <inline> return ImageCopy(image)                                                        end
+function Raylib.ImageFromImage(image: Image, rec: Rectangle): Image                                                                                <inline> return ImageFromImage(image, rec)                                              end
+function Raylib.ImageToPOT(image: Image*, fillColor: Color)                                                                                        <inline>        ImageToPOT(image, fillColor)                                            end
+function Raylib.ImageFormat(image: Image*, newFormat: cint)                                                                                        <inline>        ImageFormat(image, newFormat)                                           end
+function Raylib.ImageAlphaMask(image: Image*, alphaMask: Image)                                                                                    <inline>        ImageAlphaMask(image, alphaMask)                                        end
+function Raylib.ImageAlphaClear(image: Image*, color: Color, threshold: float32)                                                                   <inline>        ImageAlphaClear(image, color, threshold)                                end
+function Raylib.ImageAlphaCrop(image: Image*, threshold: float32)                                                                                  <inline>        ImageAlphaCrop(image, threshold)                                        end
+function Raylib.ImageAlphaPremultiply(image: Image*)                                                                                               <inline>        ImageAlphaPremultiply(image)                                            end
+function Raylib.ImageCrop(image: Image*, crop: Rectangle)                                                                                          <inline>        ImageCrop(image, crop)                                                  end
+function Raylib.ImageResize(image: Image*, newWidth: cint, newHeight: cint)                                                                        <inline>        ImageResize(image, newWidth, newHeight)                                 end
+function Raylib.ImageResizeNN(image: Image*, newWidth: cint, newHeight: cint)                                                                      <inline>        ImageResizeNN(image, newWidth, newHeight)                               end
+function Raylib.ImageResizeCanvas(image: Image*, newWidth: cint, newHeight: cint, offsetX: cint, offsetY: cint, color: Color)                      <inline>        ImageResizeCanvas(image, newWidth, newHeight, offsetX, offsetY, color)  end
+function Raylib.ImageMipmaps(image: Image*)                                                                                                        <inline>        ImageMipmaps(image)                                                     end
+function Raylib.ImageDither(image: Image*, rBpp: cint, gBpp: cint, bBpp: cint, aBpp: cint)                                                         <inline>        ImageDither(image, rBpp, gBpp, bBpp, aBpp)                              end
+function Raylib.ImageExtractPalette(image: Image, maxPaletteSize: cint, extractCount: cint*): Color*                                               <inline> return ImageExtractPalette(image, maxPaletteSize, extractCount)                end
+function Raylib.ImageText(text: cstring, fontSize: cint, color: Color): Image                                                                      <inline> return ImageText(text, fontSize, color)                                        end
+function Raylib.ImageTextEx(font: Font, text: cstring, fontSize: float32, spacing: float32, tint: Color): Image                                    <inline> return ImageTextEx(font, text, fontSize, spacing, tint)                        end
+function Raylib.ImageDraw(dst: Image*, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color)                                              <inline>        ImageDraw(dst, src, srcRec, dstRec, tint)                               end
+function Raylib.ImageDrawRectangle(dst: Image*, rec: Rectangle, color: Color)                                                                      <inline>        ImageDrawRectangle(dst, rec, color)                                     end
+function Raylib.ImageDrawRectangleLines(dst: Image*, rec: Rectangle, thick: cint, color: Color)                                                    <inline>        ImageDrawRectangleLines(dst, rec, thick, color)                         end
+function Raylib.ImageDrawText(dst: Image*, position: Vector2, text: cstring, fontSize: cint, color: Color)                                         <inline>        ImageDrawText(dst, position, text, fontSize, color)                     end
+function Raylib.ImageDrawTextEx(dst: Image*, position: Vector2, font: Font, text: cstring, fontSize: float32, spacing: float32, color: Color)      <inline>        ImageDrawTextEx(dst, position, font, text, fontSize, spacing, color)    end
+function Raylib.ImageFlipVertical(image: Image*)                                                                                                   <inline>        ImageFlipVertical(image)                                                end
+function Raylib.ImageFlipHorizontal(image: Image*)                                                                                                 <inline>        ImageFlipHorizontal(image)                                              end
+function Raylib.ImageRotateCW(image: Image*)                                                                                                       <inline>        ImageRotateCW(image)                                                    end
+function Raylib.ImageRotateCCW(image: Image*)                                                                                                      <inline>        ImageRotateCCW(image)                                                   end
+function Raylib.ImageColorTint(image: Image*, color: Color)                                                                                        <inline>        ImageColorTint(image, color)                                            end
+function Raylib.ImageColorInvert(image: Image*)                                                                                                    <inline>        ImageColorInvert(image)                                                 end
+function Raylib.ImageColorGrayscale(image: Image*)                                                                                                 <inline>        ImageColorGrayscale(image)                                              end
+function Raylib.ImageColorContrast(image: Image*, contrast: float32)                                                                               <inline>        ImageColorContrast(image, contrast)                                     end
+function Raylib.ImageColorBrightness(image: Image*, brightness: cint)                                                                              <inline>        ImageColorBrightness(image, brightness)                                 end
+function Raylib.ImageColorReplace(image: Image*, color: Color, replace: Color)                                                                     <inline>        ImageColorReplace(image, color, replace)                                end
+
+-- Image generation functions
+function Raylib.GenImageColor(width: cint, height: cint, color: Color): Image                                                                      <inline> return GenImageColor(width, height, color)                                     end
+function Raylib.GenImageGradientV(width: cint, height: cint, top: Color, bottom: Color): Image                                                     <inline> return GenImageGradientV(width, height, top, bottom)                           end
+function Raylib.GenImageGradientH(width: cint, height: cint, left: Color, right: Color): Image                                                     <inline> return GenImageGradientH(width, height, left, right)                           end
+function Raylib.GenImageGradientRadial(width: cint, height: cint, density: float32, inner: Color, outer: Color): Image                             <inline> return GenImageGradientRadial(width, height, density, inner, outer)            end
+function Raylib.GenImageChecked(width: cint, height: cint, checksX: cint, checksY: cint, col1: Color, col2: Color): Image                          <inline> return GenImageChecked(width, height, checksX, checksY, col1, col2)            end
+function Raylib.GenImageWhiteNoise(width: cint, height: cint, factor: float32): Image                                                              <inline> return GenImageWhiteNoise(width, height, factor)                               end
+function Raylib.GenImagePerlinNoise(width: cint, height: cint, offsetX: cint, offsetY: cint, scale: float32): Image                                <inline> return GenImagePerlinNoise(width, height, offsetX, offsetY, scale)             end
+function Raylib.GenImageCellular(width: cint, height: cint, tileSize: cint): Image                                                                 <inline> return GenImageCellular(width, height, tileSize)                               end
+
+-- Texture2D configuration functions
+function Raylib.GenTextureMipmaps(texture: Texture2D*)                                                                                             <inline>        GenTextureMipmaps(texture)                                              end
+function Raylib.SetTextureFilter(texture: Texture2D, filterMode: cint)                                                                             <inline>        SetTextureFilter(texture, filterMode)                                   end
+function Raylib.SetTextureWrap(texture: Texture2D, wrapMode: cint)                                                                                 <inline>        SetTextureWrap(texture, wrapMode)                                       end
+
+-- Texture2D drawing functions
+function Raylib.DrawTexture(texture: Texture2D, posX: cint, posY: cint, tint: Color)                                                               <inline>        DrawTexture(texture, posX, posY, tint)                                  end
+function Raylib.DrawTextureV(texture: Texture2D, position: Vector2, tint: Color)                                                                   <inline>        DrawTextureV(texture, position, tint)                                   end
+function Raylib.DrawTextureEx(texture: Texture2D, position: Vector2, rotation: float32, scale: float32, tint: Color)                               <inline>        DrawTextureEx(texture, position, rotation, scale, tint)                 end
+function Raylib.DrawTextureRec(texture: Texture2D, sourceRec: Rectangle, position: Vector2, tint: Color)                                           <inline>        DrawTextureRec(texture, sourceRec, position, tint)                      end
+function Raylib.DrawTextureQuad(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color)                                <inline>        DrawTextureQuad(texture, tiling, offset, quad, tint)                    end
+function Raylib.DrawTexturePro(texture: Texture2D, sourceRec: Rectangle, destRec: Rectangle, origin: Vector2, rotation: float32, tint: Color)      <inline>        DrawTexturePro(texture, sourceRec, destRec, origin, rotation, tint)     end
+function Raylib.DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, destRec: Rectangle, origin: Vector2, rotation: float32, tint: Color) <inline>        DrawTextureNPatch(texture, nPatchInfo, destRec, origin, rotation, tint) end
+
+-----------------------------------
+-- Raylib function definitions ] --
+-----------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === TEXTURES MODULE === ]
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
