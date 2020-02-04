@@ -6,7 +6,7 @@ This is a WIP [Raylib](https://www.raylib.com/) wrapper for [Nelua language](htt
 
 - [x] core
 - [x] shapes
-- [ ] textures
+- [x] textures
 - [x] text
 - [ ] models
 - [ ] shaders (rlgl)
