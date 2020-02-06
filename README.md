@@ -10,4 +10,4 @@ This is a WIP [Raylib](https://www.raylib.com/) wrapper for [Nelua language](htt
 - [x] text
 - [x] models
 - [x] shaders (rlgl)
-- [ ] audio
+- [x] audio
