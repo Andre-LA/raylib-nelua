@@ -8,6 +8,6 @@ This is a WIP [Raylib](https://www.raylib.com/) wrapper for [Nelua language](htt
 - [x] shapes
 - [x] textures
 - [x] text
-- [ ] models
+- [x] models
 - [ ] shaders (rlgl)
 - [ ] audio
