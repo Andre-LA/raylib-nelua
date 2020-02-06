@@ -1120,8 +1120,6 @@ local function DrawTriangleStrip(points: Vector2*, pointsCount: cint, color: Col
 local function DrawPoly(center: Vector2, sides: cint, radius: float32, rotation: float32, color: Color)                                                   <cimport, nodecl> end -- Draw a regular polygon (Vector version)
 local function DrawPolyLines(center: Vector2, sides: cint, radius: float32, rotation: float32, color: Color)                                              <cimport, nodecl> end -- Draw a polygon outline of n sides
 
-local function SetShapesTexture(texture: Texture2D, source: Rectangle)                                                                                    <cimport, nodecl> end -- Define default texture used to draw shapes
-
 -- Basic shapes collision detection functions
 local function CheckCollisionRecs(rec1: Rectangle, rec2: Rectangle): boolean                                          <cimport, nodecl> end -- Check collision between two rectangles
 local function CheckCollisionCircles(center1: Vector2, radius1: float32, center2: Vector2, radius2: float32): boolean <cimport, nodecl> end -- Check collision between two circles
@@ -1170,8 +1168,6 @@ function Raylib.DrawTriangleFan(points: Vector2*, numPoints: cint, color: Color)
 function Raylib.DrawTriangleStrip(points: Vector2*, pointsCount: cint, color: Color)                                                                       <inline> DrawTriangleStrip(points, pointsCount, color)                                          end
 function Raylib.DrawPoly(center: Vector2, sides: cint, radius: float32, rotation: float32, color: Color)                                                   <inline> DrawPoly(center, sides, radius, rotation, color)                                       end
 function Raylib.DrawPolyLines(center: Vector2, sides: cint, radius: float32, rotation: float32, color: Color)                                              <inline> DrawPolyLines(center, sides, radius, rotation, color)                                  end
-
-function Raylib.SetShapesTexture(texture: Texture2D, source: Rectangle)                                                                                    <inline> SetShapesTexture(texture, source)                                                      end
 
 -- Basic shapes collision detection functions
 function Raylib.CheckCollisionRecs(rec1: Rectangle, rec2: Rectangle): boolean                                          <inline> return CheckCollisionRecs(rec1, rec2)                            end
@@ -1633,4 +1629,97 @@ function Raylib.GetCollisionRayGround(ray: Ray, groundHeight: float32): RayHitIn
 
 ------------------------------------------------------------------------------------------------------------------------
 -- === MODELS MODULE === ]
+------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === SHADERS MODULE === [
+------------------------------------------------------------------------------------------------------------------------
+
+-- Shader loading/unloading functions
+local function LoadText(fileName: cstring): cstring                                                              <cimport, nodecl> end -- Load chars array from text file
+local function LoadShader(vsFileName: cstring, fsFileName: cstring): Shader                                      <cimport, nodecl> end -- Load shader from files and bind default locations
+local function LoadShaderCode(vsCode: cstring, fsCode: cstring): Shader                                          <cimport, nodecl> end -- Load shader from code strings and bind default locations
+local function UnloadShader(shader: Shader)                                                                      <cimport, nodecl> end -- Unload shader from GPU memory (VRAM)
+
+local function GetShaderDefault(): Shader                                                                        <cimport, nodecl> end -- Get default shader
+local function GetTextureDefault(): Texture2D                                                                    <cimport, nodecl> end -- Get default texture
+local function GetShapesTexture(): Texture2D                                                                     <cimport, nodecl> end -- Get texture to draw shapes
+local function GetShapesTextureRec(): Rectangle                                                                  <cimport, nodecl> end -- Get texture rectangle to draw shapes
+local function SetShapesTexture(texture: Texture2D, source: Rectangle)                                           <cimport, nodecl> end -- Define default texture used to draw shapes
+
+-- Shader configuration functions
+local function GetShaderLocation(shader: Shader, uniformName: cstring): cint                                      <cimport, nodecl> end -- Get shader uniform location
+local function SetShaderValue(shader: Shader, uniformLoc: cint, value: pointer, uniformType: cint)               <cimport, nodecl> end -- Set shader uniform value
+local function SetShaderValueV(shader: Shader, uniformLoc: cint, value: pointer, uniformType: cint, count: cint) <cimport, nodecl> end -- Set shader uniform value vector
+local function SetShaderValueMatrix(shader: Shader, uniformLoc: cint, mat: Matrix)                               <cimport, nodecl> end -- Set shader uniform value (matrix 4x4)
+local function SetShaderValueTexture(shader: Shader, uniformLoc: cint, texture: Texture2D)                       <cimport, nodecl> end -- Set shader uniform value for texture
+local function SetMatrixProjection(proj: Matrix)                                                                 <cimport, nodecl> end -- Set a custom projection matrix (replaces internal projection matrix)
+local function SetMatrixModelview(view: Matrix)                                                                  <cimport, nodecl> end -- Set a custom modelview matrix (replaces internal modelview matrix)
+local function GetMatrixModelview(): Matrix                                                                      <cimport, nodecl> end -- Get internal modelview matrix
+local function GetMatrixProjection(): Matrix                                                                     <cimport, nodecl> end -- Get internal projection matrix
+
+-- Shading begin/end functions
+local function BeginShaderMode(shader: Shader)                                                                   <cimport, nodecl> end -- Begin custom shader drawing
+local function EndShaderMode()                                                                                   <cimport, nodecl> end -- End custom shader drawing (use default shader)
+local function BeginBlendMode(mode: cint)                                                                        <cimport, nodecl> end -- Begin blending mode (alpha, additive, multiplied)
+local function EndBlendMode()                                                                                    <cimport, nodecl> end -- End blending mode (reset to default: alpha blending)
+
+-- VR control functions
+local function InitVrSimulator()                                                                                 <cimport, nodecl> end -- Init VR simulator for selected device parameters
+local function CloseVrSimulator()                                                                                <cimport, nodecl> end -- Close VR simulator for current device
+local function UpdateVrTracking(camera: Camera*)                                                                 <cimport, nodecl> end -- Update VR tracking (position and orientation) and camera
+local function SetVrConfiguration(info: VrDeviceInfo, distortion: Shader)                                        <cimport, nodecl> end -- Set stereo rendering configuration parameters
+local function IsVrSimulatorReady(): boolean                                                                        <cimport, nodecl> end -- Detect if VR simulator is ready
+local function ToggleVrMode()                                                                                    <cimport, nodecl> end -- Enable/Disable VR experience
+local function BeginVrDrawing()                                                                                  <cimport, nodecl> end -- Begin VR simulator stereo rendering
+local function EndVrDrawing()                                                                                    <cimport, nodecl> end -- End VR simulator stereo rendering
+
+-----------------------------------
+-- Raylib function definitions [ --
+-----------------------------------
+
+function Raylib.LoadText(fileName: cstring): cstring                                                              <inline> return LoadText(fileName)                                             end
+function Raylib.LoadShader(vsFileName: cstring, fsFileName: cstring): Shader                                      <inline> return LoadShader(vsFileName, fsFileName)                             end
+function Raylib.LoadShaderCode(vsCode: cstring, fsCode: cstring): Shader                                          <inline> return LoadShaderCode(vsCode, fsCode)                                 end
+function Raylib.UnloadShader(shader: Shader)                                                                      <inline>        UnloadShader(shader)                                           end
+
+function Raylib.GetShaderDefault(): Shader                                                                        <inline> return GetShaderDefault()                                             end
+function Raylib.GetTextureDefault(): Texture2D                                                                    <inline> return GetTextureDefault()                                            end
+function Raylib.GetShapesTexture(): Texture2D                                                                     <inline> return GetShapesTexture()                                             end
+function Raylib.GetShapesTextureRec(): Rectangle                                                                  <inline> return GetShapesTextureRec()                                          end
+function Raylib.SetShapesTexture(texture: Texture2D, source: Rectangle)                                           <inline>        SetShapesTexture(texture, source)                              end
+
+-- Shader configuration functions
+function Raylib.GetShaderLocation(shader: Shader, uniformName: cstring): cint                                      <inline> return GetShaderLocation(shader, uniformName)                         end
+function Raylib.SetShaderValue(shader: Shader, uniformLoc: cint, value: pointer, uniformType: cint)               <inline>        SetShaderValue(shader, uniformLoc, value, uniformType)         end
+function Raylib.SetShaderValueV(shader: Shader, uniformLoc: cint, value: pointer, uniformType: cint, count: cint) <inline>        SetShaderValueV(shader, uniformLoc, value, uniformType, count) end
+function Raylib.SetShaderValueMatrix(shader: Shader, uniformLoc: cint, mat: Matrix)                               <inline>        SetShaderValueMatrix(shader, uniformLoc, mat)                  end
+function Raylib.SetShaderValueTexture(shader: Shader, uniformLoc: cint, texture: Texture2D)                       <inline>        SetShaderValueTexture(shader, uniformLoc, texture)             end
+function Raylib.SetMatrixProjection(proj: Matrix)                                                                 <inline>        SetMatrixProjection(proj)                                      end
+function Raylib.SetMatrixModelview(view: Matrix)                                                                  <inline>        SetMatrixModelview(view)                                       end
+function Raylib.GetMatrixModelview(): Matrix                                                                      <inline> return GetMatrixModelview()                                           end
+function Raylib.GetMatrixProjection(): Matrix                                                                     <inline> return GetMatrixProjection()                                          end
+
+-- Shading begin/end functions
+function Raylib.BeginShaderMode(shader: Shader)                                                                   <inline>        BeginShaderMode(shader)                                        end
+function Raylib.EndShaderMode()                                                                                   <inline>        EndShaderMode()                                                end
+function Raylib.BeginBlendMode(mode: cint)                                                                        <inline>        BeginBlendMode(mode)                                           end
+function Raylib.EndBlendMode()                                                                                    <inline>        EndBlendMode()                                                 end
+
+-- VR control functions
+function Raylib.InitVrSimulator()                                                                                 <inline>        InitVrSimulator()                                              end
+function Raylib.CloseVrSimulator()                                                                                <inline>        CloseVrSimulator()                                             end
+function Raylib.UpdateVrTracking(camera: Camera*)                                                                 <inline>        UpdateVrTracking(camera)                                       end
+function Raylib.SetVrConfiguration(info: VrDeviceInfo, distortion: Shader)                                        <inline>        SetVrConfiguration(info, distortion)                           end
+function Raylib.IsVrSimulatorReady(): boolean                                                                        <inline> return IsVrSimulatorReady()                                           end
+function Raylib.ToggleVrMode()                                                                                    <inline>        ToggleVrMode()                                                 end
+function Raylib.BeginVrDrawing()                                                                                  <inline>        BeginVrDrawing()                                               end
+function Raylib.EndVrDrawing()                                                                                    <inline>        EndVrDrawing()                                                 end
+
+-----------------------------------
+-- Raylib function definitions ] --
+-----------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === SHADERS MODULE === ]
 ------------------------------------------------------------------------------------------------------------------------

@@ -9,5 +9,5 @@ This is a WIP [Raylib](https://www.raylib.com/) wrapper for [Nelua language](htt
 - [x] textures
 - [x] text
 - [x] models
-- [ ] shaders (rlgl)
+- [x] shaders (rlgl)
 - [ ] audio
