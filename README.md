@@ -1,4 +1,4 @@
-## raylib-nelua
+# raylib-nelua
 
 This is a [Raylib](https://www.raylib.com/) wrapper for [Nelua language](https://nelua.io/)
 
