@@ -1460,3 +1460,177 @@ function Raylib.TextToInteger(text: cstring): cint                              
 ------------------------------------------------------------------------------------------------------------------------
 -- === TEXT MODULE === ]
 ------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === MODELS MODULE === [
+------------------------------------------------------------------------------------------------------------------------
+
+-- Basic geometric 3D shapes drawing functions
+local function DrawLine3D(startPos: Vector3, endPos: Vector3, color: Color)                                                                  <cimport, nodecl> end -- Draw a line in 3D world space
+local function DrawPoint3D(position: Vector3, color: Color)                                                                                  <cimport, nodecl> end -- Draw a point in 3D space, actually a small line
+local function DrawCircle3D(center: Vector3, radius: float32, rotationAxis: Vector3, rotationAngle: float32, color: Color)                   <cimport, nodecl> end -- Draw a circle in 3D world space
+local function DrawCube(position: Vector3, width: float32, height: float32, length: float32, color: Color)                                   <cimport, nodecl> end -- Draw cube
+local function DrawCubeV(position: Vector3, size: Vector3, color: Color)                                                                     <cimport, nodecl> end -- Draw cube (Vector version)
+local function DrawCubeWires(position: Vector3, width: float32, height: float32, length: float32, color: Color)                              <cimport, nodecl> end -- Draw cube wires
+local function DrawCubeWiresV(position: Vector3, size: Vector3, color: Color)                                                                <cimport, nodecl> end -- Draw cube wires (Vector version)
+local function DrawCubeTexture(texture: Texture2D, position: Vector3, width: float32, height: float32, length: float32, color: Color)        <cimport, nodecl> end -- Draw cube textured
+local function DrawSphere(centerPos: Vector3, radius: float32, color: Color)                                                                 <cimport, nodecl> end -- Draw sphere
+local function DrawSphereEx(centerPos: Vector3, radius: float32, rings: cint, slices: cint, color: Color)                                    <cimport, nodecl> end -- Draw sphere with extended parameters
+local function DrawSphereWires(centerPos: Vector3, radius: float32, rings: cint, slices: cint, color: Color)                                 <cimport, nodecl> end -- Draw sphere wires
+local function DrawCylinder(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: cint, color: Color)       <cimport, nodecl> end -- Draw a cylinder/cone
+local function DrawCylinderWires(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: cint, color: Color)  <cimport, nodecl> end -- Draw a cylinder/cone wires
+local function DrawPlane(centerPos: Vector3, size: Vector2, color: Color)                                                                    <cimport, nodecl> end -- Draw a plane XZ
+local function DrawRay(ray: Ray, color: Color)                                                                                               <cimport, nodecl> end -- Draw a ray line
+local function DrawGrid(slices: cint, spacing: float32)                                                                                      <cimport, nodecl> end -- Draw a grid (centered at (0, 0, 0))
+local function DrawGizmo(position: Vector3)                                                                                                  <cimport, nodecl> end -- Draw simple gizmo
+
+-- Model loading/unloading functions
+local function LoadModel(fileName: cstring): Model                                                                                           <cimport, nodecl> end -- Load model from files (meshes and materials)
+local function LoadModelFromMesh(mesh: Mesh): Model                                                                                          <cimport, nodecl> end -- Load model from generated mesh (default material)
+local function UnloadModel(model: Model)                                                                                                     <cimport, nodecl> end -- Unload model from memory (RAM and/or VRAM)
+
+-- Mesh loading/unloading functions
+local function LoadMeshes(fileName: cstring, meshCount: cint*): Mesh*                                                                        <cimport, nodecl> end -- Load meshes from model file
+local function ExportMesh(mesh: Mesh, fileName: cstring)                                                                                     <cimport, nodecl> end -- Export mesh data to file
+local function UnloadMesh(mesh: Mesh)                                                                                                        <cimport, nodecl> end -- Unload mesh from memory (RAM and/or VRAM)
+
+-- Material loading/unloading functions
+local function LoadMaterials(fileName: cstring, materialCount: cint*): Material*                                                             <cimport, nodecl> end -- Load materials from model file
+local function LoadMaterialDefault(): Material                                                                                               <cimport, nodecl> end -- Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
+local function UnloadMaterial(material: Material)                                                                                            <cimport, nodecl> end -- Unload material from GPU memory (VRAM)
+local function SetMaterialTexture(material: Material*, mapType: cint, texture: Texture2D)                                                    <cimport, nodecl> end -- Set texture for a material map type (MAP_DIFFUSE, MAP_SPECULAR...)
+local function SetModelMeshMaterial(model: Model*, meshId: cint, materialId: cint)                                                           <cimport, nodecl> end -- Set material for a mesh
+
+-- Model animations loading/unloading functions
+local function LoadModelAnimations(fileName: cstring, animsCount: cint*): ModelAnimation*                                                    <cimport, nodecl> end -- Load model animations from file
+local function UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: cint)                                                         <cimport, nodecl> end -- Update model animation pose
+local function UnloadModelAnimation(anim: ModelAnimation)                                                                                    <cimport, nodecl> end -- Unload animation data
+local function IsModelAnimationValid(model: Model, anim: ModelAnimation): boolean                                                            <cimport, nodecl> end -- Check model animation skeleton match
+
+-- Mesh generation functions
+local function GenMeshPoly(sides: cint, radius: float32): Mesh                                                                               <cimport, nodecl> end -- Generate polygonal mesh
+local function GenMeshPlane(width: float32, length: float32, resX: cint, resZ: cint): Mesh                                                   <cimport, nodecl> end -- Generate plane mesh (with subdivisions)
+local function GenMeshCube(width: float32, height: float32, length: float32): Mesh                                                           <cimport, nodecl> end -- Generate cuboid mesh
+local function GenMeshSphere(radius: float32, rings: cint, slices: cint): Mesh                                                               <cimport, nodecl> end -- Generate sphere mesh (standard sphere)
+local function GenMeshHemiSphere(radius: float32, rings: cint, slices: cint): Mesh                                                           <cimport, nodecl> end -- Generate half-sphere mesh (no bottom cap)
+local function GenMeshCylinder(radius: float32, height: float32, slices: cint): Mesh                                                         <cimport, nodecl> end -- Generate cylinder mesh
+local function GenMeshTorus(radius: float32, size: float32, radSeg: cint, sides: cint): Mesh                                                 <cimport, nodecl> end -- Generate torus mesh
+local function GenMeshKnot(radius: float32, size: float32, radSeg: cint, sides: cint): Mesh                                                  <cimport, nodecl> end -- Generate trefoil knot mesh
+local function GenMeshHeightmap(heightmap: Image, size: Vector3): Mesh                                                                       <cimport, nodecl> end -- Generate heightmap mesh from image data
+local function GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3): Mesh                                                                     <cimport, nodecl> end -- Generate cubes-based map mesh from image data
+
+-- Mesh manipulation functions
+local function MeshBoundingBox(mesh: Mesh): BoundingBox                                                                                      <cimport, nodecl> end -- Compute mesh bounding box limits
+local function MeshTangents(mesh: Mesh*)                                                                                                     <cimport, nodecl> end -- Compute mesh tangents
+local function MeshBinormals(mesh: Mesh*)                                                                                                    <cimport, nodecl> end -- Compute mesh binormals
+
+-- Model drawing functions
+local function DrawModel(model: Model, position: Vector3, scale: float32, tint: Color)                                                       <cimport, nodecl> end -- Draw a model (with texture if set)
+local function DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color)      <cimport, nodecl> end -- Draw a model with extended parameters
+local function DrawModelWires(model: Model, position: Vector3, scale: float32, tint: Color)                                                  <cimport, nodecl> end -- Draw a model wires (with texture if set)
+local function DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) <cimport, nodecl> end -- Draw a model wires (with texture if set) with extended parameters
+local function DrawBoundingBox(box: BoundingBox, color: Color)                                                                               <cimport, nodecl> end -- Draw bounding box (wires)
+local function DrawBillboard(camera: Camera, texture: Texture2D, center: Vector3, size: float32, tint: Color)                                <cimport, nodecl> end -- Draw a billboard texture
+local function DrawBillboardRec(camera: Camera, texture: Texture2D, sourceRec: Rectangle, center: Vector3, size: float32, tint: Color)       <cimport, nodecl> end -- Draw a billboard texture defined by sourceRec
+
+-- Collision detection functions
+local function CheckCollisionSpheres(centerA: Vector3, radiusA: float32, centerB: Vector3, radiusB: float32): boolean                        <cimport, nodecl> end -- Detect collision between two spheres
+local function CheckCollisionBoxes(box1: BoundingBox, box2: BoundingBox): boolean                                                            <cimport, nodecl> end -- Detect collision between two bounding boxes
+local function CheckCollisionBoxSphere(box: BoundingBox, center: Vector3, radius: float32): boolean                                          <cimport, nodecl> end -- Detect collision between box and sphere
+local function CheckCollisionRaySphere(ray: Ray, center: Vector3, radius: float32): boolean                                                  <cimport, nodecl> end -- Detect collision between ray and sphere
+local function CheckCollisionRaySphereEx(ray: Ray, center: Vector3, radius: float32, collisionPoint: Vector3*): boolean                       <cimport, nodecl> end -- Detect collision between ray and sphere, returns collision point
+local function CheckCollisionRayBox(ray: Ray, box: BoundingBox): boolean                                                                     <cimport, nodecl> end -- Detect collision between ray and box
+local function GetCollisionRayModel(ray: Ray, model: Model): RayHitInfo                                                                      <cimport, nodecl> end -- Get collision info between ray and model
+local function GetCollisionRayTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayHitInfo                                          <cimport, nodecl> end -- Get collision info between ray and triangle
+local function GetCollisionRayGround(ray: Ray, groundHeight: float32): RayHitInfo                                                            <cimport, nodecl> end -- Get collision info between ray and ground plane (Y-normal plane)
+
+-----------------------------------
+-- Raylib function definitions [ --
+-----------------------------------
+
+-- Basic geometric 3D shapes drawing functions
+function Raylib.DrawLine3D(startPos: Vector3, endPos: Vector3, color: Color)                                                                  <inline>        DrawLine3D(startPos, endPos, color)                                         end
+function Raylib.DrawPoint3D(position: Vector3, color: Color)                                                                                  <inline>        DrawPoint3D(position, color)                                                end
+function Raylib.DrawCircle3D(center: Vector3, radius: float32, rotationAxis: Vector3, rotationAngle: float32, color: Color)                   <inline>        DrawCircle3D(center, radius, rotationAxis, rotationAngle, color)            end
+function Raylib.DrawCube(position: Vector3, width: float32, height: float32, length: float32, color: Color)                                   <inline>        DrawCube(position, width, height, length, color)                            end
+function Raylib.DrawCubeV(position: Vector3, size: Vector3, color: Color)                                                                     <inline>        DrawCubeV(position, size, color)                                            end
+function Raylib.DrawCubeWires(position: Vector3, width: float32, height: float32, length: float32, color: Color)                              <inline>        DrawCubeWires(position, width, height, length, color)                       end
+function Raylib.DrawCubeWiresV(position: Vector3, size: Vector3, color: Color)                                                                <inline>        DrawCubeWiresV(position, size, color)                                       end
+function Raylib.DrawCubeTexture(texture: Texture2D, position: Vector3, width: float32, height: float32, length: float32, color: Color)        <inline>        DrawCubeTexture(texture, position, width, height, length, color)            end
+function Raylib.DrawSphere(centerPos: Vector3, radius: float32, color: Color)                                                                 <inline>        DrawSphere(centerPos, radius, color)                                        end
+function Raylib.DrawSphereEx(centerPos: Vector3, radius: float32, rings: cint, slices: cint, color: Color)                                    <inline>        DrawSphereEx(centerPos, radius, rings, slices, color)                       end
+function Raylib.DrawSphereWires(centerPos: Vector3, radius: float32, rings: cint, slices: cint, color: Color)                                 <inline>        DrawSphereWires(centerPos, radius, rings, slices, color)                    end
+function Raylib.DrawCylinder(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: cint, color: Color)       <inline>        DrawCylinder(position, radiusTop, radiusBottom, height, slices, color)      end
+function Raylib.DrawCylinderWires(position: Vector3, radiusTop: float32, radiusBottom: float32, height: float32, slices: cint, color: Color)  <inline>        DrawCylinderWires(position, radiusTop, radiusBottom, height, slices, color) end
+function Raylib.DrawPlane(centerPos: Vector3, size: Vector2, color: Color)                                                                    <inline>        DrawPlane(centerPos, size, color)                                           end
+function Raylib.DrawRay(ray: Ray, color: Color)                                                                                               <inline>        DrawRay(ray, color)                                                         end
+function Raylib.DrawGrid(slices: cint, spacing: float32)                                                                                      <inline>        DrawGrid(slices, spacing)                                                   end
+function Raylib.DrawGizmo(position: Vector3)                                                                                                  <inline>        DrawGizmo(position)                                                         end
+
+-- Model loading/unloading functions
+function Raylib.LoadModel(fileName: cstring): Model                                                                                           <inline> return LoadModel(fileName)                                                         end
+function Raylib.LoadModelFromMesh(mesh: Mesh): Model                                                                                          <inline> return LoadModelFromMesh(mesh)                                                     end
+function Raylib.UnloadModel(model: Model)                                                                                                     <inline>        UnloadModel(model)                                                          end
+
+-- Mesh loading/unloading functions
+function Raylib.LoadMeshes(fileName: cstring, meshCount: cint*): Mesh*                                                                        <inline> return LoadMeshes(fileName, meshCount)                                             end
+function Raylib.ExportMesh(mesh: Mesh, fileName: cstring)                                                                                     <inline>        ExportMesh(mesh, fileName)                                                  end
+function Raylib.UnloadMesh(mesh: Mesh)                                                                                                        <inline>        UnloadMesh(mesh)                                                            end
+
+-- Material loading/unloading functions
+function Raylib.LoadMaterials(fileName: cstring, materialCount: cint*): Material*                                                             <inline> return LoadMaterials(fileName, materialCount)                                      end
+function Raylib.LoadMaterialDefault(): Material                                                                                               <inline> return LoadMaterialDefault()                                                       end
+function Raylib.UnloadMaterial(material: Material)                                                                                            <inline>        UnloadMaterial(material)                                                    end
+function Raylib.SetMaterialTexture(material: Material*, mapType: cint, texture: Texture2D)                                                    <inline>        SetMaterialTexture(material, mapType, texture)                              end
+function Raylib.SetModelMeshMaterial(model: Model*, meshId: cint, materialId: cint)                                                           <inline>        SetModelMeshMaterial(model, meshId, materialId)                             end
+
+-- Model animations loading/unloading functions
+function Raylib.LoadModelAnimations(fileName: cstring, animsCount: cint*): ModelAnimation*                                                    <inline> return LoadModelAnimations(fileName, animsCount)                                   end
+function Raylib.UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: cint)                                                         <inline>        UpdateModelAnimation(model, anim, frame)                                    end
+function Raylib.UnloadModelAnimation(anim: ModelAnimation)                                                                                    <inline>        UnloadModelAnimation(anim)                                                  end
+function Raylib.IsModelAnimationValid(model: Model, anim: ModelAnimation): boolean                                                            <inline> return IsModelAnimationValid(model, anim)                                          end
+
+-- Mesh generation functions
+function Raylib.GenMeshPoly(sides: cint, radius: float32): Mesh                                                                               <inline> return GenMeshPoly(sides, radius)                                                  end
+function Raylib.GenMeshPlane(width: float32, length: float32, resX: cint, resZ: cint): Mesh                                                   <inline> return GenMeshPlane(width, length, resX, resZ)                                     end
+function Raylib.GenMeshCube(width: float32, height: float32, length: float32): Mesh                                                           <inline> return GenMeshCube(width, height, length)                                          end
+function Raylib.GenMeshSphere(radius: float32, rings: cint, slices: cint): Mesh                                                               <inline> return GenMeshSphere(radius, rings, slices)                                        end
+function Raylib.GenMeshHemiSphere(radius: float32, rings: cint, slices: cint): Mesh                                                           <inline> return GenMeshHemiSphere(radius, rings, slices)                                    end
+function Raylib.GenMeshCylinder(radius: float32, height: float32, slices: cint): Mesh                                                         <inline> return GenMeshCylinder(radius, height, slices)                                     end
+function Raylib.GenMeshTorus(radius: float32, size: float32, radSeg: cint, sides: cint): Mesh                                                 <inline> return GenMeshTorus(radius, size, radSeg, sides)                                   end
+function Raylib.GenMeshKnot(radius: float32, size: float32, radSeg: cint, sides: cint): Mesh                                                  <inline> return GenMeshKnot(radius, size, radSeg, sides)                                    end
+function Raylib.GenMeshHeightmap(heightmap: Image, size: Vector3): Mesh                                                                       <inline> return GenMeshHeightmap(heightmap, size)                                           end
+function Raylib.GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3): Mesh                                                                     <inline> return GenMeshCubicmap(cubicmap, cubeSize)                                         end
+
+-- Mesh manipulation functions
+function Raylib.MeshBoundingBox(mesh: Mesh): BoundingBox                                                                                      <inline> return MeshBoundingBox(mesh)                                                       end
+function Raylib.MeshTangents(mesh: Mesh*)                                                                                                     <inline>        MeshTangents(mesh)                                                          end
+function Raylib.MeshBinormals(mesh: Mesh*)                                                                                                    <inline>        MeshBinormals(mesh)                                                         end
+
+-- Model drawing functions
+function Raylib.DrawModel(model: Model, position: Vector3, scale: float32, tint: Color)                                                       <inline>        DrawModel(model, position, scale, tint)                                     end
+function Raylib.DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color)      <inline>        DrawModelEx(model, position, rotationAxis, rotationAngle, scale, tint)      end
+function Raylib.DrawModelWires(model: Model, position: Vector3, scale: float32, tint: Color)                                                  <inline>        DrawModelWires(model, position, scale, tint)                                end
+function Raylib.DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: float32, scale: Vector3, tint: Color) <inline>        DrawModelWiresEx(model, position, rotationAxis, rotationAngle, scale, tint) end
+function Raylib.DrawBoundingBox(box: BoundingBox, color: Color)                                                                               <inline>        DrawBoundingBox(box, color)                                                 end
+function Raylib.DrawBillboard(camera: Camera, texture: Texture2D, center: Vector3, size: float32, tint: Color)                                <inline>        DrawBillboard(camera, texture, center, size, tint)                          end
+function Raylib.DrawBillboardRec(camera: Camera, texture: Texture2D, sourceRec: Rectangle, center: Vector3, size: float32, tint: Color)       <inline>        DrawBillboardRec(camera, texture, sourceRec, center, size, tint)            end
+
+-- Collision detection functions
+function Raylib.CheckCollisionSpheres(centerA: Vector3, radiusA: float32, centerB: Vector3, radiusB: float32): boolean                        <inline> return CheckCollisionSpheres(centerA, radiusA, centerB, radiusB)                   end
+function Raylib.CheckCollisionBoxes(box1: BoundingBox, box2: BoundingBox): boolean                                                            <inline> return CheckCollisionBoxes(box1, box2)                                             end
+function Raylib.CheckCollisionBoxSphere(box: BoundingBox, center: Vector3, radius: float32): boolean                                          <inline> return CheckCollisionBoxSphere(box, center, radius)                                end
+function Raylib.CheckCollisionRaySphere(ray: Ray, center: Vector3, radius: float32): boolean                                                  <inline> return CheckCollisionRaySphere(ray, center, radius)                                end
+function Raylib.CheckCollisionRaySphereEx(ray: Ray, center: Vector3, radius: float32, collisionPoint: Vector3*): boolean                       <inline> return CheckCollisionRaySphereEx(ray, center, radius, collisionPoint)              end
+function Raylib.CheckCollisionRayBox(ray: Ray, box: BoundingBox): boolean                                                                     <inline> return CheckCollisionRayBox(ray, box)                                              end
+function Raylib.GetCollisionRayModel(ray: Ray, model: Model): RayHitInfo                                                                      <inline> return GetCollisionRayModel(ray, model)                                            end
+function Raylib.GetCollisionRayTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3): RayHitInfo                                          <inline> return GetCollisionRayTriangle(ray, p1, p2, p3)                                    end
+function Raylib.GetCollisionRayGround(ray: Ray, groundHeight: float32): RayHitInfo                                                            <inline> return GetCollisionRayGround(ray, groundHeight)                                    end
+
+-----------------------------------
+-- Raylib function definitions ] --
+-----------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === MODELS MODULE === ]
+------------------------------------------------------------------------------------------------------------------------
