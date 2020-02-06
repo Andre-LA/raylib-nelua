@@ -1036,9 +1036,9 @@ function Raylib.IsMouseButtonUp(button: cint): boolean          <inline> return 
 function Raylib.GetMouseX(): cint                               <inline> return GetMouseX()                      end
 function Raylib.GetMouseY(): cint                               <inline> return GetMouseY()                      end
 function Raylib.GetMousePosition(): Vector2                     <inline> return GetMousePosition()               end
-function Raylib.SetMousePosition(x: cint, y: cint)              <inline> return SetMousePosition(x, y)           end
-function Raylib.SetMouseOffset(offsetX: cint, offsetY: cint)    <inline> return SetMouseOffset(offsetX, offsetY) end
-function Raylib.SetMouseScale(scaleX: float32, scaleY: float32) <inline> return SetMouseScale(scaleX, scaleY)    end
+function Raylib.SetMousePosition(x: cint, y: cint)              <inline>        SetMousePosition(x, y)           end
+function Raylib.SetMouseOffset(offsetX: cint, offsetY: cint)    <inline>        SetMouseOffset(offsetX, offsetY) end
+function Raylib.SetMouseScale(scaleX: float32, scaleY: float32) <inline>        SetMouseScale(scaleX, scaleY)    end
 function Raylib.GetMouseWheelMove(): cint                       <inline> return GetMouseWheelMove()              end
 
 -- Input-related functions: touch
@@ -1049,7 +1049,7 @@ function Raylib.GetTouchPosition(index: cint): Vector2 <inline> return GetTouchP
 --------------------------------------------------------------------------------------
 -- Gestures and Touch Handling Functions (Module: gestures)
 --------------------------------------------------------------------------------------
-function Raylib.SetGesturesEnabled(gestureFlags: cuint)   <inline> return SetGesturesEnabled(gestureFlags) end
+function Raylib.SetGesturesEnabled(gestureFlags: cuint)   <inline>        SetGesturesEnabled(gestureFlags) end
 function Raylib.IsGestureDetected(gesture: cint): boolean <inline> return IsGestureDetected(gesture)       end
 function Raylib.GetGestureDetected(): cint                <inline> return GetGestureDetected()             end
 function Raylib.GetTouchPointsCount(): cint               <inline> return GetTouchPointsCount()            end
@@ -1062,12 +1062,12 @@ function Raylib.GetGesturePinchAngle(): float32           <inline> return GetGes
 --------------------------------------------------------------------------------------
 -- Camera System Functions (Module: camera)
 --------------------------------------------------------------------------------------
-function Raylib.SetCameraMode(camera: Camera, mode: cint) <inline> return SetCameraMode(camera, mode)         end
-function Raylib.UpdateCamera(camera: Camera*)             <inline> return UpdateCamera(camera)                end
+function Raylib.SetCameraMode(camera: Camera, mode: cint) <inline>        SetCameraMode(camera, mode)         end
+function Raylib.UpdateCamera(camera: Camera*)             <inline>        UpdateCamera(camera)                end
 
-function Raylib.SetCameraPanControl(panKey: cint)         <inline> return SetCameraPanControl(panKey)         end
-function Raylib.SetCameraAltControl(altKey: cint)         <inline> return SetCameraAltControl(altKey)         end
-function Raylib.SetCameraSmoothZoomControl(szKey: cint)   <inline> return SetCameraSmoothZoomControl(szKey)   end
+function Raylib.SetCameraPanControl(panKey: cint)         <inline>        SetCameraPanControl(panKey)         end
+function Raylib.SetCameraAltControl(altKey: cint)         <inline>        SetCameraAltControl(altKey)         end
+function Raylib.SetCameraSmoothZoomControl(szKey: cint)   <inline>        SetCameraSmoothZoomControl(szKey)   end
 function Raylib.SetCameraMoveControls(frontKey: cint, backKey: cint, rightKey: cint, leftKey: cint, upKey: cint, downKey: cint) <inline>
    SetCameraMoveControls(frontKey, backKey, rightKey, leftKey, upKey, downKey)
 end
