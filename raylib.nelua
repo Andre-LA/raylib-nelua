@@ -43,7 +43,7 @@ global Matrix     <cimport, nodecl> = @record{                                  
    m2: float32, m6: float32, m10: float32, m14: float32,
    m3: float32, m7: float32, m11: float32, m15: float32
 }
-global Color     <cimport, nodecl> = @record{r: cuchar, g: cuchar, b: cuchar, a: cuchar}              -- Color type, RGBA (32bit)
+global Color     <cimport, nodecl> = @record{r: uint8, g: uint8, b: uint8, a: uint8}              -- Color type, RGBA (32bit)
 global Rectangle <cimport, nodecl> = @record{x: float32, y: float32, width: float32, height: float32} -- Rectangle type
 
 -- Image type, bpp always RGBA (32bit)
@@ -1158,7 +1158,7 @@ local function CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vect
 -- Basic shapes drawing functions
 function Raylib.DrawPixel(posX: cint, posY: cint, color: Color)                                                                                            <inline>        DrawPixel(posX, posY, color)                                                           end
 function Raylib.DrawPixelV(position: Vector2, color: Color)                                                                                                <inline>        DrawPixelV(position, color)                                                            end
-function Raylib.DrawLine(startPosX: cint, startPosY: cint, endPosX: cint, endPosY: cint, color: Color)                                                     <inline>        DrawLine(startPosX, startPosY, endPosX, endPosY, color)                                end
+function Raylib.DrawLine(startPosX: cint <autocast>, startPosY: cint <autocast>, endPosX: cint <autocast>, endPosY: cint <autocast>, color: Color)                                                     <inline>        DrawLine(startPosX, startPosY, endPosX, endPosY, color)                                end
 function Raylib.DrawLineV(startPos: Vector2, endPos: Vector2, color: Color)                                                                                <inline>        DrawLineV(startPos, endPos, color)                                                     end
 function Raylib.DrawLineEx(startPos: Vector2, endPos: Vector2, thick: float32, color: Color)                                                               <inline>        DrawLineEx(startPos, endPos, thick, color)                                             end
 function Raylib.DrawLineBezier(startPos: Vector2, endPos: Vector2, thick: float32, color: Color)                                                           <inline>        DrawLineBezier(startPos, endPos, thick, color)                                         end
