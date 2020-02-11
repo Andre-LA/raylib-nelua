@@ -34,7 +34,7 @@ for i = 0, < MAX_BUILDINGS do
    buildColors[i] = {
       (@uint8)(Raylib.GetRandomValue(200, 240)),
       (@uint8)(Raylib.GetRandomValue(200, 240)),
-      (@uint8)(Raylib.GetRandomValue(200, 250)), 
+      (@uint8)(Raylib.GetRandomValue(200, 250)),
       255_u8}
 end
 
@@ -53,9 +53,9 @@ while not Raylib.WindowShouldClose() do
    -- [[ Update [[
 
    -- player movement
-   if Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) then
+   if Raylib.IsKeyDown(KeyboardKey.RIGHT) then
       player.x = player.x + 2
-   elseif Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
+   elseif Raylib.IsKeyDown(KeyboardKey.LEFT) then
       player.x = player.x - 2
    end
 
@@ -63,9 +63,9 @@ while not Raylib.WindowShouldClose() do
    camera.target = { player.x + 20, player.y + 20 }
 
    -- camera rotation controls
-   if Raylib.IsKeyDown(KeyboardKey.KEY_A) then
+   if Raylib.IsKeyDown(KeyboardKey.A) then
       camera.rotation = camera.rotation - 1
-   elseif Raylib.IsKeyDown(KeyboardKey.KEY_S) then
+   elseif Raylib.IsKeyDown(KeyboardKey.S) then
       camera.rotation = camera.rotation + 1
    end
 
@@ -85,7 +85,7 @@ while not Raylib.WindowShouldClose() do
       camera.zoom = 0.1
    end
 
-   if Raylib.IsKeyPressed(KeyboardKey.KEY_R) then
+   if Raylib.IsKeyPressed(KeyboardKey.R) then
       camera.zoom = 1
       camera.rotation = 0
    end

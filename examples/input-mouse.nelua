@@ -20,11 +20,11 @@ Raylib.SetTargetFPS(60)
 while (not Raylib.WindowShouldClose()) do
    ballPosition = Raylib.GetMousePosition()
 
-   if Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) then
+   if Raylib.IsMouseButtonPressed(MouseButton.LEFT_BUTTON) then
       ballColor = RaylibColors.Maroon
-   elseif Raylib.IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE_BUTTON) then
+   elseif Raylib.IsMouseButtonPressed(MouseButton.MIDDLE_BUTTON) then
       ballColor = RaylibColors.Lime
-   elseif Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON) then
+   elseif Raylib.IsMouseButtonPressed(MouseButton.RIGHT_BUTTON) then
       ballColor = RaylibColors.Darkblue
    end
 

@@ -15,16 +15,16 @@ Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - keyboard i
 Raylib.SetTargetFPS(60)
 
 while (not Raylib.WindowShouldClose()) do
-   if Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) then
+   if Raylib.IsKeyDown(KeyboardKey.RIGHT) then
       ballPosition.x = ballPosition.x + 2.0
    end
-   if Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
+   if Raylib.IsKeyDown(KeyboardKey.LEFT) then
       ballPosition.x = ballPosition.x - 2.0
    end
-   if Raylib.IsKeyDown(KeyboardKey.KEY_UP) then
+   if Raylib.IsKeyDown(KeyboardKey.UP) then
       ballPosition.y = ballPosition.y - 2.0
    end
-   if Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) then
+   if Raylib.IsKeyDown(KeyboardKey.DOWN) then
       ballPosition.y = ballPosition.y + 2.0
    end
 
