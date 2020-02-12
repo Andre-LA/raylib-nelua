@@ -12,7 +12,7 @@ local screenHeight: integer <comptime> = 450
 
 Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - mouse input")
 
-local ballPosition = (@Vector2){x = -100, y = -100}
+local ballPosition: Vector2 = {x = -100, y = -100}
 local ballColor: Color = RaylibColors.Darkblue
 
 Raylib.SetTargetFPS(60)
