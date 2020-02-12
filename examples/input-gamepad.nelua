@@ -91,20 +91,20 @@ while not Raylib.WindowShouldClose() do
             -- Draw axis: left joystick
             Raylib.DrawCircle(259, 152, 39, RaylibColors.Black)
             Raylib.DrawCircle(259, 152, 34, RaylibColors.Lightgray)
-            Raylib.DrawCircle(259 + (@cint)(Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_X) * 20),
-                              152 - (@cint)(Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_Y) * 20), 25, RaylibColors.Black)
+            Raylib.DrawCircle(259 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_X) * 20,
+                              152 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_Y) * 20, 25, RaylibColors.Black)
 
             -- Draw axis: right joystick
             Raylib.DrawCircle(461, 237, 38, RaylibColors.Black)
             Raylib.DrawCircle(461, 237, 33, RaylibColors.Lightgray)
-            Raylib.DrawCircle(259 + (@cint)(Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_X) * 20),
-                              152 - (@cint)(Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_Y) * 20), 25, RaylibColors.Black)
+            Raylib.DrawCircle(259 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_X) * 20,
+                              152 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_Y) * 20, 25, RaylibColors.Black)
 
             -- Draw axis: left-right triggers
             Raylib.DrawRectangle(170, 30, 15, 70, RaylibColors.Gray)
             Raylib.DrawRectangle(604, 30, 15, 70, RaylibColors.Gray)
-            Raylib.DrawRectangle(170, 30, 15, (@cint)(((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_TRIGGER)) / 2) * 70), RaylibColors.Red)
-            Raylib.DrawRectangle(604, 30, 15, (@cint)(((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_TRIGGER)) / 2) * 70), RaylibColors.Red)
+            Raylib.DrawRectangle(170, 30, 15, ((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_TRIGGER)) / 2) * 70, RaylibColors.Red)
+            Raylib.DrawRectangle(604, 30, 15, ((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_TRIGGER)) / 2) * 70, RaylibColors.Red)
          else
             Raylib.DrawTexture(texPs3Pad, 0, 0, RaylibColors.Darkgray);
 
@@ -136,18 +136,18 @@ while not Raylib.WindowShouldClose() do
             -- Draw axis: left joystick
             Raylib.DrawCircle(319, 255, 35, RaylibColors.Black);
             Raylib.DrawCircle(319, 255, 31, RaylibColors.Lightgray);
-            Raylib.DrawCircle(319 + (@cint)(Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_X)*20), 255 + (@cint)(Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_Y)*20), 25, RaylibColors.Black);
+            Raylib.DrawCircle(319 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_X)*20, 255 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_Y) * 20, 25, RaylibColors.Black);
 
             -- Draw axis: right joystick
             Raylib.DrawCircle(475, 255, 35, RaylibColors.Black);
             Raylib.DrawCircle(475, 255, 31, RaylibColors.Lightgray);
-            Raylib.DrawCircle(475 + (@cint)(Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_X)*20), 255 + (@cint)(Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_Y)*20), 25, RaylibColors.Black);
+            Raylib.DrawCircle(475 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_X) * 20, 255 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_Y) * 20, 25, RaylibColors.Black);
 
             -- Draw axis: left-right triggers
             Raylib.DrawRectangle(169, 48, 15, 70, RaylibColors.Gray);
             Raylib.DrawRectangle(611, 48, 15, 70, RaylibColors.Gray);
-            Raylib.DrawRectangle(169, 48, 15, (@cint)(((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_TRIGGER))/2_f32)*70), RaylibColors.Red);
-            Raylib.DrawRectangle(611, 48, 15, (@cint)(((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_TRIGGER))/2_f32)*70), RaylibColors.Red);
+            Raylib.DrawRectangle(169, 48, 15, ((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_TRIGGER)) / 2) * 70, RaylibColors.Red);
+            Raylib.DrawRectangle(611, 48, 15, ((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_TRIGGER)) / 2) * 70, RaylibColors.Red);
          end
 
          Raylib.DrawText(TextFormat_i("DETECTED AXIS [%i]:", Raylib.GetGamepadAxisCount(GamepadNumber.PLAYER1)), 10, 50, 10, RaylibColors.Maroon)
