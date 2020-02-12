@@ -2,7 +2,7 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
--- This code is based on the "input keys" example by raysan5, available at: https://www.raylib.com/examples.html
+-- This code is based on the "input mouse" example by raysan5, available at: https://www.raylib.com/examples.html
 
 ## strict = true
 require 'raylib'
