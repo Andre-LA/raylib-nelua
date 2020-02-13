@@ -5,7 +5,23 @@
 -- This code is based on the "2D camera platformer" example by raysan5, available at: https://www.raylib.com/examples.html
 
 ## strict = true
+
+require 'math'
 require 'raylib'
+
+-- TODO: Include 'raymath', 'camera' and 'gestures' extra modules into raylib.nelua
+-- in a nelua-ish way (for example, import the subtourines below, but also implement
+-- Vector2 methods for them)
+
+-- ('raymath', 'camera', 'gestures', 'raygui', 'easings', 'physac 'are extra modules with
+-- additional features, however only 'raymath', 'camera 'and 'gestures 'are compiled
+-- by default with raylib)
+
+## cinclude '<raymath.h>'
+local function Vector2Add(v1: Vector2, v2: Vector2): Vector2                <cimport 'Vector2Add'     , nodecl> end
+local function Vector2Subtract(v1: Vector2, v2: Vector2): Vector2           <cimport 'Vector2Subtract', nodecl> end
+local function Vector2Length(v: Vector2): float32                           <cimport 'Vector2Length'  , nodecl> end
+local function Vector2Scale(v: Vector2, scale: float32 <autocast>): Vector2 <cimport 'Vector2Scale'   , nodecl> end
 
 --[==[
 #include "raymath.h"
@@ -27,7 +43,7 @@ local EnvItem = @record{
    color: Color
 }
 
-local function UpdatePlayer(player: Player*, envItems: EnvItem[0], envItemsLength: integer, delta: number)
+local function UpdatePlayer(player: Player*, envItems: EnvItem[0], envItemsLength: uinteger, delta: number)
    if Raylib.IsKeyDown(KeyboardKey.LEFT) then
       player.position.x = player.position.x - PLAYER_HOR_SPD * delta
    end
@@ -42,18 +58,19 @@ local function UpdatePlayer(player: Player*, envItems: EnvItem[0], envItemsLengt
 
    local hitObstacle = false
 
-   for i = 0, < envItemsLength do
+   for i = 0_u, < envItemsLength do
       local p: Vector2* = &player.position
+      local ei: EnvItem* = &envItems[i]
 
-      if envItems[i].blocking and
-         envItems[i].rect.x <= p.x and
-         envItems[i].rect.x + envItems[i].rect.width >= p.x and
-         envItems[i].rect.y >= p.y and
-         envItems[i].rect.y < p.y + player.speed * delta
+      if ei.blocking
+         and ei.rect.x <= p.x
+         and ei.rect.x + ei.rect.width >= p.x
+         and ei.rect.y >= p.y
+         and ei.rect.y < p.y + player.speed * delta
       then
          hitObstacle = true
          player.speed = 0
-         p.y = envItems[i].rect.y
+         p.y = ei.rect.y
       end
    end
 
@@ -66,111 +83,96 @@ local function UpdatePlayer(player: Player*, envItems: EnvItem[0], envItemsLengt
    end
 end
 
+--local function UpdateCameraCenter(camera: Camera2D*, player: Player*, envItems: EnvItem[0], envItemsLength: uinteger, delta: number, width: integer, height: integer)
+local function UpdateCameraCenter(camera: Camera2D*, player: Player*, width: integer, height: integer)
+   camera.offset = (@Vector2){ width/2, height/2 }
+   camera.target = player.position
+end
+
+local function UpdateCameraCenterInsideMap(camera: Camera2D*, player: Player*, envItems: EnvItem[0], envItemsLength: uinteger, width: integer, height: integer)
+   camera.target = player.position
+   camera.offset = (@Vector2){ width/2, height/2 }
+   local minX, minY, maxX, maxY = 1000.0, 1000.0, -1000.0, -1000.0
+
+   for i = 0_u, < envItemsLength do
+      local ei: EnvItem* = &envItems[i]
+
+      minX = math.min(ei.rect.x, minX)
+      maxX = math.max(ei.rect.x + ei.rect.width, maxX)
+      minY = math.min(ei.rect.y, minY)
+      maxY = math.max(ei.rect.y + ei.rect.height, maxY)
+   end
+
+   local max: Vector2 = Raylib.GetWorldToScreen2D((@Vector2){ maxX, maxY }, $camera)
+   local min: Vector2 = Raylib.GetWorldToScreen2D((@Vector2){ minX, minY }, $camera)
+
+   if max.x < width  then camera.offset.x = width  - (max.x - width/2)  end
+   if max.y < height then camera.offset.y = height - (max.y - height/2) end
+   if min.x > 0 then camera.offset.x = width/2  - min.x end
+   if min.y > 0 then camera.offset.y = height/2 - min.y end
+end
+
+local function UpdateCameraCenterSmoothFollow(camera: Camera2D*, player: Player*, delta: number, width: integer, height: integer)
+   local minSpeed: number <comptime> = 30
+   local minEffectLength: number <comptime> = 10
+   local fractionSpeed: number <comptime> = 0.8
+
+   camera.offset = (@Vector2){ width/2, height/2 }
+   local diff = Vector2Subtract(player.position, camera.target)
+   local length = Vector2Length(diff)
+
+   if length > minEffectLength then
+      local speed = math.max(fractionSpeed * length, minSpeed)
+      camera.target = Vector2Add(camera.target, Vector2Scale(diff, speed * delta / length))
+   end
+end
+
+local function UpdateCameraEvenOutOnLanding(camera: Camera2D*, player: Player*, delta: number, width: integer, height: integer)
+   local evenOutSpeed: number <comptime> = 700
+   local eveningOut: boolean <static> = false
+   local evenOutTarget: number <static>;
+
+   camera.offset = (@Vector2){ width/2, height/2 }
+   camera.target.x = player.position.x
+
+   if eveningOut then
+      if evenOutTarget > camera.target.y then
+         camera.target.y = camera.target.y + evenOutSpeed * delta
+
+         if camera.target.y > evenOutTarget then
+            camera.target.y = evenOutTarget
+            eveningOut = false
+         end
+      else
+         camera.target.y = camera.target.y - evenOutSpeed * delta
+
+         if camera.target.y < evenOutTarget then
+            camera.target.y = evenOutTarget
+            eveningOut = false
+         end
+      end
+   else
+      if player.canJump and player.speed == 0 and player.position.y ~= camera.target.y then
+         eveningOut = true
+         evenOutTarget = player.position.y
+      end
+   end
+end
+
+local function UpdateCameraPlayerBoundsPush(camera: Camera2D*, player: Player*, width: integer, height: integer)
+   local bbox: Vector2 <const> = { 0.2, 0.2 }
+
+   local bboxWorldMin = Raylib.GetScreenToWorld2D((@Vector2){ (1-bbox.x) * 0.5 * width, (1-bbox.y) * 0.5 * height }, $camera)
+   local bboxWorldMax = Raylib.GetScreenToWorld2D((@Vector2){ (1+bbox.x) * 0.5 * width, (1+bbox.y) * 0.5 * height }, $camera)
+   camera.offset = (@Vector2){ (1-bbox.x) * 0.5 * width, (1-bbox.y) * 0.5 * height }
+
+   if player.position.x < bboxWorldMin.x then camera.target.x = player.position.x end
+   if player.position.y < bboxWorldMin.y then camera.target.y = player.position.y end
+   if player.position.x > bboxWorldMax.x then camera.target.x = bboxWorldMin.x + (player.position.x - bboxWorldMax.x) end
+   if player.position.y > bboxWorldMax.y then camera.target.y = bboxWorldMin.y + (player.position.y - bboxWorldMax.y) end
+end
+
 --[===[
-
-void UpdateCameraCenter(Camera2D *camera, Player *player, EnvItem *envItems, int envItemsLength, float delta, int width, int height)
-{
-    camera->offset = (Vector2){ width/2, height/2 };
-    camera->target = player->position;
-}
-
-void UpdateCameraCenterInsideMap(Camera2D *camera, Player *player, EnvItem *envItems, int envItemsLength, float delta, int width, int height)
-{
-    camera->target = player->position;
-    camera->offset = (Vector2){ width/2, height/2 };
-    float minX = 1000, minY = 1000, maxX = -1000, maxY = -1000;
-
-    for (int i = 0; i < envItemsLength; i++)
-    {
-        EnvItem *ei = envItems + i;
-        minX = fminf(ei->rect.x, minX);
-        maxX = fmaxf(ei->rect.x + ei->rect.width, maxX);
-        minY = fminf(ei->rect.y, minY);
-        maxY = fmaxf(ei->rect.y + ei->rect.height, maxY);
-    }
-
-    Vector2 max = GetWorldToScreen2D((Vector2){ maxX, maxY }, *camera);
-    Vector2 min = GetWorldToScreen2D((Vector2){ minX, minY }, *camera);
-
-    if (max.x < width) camera->offset.x = width - (max.x - width/2);
-    if (max.y < height) camera->offset.y = height - (max.y - height/2);
-    if (min.x > 0) camera->offset.x = width/2 - min.x;
-    if (min.y > 0) camera->offset.y = height/2 - min.y;
-}
-
-void UpdateCameraCenterSmoothFollow(Camera2D *camera, Player *player, EnvItem *envItems, int envItemsLength, float delta, int width, int height)
-{
-    static float minSpeed = 30;
-    static float minEffectLength = 10;
-    static float fractionSpeed = 0.8f;
-
-    camera->offset = (Vector2){ width/2, height/2 };
-    Vector2 diff = Vector2Subtract(player->position, camera->target);
-    float length = Vector2Length(diff);
-
-    if (length > minEffectLength)
-    {
-        float speed = fmaxf(fractionSpeed*length, minSpeed);
-        camera->target = Vector2Add(camera->target, Vector2Scale(diff, speed*delta/length));
-    }
-}
-
-void UpdateCameraEvenOutOnLanding(Camera2D *camera, Player *player, EnvItem *envItems, int envItemsLength, float delta, int width, int height)
-{
-    static float evenOutSpeed = 700;
-    static int eveningOut = false;
-    static float evenOutTarget;
-
-    camera->offset = (Vector2){ width/2, height/2 };
-    camera->target.x = player->position.x;
-
-    if (eveningOut)
-    {
-        if (evenOutTarget > camera->target.y)
-        {
-            camera->target.y += evenOutSpeed*delta;
-
-            if (camera->target.y > evenOutTarget)
-            {
-                camera->target.y = evenOutTarget;
-                eveningOut = 0;
-            }
-        }
-        else
-        {
-            camera->target.y -= evenOutSpeed*delta;
-
-            if (camera->target.y < evenOutTarget)
-            {
-                camera->target.y = evenOutTarget;
-                eveningOut = 0;
-            }
-        }
-    }
-    else
-    {
-        if (player->canJump && (player->speed == 0) && (player->position.y != camera->target.y))
-        {
-            eveningOut = 1;
-            evenOutTarget = player->position.y;
-        }
-    }
-}
-
-void UpdateCameraPlayerBoundsPush(Camera2D *camera, Player *player, EnvItem *envItems, int envItemsLength, float delta, int width, int height)
-{
-    static Vector2 bbox = { 0.2f, 0.2f };
-
-    Vector2 bboxWorldMin = GetScreenToWorld2D((Vector2){ (1 - bbox.x)*0.5f*width, (1 - bbox.y)*0.5f*height }, *camera);
-    Vector2 bboxWorldMax = GetScreenToWorld2D((Vector2){ (1 + bbox.x)*0.5f*width, (1 + bbox.y)*0.5f*height }, *camera);
-    camera->offset = (Vector2){ (1 - bbox.x)*0.5f * width, (1 - bbox.y)*0.5f*height };
-
-    if (player->position.x < bboxWorldMin.x) camera->target.x = player->position.x;
-    if (player->position.y < bboxWorldMin.y) camera->target.y = player->position.y;
-    if (player->position.x > bboxWorldMax.x) camera->target.x = bboxWorldMin.x + (player->position.x - bboxWorldMax.x);
-    if (player->position.y > bboxWorldMax.y) camera->target.y = bboxWorldMin.y + (player->position.y - bboxWorldMax.y);
-}
-
 int main(void)
 {
     // Initialization
