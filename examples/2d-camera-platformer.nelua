@@ -29,40 +29,40 @@ local EnvItem = @record{
 
 local function UpdatePlayer(player: Player*, envItems: EnvItem[0], envItemsLength: integer, delta: number)
    if Raylib.IsKeyDown(KeyboardKey.LEFT) then
-      ($player).position.x = ($player).position.x - PLAYER_HOR_SPD * delta
+      player.position.x = player.position.x - PLAYER_HOR_SPD * delta
    end
    if Raylib.IsKeyDown(KeyboardKey.RIGHT) then
-      ($player).position.x = ($player).position.x + PLAYER_HOR_SPD * delta
+      player.position.x = player.position.x + PLAYER_HOR_SPD * delta
    end
 
-   if Raylib.IsKeyDown(KeyboardKey.SPACE) and ($player).canJump then
-      ($player).speed = -PLAYER_JUMP_SPD;
-      ($player).canJump = false
+   if Raylib.IsKeyDown(KeyboardKey.SPACE) and player.canJump then
+      player.speed = -PLAYER_JUMP_SPD;
+      player.canJump = false
    end
 
    local hitObstacle = false
 
    for i = 0, < envItemsLength do
-      local p: Vector2* = &($player).position
+      local p: Vector2* = &player.position
 
       if envItems[i].blocking and
-         envItems[i].rect.x <= ($p).x and
-         envItems[i].rect.x + envItems[i].rect.width >= ($p).x and
-         envItems[i].rect.y >= ($p).y and
-         envItems[i].rect.y < ($p).y + ($player).speed * delta
+         envItems[i].rect.x <= p.x and
+         envItems[i].rect.x + envItems[i].rect.width >= p.x and
+         envItems[i].rect.y >= p.y and
+         envItems[i].rect.y < p.y + player.speed * delta
       then
          hitObstacle = true
-         ($player).speed = 0
-         ($p).y = envItems[i].rect.y
+         player.speed = 0
+         p.y = envItems[i].rect.y
       end
    end
 
    if not hitObstacle then
-      ($player).position.y = ($player).position.y + ($player).speed * delta;
-      ($player).speed = ($player).speed + G * delta;
-      ($player).canJump = false
+      player.position.y = player.position.y + player.speed * delta;
+      player.speed = player.speed + G * delta;
+      player.canJump = false
    else
-      ($player).canJump = true
+      player.canJump = true
    end
 end
 
