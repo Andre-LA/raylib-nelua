@@ -22,7 +22,7 @@ local Player = @record{
 }
 
 local EnvItem = @record{
-   rect: Vector2,
+   rect: Rectangle,
    blocking: integer,
    color: Color
 }
@@ -36,47 +36,37 @@ local function UpdatePlayer(player: Player*, envItems: EnvItem[0], envItemsLengt
    end
 
    if Raylib.IsKeyDown(KeyboardKey.SPACE) and ($player).canJump then
-      ($player).speed = -PLAYER_JUMP_SPD
-      --($player).canJump = false
+      ($player).speed = -PLAYER_JUMP_SPD;
+      ($player).canJump = false
+   end
+
+   local hitObstacle = false
+
+   for i = 0, < envItemsLength do
+      local p: Vector2* = &($player).position
+
+      if envItems[i].blocking and
+         envItems[i].rect.x <= ($p).x and
+         envItems[i].rect.x + envItems[i].rect.width >= ($p).x and
+         envItems[i].rect.y >= ($p).y and
+         envItems[i].rect.y < ($p).y + ($player).speed * delta
+      then
+         hitObstacle = true
+         ($player).speed = 0
+         ($p).y = envItems[i].rect.y
+      end
+   end
+
+   if not hitObstacle then
+      ($player).position.y = ($player).position.y + ($player).speed * delta;
+      ($player).speed = ($player).speed + G * delta;
+      ($player).canJump = false
+   else
+      ($player).canJump = true
    end
 end
 
 --[===[
-void UpdatePlayer(Player *player, EnvItem *envItems, int envItemsLength, float delta)
-{
-    if (IsKeyDown(KEY_LEFT)) player->position.x -= PLAYER_HOR_SPD*delta;
-    if (IsKeyDown(KEY_RIGHT)) player->position.x += PLAYER_HOR_SPD*delta;
-    if (IsKeyDown(KEY_SPACE) && player->canJump)
-    {
-        player->speed = -PLAYER_JUMP_SPD;
-        player->canJump = false;
-    }
-
-    int hitObstacle = 0;
-    for (int i = 0; i < envItemsLength; i++)
-    {
-        EnvItem *ei = envItems + i;
-        Vector2 *p = &(player->position);
-        if (ei->blocking &&
-            ei->rect.x <= p->x &&
-            ei->rect.x + ei->rect.width >= p->x &&
-            ei->rect.y >= p->y &&
-            ei->rect.y < p->y + player->speed*delta)
-        {
-            hitObstacle = 1;
-            player->speed = 0.0f;
-            p->y = ei->rect.y;
-        }
-    }
-
-    if (!hitObstacle)
-    {
-        player->position.y += player->speed*delta;
-        player->speed += G*delta;
-        player->canJump = false;
-    }
-    else player->canJump = true;
-}
 
 void UpdateCameraCenter(Camera2D *camera, Player *player, EnvItem *envItems, int envItemsLength, float delta, int width, int height)
 {
