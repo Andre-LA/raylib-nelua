@@ -14,7 +14,7 @@ require 'raylib'
 -- Vector2 methods for them)
 
 -- ('raymath', 'camera', 'gestures', 'raygui', 'easings', 'physac 'are extra modules with
--- additional features, however only 'raymath', 'camera 'and 'gestures 'are compiled
+-- additional features, however only 'raymath', 'camera 'and 'gestures' are compiled
 -- by default with raylib)
 
 ## cinclude '<raymath.h>'
@@ -22,10 +22,6 @@ local function Vector2Add(v1: Vector2, v2: Vector2): Vector2                <cim
 local function Vector2Subtract(v1: Vector2, v2: Vector2): Vector2           <cimport 'Vector2Subtract', nodecl> end
 local function Vector2Length(v: Vector2): float32                           <cimport 'Vector2Length'  , nodecl> end
 local function Vector2Scale(v: Vector2, scale: float32 <autocast>): Vector2 <cimport 'Vector2Scale'   , nodecl> end
-
---[==[
-#include "raymath.h"
---]==]
 
 local G: integer <comptime> = 400
 local PLAYER_JUMP_SPD: number <comptime> = 350
@@ -39,11 +35,11 @@ local Player = @record{
 
 local EnvItem = @record{
    rect: Rectangle,
-   blocking: integer,
+   blocking: boolean,
    color: Color
 }
 
-local function UpdatePlayer(player: Player*, envItems: EnvItem[0], envItemsLength: uinteger, delta: number)
+local function UpdatePlayer(player: Player*, envItems: EnvItem[0]*, envItemsLength: uinteger, delta: number)
    if Raylib.IsKeyDown(KeyboardKey.LEFT) then
       player.position.x = player.position.x - PLAYER_HOR_SPD * delta
    end
@@ -89,7 +85,7 @@ local function UpdateCameraCenter(camera: Camera2D*, player: Player*, width: int
    camera.target = player.position
 end
 
-local function UpdateCameraCenterInsideMap(camera: Camera2D*, player: Player*, envItems: EnvItem[0], envItemsLength: uinteger, width: integer, height: integer)
+local function UpdateCameraCenterInsideMap(camera: Camera2D*, player: Player*, envItems: EnvItem[0]*, envItemsLength: uinteger, width: integer, height: integer)
    camera.target = player.position
    camera.offset = (@Vector2){ width/2, height/2 }
    local minX, minY, maxX, maxY = 1000.0, 1000.0, -1000.0, -1000.0
@@ -172,117 +168,108 @@ local function UpdateCameraPlayerBoundsPush(camera: Camera2D*, player: Player*, 
    if player.position.y > bboxWorldMax.y then camera.target.y = bboxWorldMin.y + (player.position.y - bboxWorldMax.y) end
 end
 
---[===[
-int main(void)
-{
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+local function UpdateCamera(cameraOption: uinteger, camera: Camera2D*, player: Player*, envItems: EnvItem[0]*, envItemsLength: uinteger, delta: number, width: integer, height: integer)
+   switch cameraOption
+   case 0 then
+      UpdateCameraCenter(camera, player, width, height)
+   case 1 then
+      UpdateCameraCenterInsideMap(camera, player, envItems, envItemsLength, width, height)
+   case 2 then
+      UpdateCameraCenterSmoothFollow(camera, player, delta, width, height)
+   case 3 then
+      UpdateCameraEvenOutOnLanding(camera, player, delta, width, height)
+   case 4 then
+      UpdateCameraPlayerBoundsPush(camera, player, width, height)
+   else
+      print("invalid camera mode")
+   end
+end
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - 2d camera");
+-- [ Initialization [
+local screenWidth: integer <comptime> = 800
+local screenHeight: integer <comptime> = 450
 
-    Player player = { 0 };
-    player.position = (Vector2){ 400, 280 };
-    player.speed = 0;
-    player.canJump = false;
-    EnvItem envItems[] = {
-        {{ 0, 0, 1000, 400 }, 0, LIGHTGRAY },
-        {{ 0, 400, 1000, 200 }, 1, GRAY },
-        {{ 300, 200, 400, 10 }, 1, GRAY },
-        {{ 250, 300, 100, 10 }, 1, GRAY },
-        {{ 650, 300, 100, 10 }, 1, GRAY }
-    };
+Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - 2d camera platformer")
 
-    int envItemsLength = sizeof(envItems)/sizeof(envItems[0]);
-
-    Camera2D camera = { 0 };
-    camera.target = player.position;
-    camera.offset = (Vector2){ screenWidth/2, screenHeight/2 };
-    camera.rotation = 0.0f;
-    camera.zoom = 1.0f;
-
-    // Store pointers to the multiple update camera functions
-    void (*cameraUpdaters[])(Camera2D*, Player*, EnvItem*, int, float, int, int) = {
-        UpdateCameraCenter,
-        UpdateCameraCenterInsideMap,
-        UpdateCameraCenterSmoothFollow,
-        UpdateCameraEvenOutOnLanding,
-        UpdateCameraPlayerBoundsPush
-    };
-
-    int cameraOption = 0;
-    int cameraUpdatersLength = sizeof(cameraUpdaters)/sizeof(cameraUpdaters[0]);
-
-    char *cameraDescriptions[] = {
-        "Follow player center",
-        "Follow player center, but clamp to map edges",
-        "Follow player center; smoothed",
-        "Follow player center horizontally; updateplayer center vertically after landing",
-        "Player push camera on getting too close to screen edge"
-    };
-
-    SetTargetFPS(60);
-    //--------------------------------------------------------------------------------------
-
-    // Main game loop
-    while (!WindowShouldClose())
-    {
-        // Update
-        //----------------------------------------------------------------------------------
-        float deltaTime = GetFrameTime();
-
-        UpdatePlayer(&player, envItems, envItemsLength, deltaTime);
-
-        camera.zoom += ((float)GetMouseWheelMove()*0.05f);
-
-        if (camera.zoom > 3.0f) camera.zoom = 3.0f;
-        else if (camera.zoom < 0.25f) camera.zoom = 0.25f;
-
-        if (IsKeyPressed(KEY_R))
-        {
-            camera.zoom = 1.0f;
-            player.position = (Vector2){ 400, 280 };
-        }
-
-        if (IsKeyPressed(KEY_C)) cameraOption = (cameraOption + 1)%cameraUpdatersLength;
-
-        // Call update camera function by its pointer
-        cameraUpdaters[cameraOption](&camera, &player, envItems, envItemsLength, deltaTime, screenWidth, screenHeight);
-        //----------------------------------------------------------------------------------
-
-        // Draw
-        //----------------------------------------------------------------------------------
-        BeginDrawing();
-
-            ClearBackground(LIGHTGRAY);
-
-            BeginMode2D(camera);
-
-                for (int i = 0; i < envItemsLength; i++) DrawRectangleRec(envItems[i].rect, envItems[i].color);
-
-                Rectangle playerRect = { player.position.x - 20, player.position.y - 40, 40, 40 };
-                DrawRectangleRec(playerRect, RED);
-
-            EndMode2D();
-
-            DrawText("Controls:", 20, 20, 10, BLACK);
-            DrawText("- Right/Left to move", 40, 40, 10, DARKGRAY);
-            DrawText("- Space to jump", 40, 60, 10, DARKGRAY);
-            DrawText("- Mouse Wheel to Zoom in-out, R to reset zoom", 40, 80, 10, DARKGRAY);
-            DrawText("- C to change camera mode", 40, 100, 10, DARKGRAY);
-            DrawText("Current camera mode:", 20, 120, 10, BLACK);
-            DrawText(cameraDescriptions[cameraOption], 40, 140, 10, DARKGRAY);
-
-        EndDrawing();
-        //----------------------------------------------------------------------------------
-    }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-
-    return 0;
+local player: Player = {
+   position = (@Vector2){ 400, 280 },
+   speed = 0,
+   canJump = false
 }
---]===]
+
+local envItems: EnvItem[5] = {
+   { (@Rectangle){   0,   0, 1000, 400 }, false, RaylibColors.Lightgray },
+   { (@Rectangle){   0, 400, 1000, 200 },  true, RaylibColors.Gray      },
+   { (@Rectangle){ 300, 200,  400,  10 },  true, RaylibColors.Gray      },
+   { (@Rectangle){ 250, 300,  100,  10 },  true, RaylibColors.Gray      },
+   { (@Rectangle){ 650, 300,  100,  10 },  true, RaylibColors.Gray      }
+}
+
+local camera: Camera2D = {
+   target = player.position,
+   offset = (@Vector2){ screenWidth/2, screenHeight/2 },
+   rotation = 0,
+   zoom = 1
+}
+
+local cameraOption = 0_u
+
+local cameraDescriptions: string[5] = {
+   "Follow player center",
+   "Follow player center, but clamp to map edges",
+   "Follow player center; smoothed",
+   "Follow player center horizontally; updateplayer center vertically after landing",
+   "Player push camera on getting too close to screen edge"
+}
+
+Raylib.SetTargetFPS(60)
+-- ] Initialization ]
+
+-- Main game loop
+while not Raylib.WindowShouldClose() do
+   -- [ Update [
+   local deltaTime = Raylib.GetFrameTime()
+
+   -- TODO: there is a way to simplify this?
+   UpdatePlayer(&player, (@EnvItem[0]*)(&envItems), #envItems, deltaTime)
+
+   camera.zoom = math.max(math.min(camera.zoom + Raylib.GetMouseWheelMove() * 0.05, 3), 0.25)
+
+   if Raylib.IsKeyPressed(KeyboardKey.R) then
+      camera.zoom = 1
+      player.position = (@Vector2){ 400, 280 }
+   end
+
+   if Raylib.IsKeyPressed(KeyboardKey.C) then
+     cameraOption = (cameraOption + 1)  % #cameraDescriptions
+   end
+
+   UpdateCamera(cameraOption, &camera, &player, (@EnvItem[0]*)(&envItems), #envItems, deltaTime, screenWidth, screenHeight)
+   -- ] Update ]
+
+   -- [ Draw [
+   Raylib.BeginDrawing()
+      Raylib.ClearBackground(RaylibColors.Lightgray)
+
+      Raylib.BeginMode2D(camera)
+         for i = 0, < #envItems do
+            Raylib.DrawRectangleRec(envItems[i].rect, envItems[i].color)
+         end
+
+         local playerRect: Rectangle = { player.position.x - 20, player.position.y - 40, 40, 40 }
+         Raylib.DrawRectangleRec(playerRect, RaylibColors.Red)
+      Raylib.EndMode2D()
+
+      Raylib.DrawText("Controls:", 20, 20, 10, RaylibColors.Black)
+      Raylib.DrawText("- Right/Left to move", 40, 40, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("- Space to jump", 40, 60, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("- Mouse wheel to zoom in-out, R to reset zoom", 40, 80, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("- C to change camera mode", 40, 100, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("Current camera mode:", 20, 120, 10, RaylibColors.Black)
+      Raylib.DrawText(cameraDescriptions[cameraOption], 40, 140, 10, RaylibColors.Darkgray)
+   Raylib.EndDrawing()
+   -- ] Draw ]
+end
+
+-- De-initialization
+Raylib.CloseWindow()
