@@ -1714,22 +1714,33 @@ function Raymath.Vector2Lerp(v1: Vector2, v2: Vector2, amount: float32 <autocast
 -- Applying to Vector2 records - Vector2 math [
 ------------------------------------------------------------------------------------
 
-function Vector2.Zero(): Vector2                                        <cimport'Vector2Zero'      , nodecl> end
-function Vector2.One(): Vector2                                         <cimport'Vector2One'       , nodecl> end
+function Vector2.Zero(): Vector2                                                     <cimport'Vector2Zero'      , nodecl> end -- Vector with components value 0.0f
+function Vector2.One(): Vector2                                                      <cimport'Vector2One'       , nodecl> end -- Vector with components value 1.0f
+function Vector2.Add(v1: Vector2, v2: Vector2): Vector2                              <cimport'Vector2Add'       , nodecl> end -- Add two vectors (v1 + v2)
+function Vector2.Subtract(v1: Vector2, v2: Vector2): Vector2                         <cimport'Vector2Subtract'  , nodecl> end -- Subtract two vectors (v1 - v2)
+function Vector2.Length(v: Vector2): float32                                         <cimport'Vector2Length'    , nodecl> end -- Calculate vector length
+function Vector2.DotProduct(v1: Vector2, v2: Vector2): float32                       <cimport'Vector2DotProduct', nodecl> end -- Calculate two vectors dot product
+function Vector2.Distance(v1: Vector2, v2: Vector2): float32                         <cimport'Vector2Distance'  , nodecl> end -- Calculate distance between two vectors
+function Vector2.Angle(v1: Vector2, v2: Vector2): float32                            <cimport'Vector2Angle'     , nodecl> end -- Calculate angle from two vectors in X-axis
+function Vector2.Scale(v: Vector2, scale: float32 <autocast>): Vector2               <cimport'Vector2Scale'     , nodecl> end -- Scale vector (multiply by value)
+function Vector2.MultiplyV(v1: Vector2, v2: Vector2): Vector2                        <cimport'Vector2MultiplyV' , nodecl> end -- Multiply vector by vector
+function Vector2.Negate(v: Vector2): Vector2                                         <cimport'Vector2Negate'    , nodecl> end -- Negate vector
+function Vector2.Divide(v: Vector2, div: float32 <autocast>): Vector2                <cimport'Vector2Divide'    , nodecl> end -- Divide vector by a float value
+function Vector2.DivideV(v1: Vector2, v2: Vector2): Vector2                          <cimport'Vector2DivideV'   , nodecl> end -- Divide vector by vector
+function Vector2.Normalize(v: Vector2): Vector2                                      <cimport'Vector2Normalize' , nodecl> end -- Normalize provided vector
+function Vector2.Lerp(v1: Vector2, v2: Vector2, amount: float32 <autocast>): Vector2 <cimport'Vector2Lerp'      , nodecl> end -- Calculate linear interpolation between two vectors
 
-function Vector2:Add(v2: Vector2): Vector2                              return Raymath.Vector2Add($self, v2)          end
-function Vector2:Subtract(v2: Vector2): Vector2                         return Raymath.Vector2Subtract($self, v2)     end
-function Vector2:Length(): float32                                      return Raymath.Vector2Length($self)           end
-function Vector2:DotProduct(v2: Vector2): float32                       return Raymath.Vector2DotProduct($self, v2)   end
-function Vector2:Distance(v2: Vector2): float32                         return Raymath.Vector2Distance($self, v2)     end
-function Vector2:Angle(v2: Vector2): float32                            return Raymath.Vector2Angle($self, v2)        end
-function Vector2:Scale(scale: float32 <autocast>): Vector2              return Raymath.Vector2Scale($self, scale)     end
-function Vector2:MultiplyV(v2: Vector2): Vector2                        return Raymath.Vector2MultiplyV($self, v2)    end
-function Vector2:Negate(): Vector2                                      return Raymath.Vector2Negate($self)           end
-function Vector2:Divide(div: float32 <autocast>): Vector2               return Raymath.Vector2Divide($self, div)      end
-function Vector2:DivideV(v2: Vector2): Vector2                          return Raymath.Vector2DivideV($self, v2)      end
-function Vector2:Normalize(): Vector2                                   return Raymath.Vector2Normalize($self)        end
-function Vector2:Lerp(v2: Vector2, amount: float32 <autocast>): Vector2 return Raymath.Vector2Lerp($self, v2, amount) end
+function Vector2.__add(v1: Vector2, v2: Vector2): Vector2                            <cimport'Vector2Add'       , nodecl> end -- Add two vectors (v1 + v2)
+function Vector2.__sub(v1: Vector2, v2: Vector2): Vector2                            <cimport'Vector2Subtract'  , nodecl> end -- Subtract two vectors (v1 - v2)
+function Vector2.__len(v: Vector2): float32                                          <cimport'Vector2Length'    , nodecl> end -- Calculate vector length
+
+function Vector2.__mul(v: Vector2, scale: float32 <autocast>): Vector2               <cimport'Vector2Scale'     , nodecl> end -- Scale vector (multiply by value)
+-- function Vector2.__mul(v1: Vector2, v2: Vector2): Vector2                         <cimport'Vector2MultiplyV' , nodecl> end -- Multiply vector by vector
+function Vector2.__unm(v: Vector2): Vector2                                          <cimport'Vector2Negate'    , nodecl> end -- Negate vector
+function Vector2.__div(v: Vector2, div: float32 <autocast>): Vector2                 <cimport'Vector2Divide'    , nodecl> end -- Divide vector by a float value
+-- function Vector2.__div(v1: Vector2, v2: Vector2): Vector2                         <cimport'Vector2DivideV'   , nodecl> end -- Divide vector by vector
+
+-- TODO: add __mul and __div to Vector2MultiplyV and Vector2DivideV respectively, probably using concepts.
 
 ------------------------------------------------------------------------------------
 -- Applying to Vector2 records - Vector2 math ]
