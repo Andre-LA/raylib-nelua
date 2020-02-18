@@ -1746,7 +1746,7 @@ function Raymath.Vector3Zero(void): Vector3                                     
 function Raymath.Vector3One(void): Vector3                                                  <cimport'Vector3One'               , nodecl> end -- Vector with components value 1.0f
 function Raymath.Vector3Add(v1: Vector3, v2: Vector3): Vector3                              <cimport'Vector3Add'               , nodecl> end -- Add two vectors
 function Raymath.Vector3Subtract(v1: Vector3, v2: Vector3): Vector3                         <cimport'Vector3Subtract'          , nodecl> end -- Subtract two vectors
-function Raymath.Vector3Scale(v: Vector3, scalar: float32 <autocast>): Vector3                         <cimport'Vector3Scale'             , nodecl> end -- Multiply vector by scalar
+function Raymath.Vector3Scale(v: Vector3, scalar: float32 <autocast>): Vector3              <cimport'Vector3Scale'             , nodecl> end -- Multiply vector by scalar
 function Raymath.Vector3Multiply(v1: Vector3, v2: Vector3): Vector3                         <cimport'Vector3Multiply'          , nodecl> end -- Multiply vector by vector
 function Raymath.Vector3CrossProduct(v1: Vector3, v2: Vector3): Vector3                     <cimport'Vector3CrossProduct'      , nodecl> end -- Calculate two vectors cross product
 function Raymath.Vector3Perpendicular(v: Vector3): Vector3                                  <cimport'Vector3Perpendicular'     , nodecl> end -- Calculate one vector perpendicular vector
@@ -1754,7 +1754,7 @@ function Raymath.Vector3Length(v: Vector3): float32                             
 function Raymath.Vector3DotProduct(v1: Vector3, v2: Vector3): float32                       <cimport'Vector3DotProduct'        , nodecl> end -- Calculate two vectors dot product
 function Raymath.Vector3Distance(v1: Vector3, v2: Vector3): float32                         <cimport'Vector3Distance'          , nodecl> end -- Calculate distance between two vectors
 function Raymath.Vector3Negate(v: Vector3): Vector3                                         <cimport'Vector3Negate'            , nodecl> end -- Negate provided vector (invert direction)
-function Raymath.Vector3Divide(v: Vector3, div: float32 <autocast>): Vector3                           <cimport'Vector3Divide'            , nodecl> end -- Divide vector by a float value
+function Raymath.Vector3Divide(v: Vector3, div: float32 <autocast>): Vector3                <cimport'Vector3Divide'            , nodecl> end -- Divide vector by a float value
 function Raymath.Vector3DivideV(v1: Vector3, v2: Vector3): Vector3                          <cimport'Vector3DivideV'           , nodecl> end -- Divide vector by vector
 function Raymath.Vector3Normalize(v: Vector3): Vector3                                      <cimport'Vector3Normalize'         , nodecl> end -- Normalize provided vector
 
@@ -1765,7 +1765,7 @@ function Raymath.Vector3OrthoNormalize(v1: Vector3*, v2: Vector3*): void        
 
 function Raymath.Vector3Transform(v: Vector3, mat: Matrix): Vector3                         <cimport'Vector3Transform'         , nodecl> end -- Transforms a Vector3 by a given Matrix
 function Raymath.Vector3RotateByQuaternion(v: Vector3, q: Quaternion): Vector3              <cimport'Vector3RotateByQuaternion', nodecl> end -- Transform a vector by quaternion rotation
-function Raymath.Vector3Lerp(v1: Vector3, v2: Vector3, amount: float32 <autocast>): Vector3            <cimport'Vector3Lerp'              , nodecl> end -- Calculate linear interpolation between two vectors
+function Raymath.Vector3Lerp(v1: Vector3, v2: Vector3, amount: float32 <autocast>): Vector3 <cimport'Vector3Lerp'              , nodecl> end -- Calculate linear interpolation between two vectors
 function Raymath.Vector3Reflect(v: Vector3, normal: Vector3): Vector3                       <cimport'Vector3Reflect'           , nodecl> end -- Calculate reflected vector to normal
 function Raymath.Vector3Min(v1: Vector3, v2: Vector3): Vector3                              <cimport'Vector3Min'               , nodecl> end -- Return min value for each pair of components
 function Raymath.Vector3Max(v1: Vector3, v2: Vector3): Vector3                              <cimport'Vector3Max'               , nodecl> end -- Return max value for each pair of components
