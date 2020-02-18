@@ -1683,8 +1683,8 @@ global RAD2DEG: number <cimport, nodecl>
 -- Module Functions Definition - Utils math [
 ------------------------------------------------------------------------------------
 
-function Raylib.Clamp(value: float32 <autocast>, min: float32 <autocast>, max: float32 <autocast>): float32    <cimport'Clamp', nodecl> end -- Clamp float value
-function Raylib.Lerp(start: float32 <autocast>, _end: float32 <autocast>, amount: float32 <autocast>): float32 <cimport'Lerp' , nodecl> end -- Calculate linear interpolation between two floats
+function Raymath.Clamp(value: float32 <autocast>, min: float32 <autocast>, max: float32 <autocast>): float32    <cimport'Clamp', nodecl> end -- Clamp float value
+function Raymath.Lerp(start: float32 <autocast>, _end: float32 <autocast>, amount: float32 <autocast>): float32 <cimport'Lerp' , nodecl> end -- Calculate linear interpolation between two floats
 
 ------------------------------------------------------------------------------------
 -- Module Functions Definition - Utils math ]
