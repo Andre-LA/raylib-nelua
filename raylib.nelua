@@ -2003,6 +2003,83 @@ function Matrix._mul(left: Matrix, right: Matrix): Matrix                       
 -- Module Functions Definition - Matrix math ]
 ------------------------------------------------------------------------------------
 
+------------------------------------------------------------------------------------
+-- Module Functions Definition - Quaternion math [
+------------------------------------------------------------------------------------
+
+function Raymath.QuaternionIdentity(): Quaternion                                                                     <cimport'QuaternionIdentity'            , nodecl> end -- Returns identity quaternion
+function Raymath.QuaternionLength(q: Quaternion): float32                                                             <cimport'QuaternionLength'              , nodecl> end-- Computes the length of a quaternion
+function Raymath.QuaternionNormalize(q: Quaternion): Quaternion                                                       <cimport'QuaternionNormalize'           , nodecl> end-- Normalize provided quaternion
+function Raymath.QuaternionInvert(q: Quaternion): Quaternion                                                          <cimport'QuaternionInvert'              , nodecl> end-- Invert provided quaternion
+function Raymath.QuaternionMultiply(q1: Quaternion, q2: Quaternion): Quaternion                                       <cimport'QuaternionMultiply'            , nodecl> end-- Calculate two quaternion multiplication
+function Raymath.QuaternionLerp(q1: Quaternion, q2: Quaternion, amount: float32): Quaternion                          <cimport'QuaternionLerp'                , nodecl> end-- Calculate linear interpolation between two quaternions
+function Raymath.QuaternionNlerp(q1: Quaternion, q2: Quaternion, amount: float32): Quaternion                         <cimport'QuaternionNlerp'               , nodecl> end-- Calculate slerp-optimized interpolation between two quaternions
+function Raymath.QuaternionSlerp(q1: Quaternion, q2: Quaternion, amount: float32): Quaternion                         <cimport'QuaternionSlerp'               , nodecl> end-- Calculates spherical linear interpolation between two quaternions
+function Raymath.QuaternionFromVector3ToVector3(from: Vector3, to: Vector3): Quaternion                               <cimport'QuaternionFromVector3ToVector3', nodecl> end-- Calculate quaternion based on the rotation from one vector to another
+function Raymath.QuaternionFromMatrix(mat: Matrix): Quaternion                                                        <cimport'QuaternionFromMatrix'          , nodecl> end-- Returns a quaternion for a given rotation matrix
+function Raymath.QuaternionToMatrix(q: Quaternion): Matrix                                                            <cimport'QuaternionToMatrix'            , nodecl> end-- Returns a matrix for a given quaternion
+
+-- Returns rotation quaternion for an angle and axis
+-- NOTE: angle must be provided in radians
+function Raymath.QuaternionFromAxisAngle(axis: Vector3, angle: float32): Quaternion                                   <cimport'QuaternionFromAxisAngle'       , nodecl> end
+
+function Raymath.QuaternionToAxisAngle(q: Quaternion, outAxis: Vector3*, outAngle: float32*)                          <cimport'QuaternionToAxisAngle'         , nodecl> end-- Returns the rotation angle and axis for a given quaternion
+function Raymath.QuaternionFromEuler(roll: float32, pitch: float32, yaw: float32): Quaternion                         <cimport'QuaternionFromEuler'           , nodecl> end-- Returns he quaternion equivalent to Euler angles
+
+-- Return the Euler angles equivalent to quaternion (roll, pitch, yaw)
+-- NOTE: Angles are returned in a Vector3 struct in degrees
+function Raymath.QuaternionToEuler(q: Quaternion): Vector3                                                            <cimport'QuaternionToEuler'             , nodecl> end
+
+function Raymath.QuaternionTransform(q: Quaternion, mat: Matrix): Quaternion                                          <cimport'QuaternionTransform'           , nodecl> end-- Transform a quaternion given a transformation matrix
+
+------------------------------------------------------------------------------------
+-- Applying to Matrix record - Matrix math [
+------------------------------------------------------------------------------------
+
+function Quaternion.Identity(): Quaternion                                                                              <cimport'QuaternionIdentity'            , nodecl> end -- Returns identity quaternion
+function Quaternion.Length(q: Quaternion): float32                                                                      <cimport'QuaternionLength'              , nodecl> end-- Computes the length of a quaternion
+function Quaternion.Normalize(q: Quaternion): Quaternion                                                                <cimport'QuaternionNormalize'           , nodecl> end-- Normalize provided quaternion
+function Quaternion.Invert(q: Quaternion): Quaternion                                                                   <cimport'QuaternionInvert'              , nodecl> end-- Invert provided quaternion
+function Quaternion.Multiply(q1: Quaternion, q2: Quaternion): Quaternion                                                <cimport'QuaternionMultiply'            , nodecl> end-- Calculate two quaternion multiplication
+function Quaternion.Lerp(q1: Quaternion, q2: Quaternion, amount: float32 <autocast>): Quaternion                        <cimport'QuaternionLerp'                , nodecl> end-- Calculate linear interpolation between two quaternions
+function Quaternion.Nlerp(q1: Quaternion, q2: Quaternion, amount: float32 <autocast>): Quaternion                       <cimport'QuaternionNlerp'               , nodecl> end-- Calculate slerp-optimized interpolation between two quaternions
+function Quaternion.Slerp(q1: Quaternion, q2: Quaternion, amount: float32 <autocast>): Quaternion                       <cimport'QuaternionSlerp'               , nodecl> end-- Calculates spherical linear interpolation between two quaternions
+function Quaternion.FromVector3ToVector3(from: Vector3, to: Vector3): Quaternion                                        <cimport'QuaternionFromVector3ToVector3', nodecl> end-- Calculate quaternion based on the rotation from one vector to another
+function Quaternion.FromMatrix(mat: Matrix): Quaternion                                                                 <cimport'QuaternionFromMatrix'          , nodecl> end-- Returns a quaternion for a given rotation matrix
+function Quaternion.ToMatrix(q: Quaternion): Matrix                                                                     <cimport'QuaternionToMatrix'            , nodecl> end-- Returns a matrix for a given quaternion
+
+-- Returns rotation quaternion for an angle and axis
+-- NOTE: angle must be provided in radians
+function Quaternion.FromAxisAngle(axis: Vector3, angle: float32 <autocast>): Quaternion                                 <cimport'QuaternionFromAxisAngle'       , nodecl> end
+
+function Quaternion.ToAxisAngle(q: Quaternion, outAxis: Vector3*, outAngle: float32*)                                   <cimport'QuaternionToAxisAngle'         , nodecl> end-- Returns the rotation angle and axis for a given quaternion
+function Quaternion.FromEuler(roll: float32 <autocast>, pitch: float32 <autocast>, yaw: float32 <autocast>): Quaternion <cimport'QuaternionFromEuler'           , nodecl> end-- Returns he quaternion equivalent to Euler angles
+
+-- Return the Euler angles equivalent to quaternion (roll, pitch, yaw)
+-- NOTE: Angles are returned in a Vector3 struct in degrees
+function Quaternion.ToEuler(q: Quaternion): Vector3                                                                     <cimport'QuaternionToEuler'             , nodecl> end
+
+function Quaternion.Transform(q: Quaternion, mat: Matrix): Quaternion                                                   <cimport'QuaternionTransform'           , nodecl> end-- Transform a quaternion given a transformation matrix
+
+------------------------------------------------------------------------------------
+-- Operator overloading to Matrix record - Matrix math [
+------------------------------------------------------------------------------------
+
+function Quaternion.__len(q: Quaternion): float32                                                                       <cimport'QuaternionLength'              , nodecl> end-- Computes the length of a quaternion
+function Quaternion.__mul(q1: Quaternion, q2: Quaternion): Quaternion                                                   <cimport'QuaternionMultiply'            , nodecl> end-- Calculate two quaternion multiplication
+
+------------------------------------------------------------------------------------
+-- Operator overloading to Matrix record - Matrix math ]
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-- Applying to Matrix record - Matrix math ]
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-- Module Functions Definition - Quaternion math ]
+------------------------------------------------------------------------------------
+
 ------------------------------------------------------------------------------------------------------------------------
 -- === RAYMATH === ]
 ------------------------------------------------------------------------------------------------------------------------
