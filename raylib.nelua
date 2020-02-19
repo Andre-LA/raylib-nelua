@@ -1831,6 +1831,68 @@ function Raymath.Vector3Barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector
 function Raymath.Vector3ToFloatV(v: Vector3): float32                                       <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
 
 ------------------------------------------------------------------------------------
+-- Applying to Vector3 records - Vector3 math [
+------------------------------------------------------------------------------------
+
+function Vector3.Zero(): Vector3                                                     <cimport'Vector3Zero'              , nodecl> end -- Vector with components value 0.0f
+function Vector3.One(): Vector3                                                      <cimport'Vector3One'               , nodecl> end -- Vector with components value 1.0f
+function Vector3.Add(v1: Vector3, v2: Vector3): Vector3                              <cimport'Vector3Add'               , nodecl> end -- Add two vectors
+function Vector3.Subtract(v1: Vector3, v2: Vector3): Vector3                         <cimport'Vector3Subtract'          , nodecl> end -- Subtract two vectors
+function Vector3.Scale(v: Vector3, scalar: float32 <autocast>): Vector3              <cimport'Vector3Scale'             , nodecl> end -- Multiply vector by scalar
+function Vector3.Multiply(v1: Vector3, v2: Vector3): Vector3                         <cimport'Vector3Multiply'          , nodecl> end -- Multiply vector by vector
+function Vector3.CrossProduct(v1: Vector3, v2: Vector3): Vector3                     <cimport'Vector3CrossProduct'      , nodecl> end -- Calculate two vectors cross product
+function Vector3.Perpendicular(v: Vector3): Vector3                                  <cimport'Vector3Perpendicular'     , nodecl> end -- Calculate one vector perpendicular vector
+function Vector3.Length(v: Vector3): float32                                         <cimport'Vector3Length'            , nodecl> end -- Calculate vector length
+function Vector3.DotProduct(v1: Vector3, v2: Vector3): float32                       <cimport'Vector3DotProduct'        , nodecl> end -- Calculate two vectors dot product
+function Vector3.Distance(v1: Vector3, v2: Vector3): float32                         <cimport'Vector3Distance'          , nodecl> end -- Calculate distance between two vectors
+function Vector3.Negate(v: Vector3): Vector3                                         <cimport'Vector3Negate'            , nodecl> end -- Negate provided vector (invert direction)
+function Vector3.Divide(v: Vector3, div: float32 <autocast>): Vector3                <cimport'Vector3Divide'            , nodecl> end -- Divide vector by a float value
+function Vector3.DivideV(v1: Vector3, v2: Vector3): Vector3                          <cimport'Vector3DivideV'           , nodecl> end -- Divide vector by vector
+function Vector3.Normalize(v: Vector3): Vector3                                      <cimport'Vector3Normalize'         , nodecl> end -- Normalize provided vector
+
+-- Orthonormalize provided vectors
+-- Makes vectors normalized and orthogonal to each other
+-- Gram-Schmidt function implementation
+function Vector3.OrthoNormalize(v1: Vector3*, v2: Vector3*)                          <cimport'Vector3OrthoNormalize'    , nodecl> end
+
+function Vector3.Transform(v: Vector3, mat: Matrix): Vector3                         <cimport'Vector3Transform'         , nodecl> end -- Transforms a Vector3 by a given Matrix
+function Vector3.RotateByQuaternion(v: Vector3, q: Quaternion): Vector3              <cimport'Vector3RotateByQuaternion', nodecl> end -- Transform a vector by quaternion rotation
+function Vector3.Lerp(v1: Vector3, v2: Vector3, amount: float32 <autocast>): Vector3 <cimport'Vector3Lerp'              , nodecl> end -- Calculate linear interpolation between two vectors
+function Vector3.Reflect(v: Vector3, normal: Vector3): Vector3                       <cimport'Vector3Reflect'           , nodecl> end -- Calculate reflected vector to normal
+function Vector3.Min(v1: Vector3, v2: Vector3): Vector3                              <cimport'Vector3Min'               , nodecl> end -- Return min value for each pair of components
+function Vector3.Max(v1: Vector3, v2: Vector3): Vector3                              <cimport'Vector3Max'               , nodecl> end -- Return max value for each pair of components
+
+-- Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c)
+-- NOTE: Assumes P is on the plane of the triangle
+function Vector3.Barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector3): Vector3 <cimport'Vector3Barycenter'        , nodecl> end
+function Vector3.ToFloatV(v: Vector3): float32                                       <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
+
+function Vector3.__add(v1: Vector3, v2: Vector3): Vector3                            <cimport'Vector3Add'               , nodecl> end -- Add two vectors
+function Vector3.__sub(v1: Vector3, v2: Vector3): Vector3                            <cimport'Vector3Subtract'          , nodecl> end -- Subtract two vectors
+function Vector3.__len(v: Vector3): float32                                          <cimport'Vector3Length'            , nodecl> end -- Calculate vector length
+function Vector3.__unm(v: Vector3): Vector3                                          <cimport'Vector3Negate'            , nodecl> end -- Negate provided vector (invert direction)
+
+function Vector3.__mul(v: Vector3, multiplier: #[concept(function(m) return m.type.is_vector3 or m.type.is_arithmetic end)]#): Vector3 <inline>
+   ## if m.type.is_vector3 then
+      return Vector3.MultiplyV(v, multiplier)
+   ## else
+      return Vector3.Scale(v, multiplier)
+   ## end
+end -- either "Multiply vector by vector" or "Multiply vector by scalar"
+
+function Vector3.__div(v: Vector3, divisor: #[concept(function(d) return d.type.is_vector3 or d.type.is_arithmetic end)]#): Vector3 <inline>
+   ## if d.type.is_vector3 then
+      return Vector3.DivideV(v, divisor)
+   ## else
+      return Vector3.Divide(v, divisor)
+   ## end
+end -- either "Divide vector by vector" or "Divide vector by a float value"
+
+------------------------------------------------------------------------------------
+-- Applying to Vector3 records - Vector3 math ]
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
 -- Module Functions Definition - Vector3 math ]
 ------------------------------------------------------------------------------------
 
