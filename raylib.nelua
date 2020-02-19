@@ -1909,38 +1909,37 @@ end -- either "Divide vector by vector" or "Divide vector by a float value"
 ------------------------------------------------------------------------------------
 
 function Raymath.MatrixDeterminant(mat: Matrix): float32                                                                                                                                              <cimport'MatrixDeterminant', nodecl> end -- Compute matrix determinant
-function Raymath.MatrixTrace(mat: Matrix): float32                                                                                                                                                    <cimport'MatrixTrace', nodecl> end -- Returns the trace of the matrix (sum of the values along the diagonal)
-function Raymath.MatrixTranspose(mat: Matrix): Matrix                                                                                                                                                 <cimport'MatrixTranspose', nodecl> end -- Transposes provided matrix
-function Raymath.MatrixInvert(mat: Matrix): Matrix                                                                                                                                                    <cimport'MatrixInvert', nodecl> end -- Invert provided matrix
-function Raymath.MatrixNormalize(mat: Matrix): Matrix                                                                                                                                                 <cimport'MatrixNormalize', nodecl> end -- Normalize provided matrix
-function Raymath.MatrixIdentity(): Matrix                                                                                                                                                             <cimport'MatrixIdentity', nodecl> end -- Returns identity matrix
-function Raymath.MatrixAdd(left: Matrix, right: Matrix): Matrix                                                                                                                                       <cimport'MatrixAdd', nodecl> end -- Add two matrices
-function Raymath.MatrixSubtract(left: Matrix, right: Matrix): Matrix                                                                                                                                  <cimport'MatrixSubtract', nodecl> end -- Subtract two matrices (left - right)
-function Raymath.MatrixTranslate(x: float32 <autocast>, y: float32 <autocast>, z: float32 <autocast>): Matrix                                                                                         <cimport'MatrixTranslate', nodecl> end -- Returns translation matrix
+function Raymath.MatrixTrace(mat: Matrix): float32                                                                                                                                                    <cimport'MatrixTrace'      , nodecl> end -- Returns the trace of the matrix (sum of the values along the diagonal)
+function Raymath.MatrixTranspose(mat: Matrix): Matrix                                                                                                                                                 <cimport'MatrixTranspose'  , nodecl> end -- Transposes provided matrix
+function Raymath.MatrixInvert(mat: Matrix): Matrix                                                                                                                                                    <cimport'MatrixInvert'     , nodecl> end -- Invert provided matrix
+function Raymath.MatrixNormalize(mat: Matrix): Matrix                                                                                                                                                 <cimport'MatrixNormalize'  , nodecl> end -- Normalize provided matrix
+function Raymath.MatrixIdentity(): Matrix                                                                                                                                                             <cimport'MatrixIdentity'   , nodecl> end -- Returns identity matrix
+function Raymath.MatrixAdd(left: Matrix, right: Matrix): Matrix                                                                                                                                       <cimport'MatrixAdd'        , nodecl> end -- Add two matrices
+function Raymath.MatrixSubtract(left: Matrix, right: Matrix): Matrix                                                                                                                                  <cimport'MatrixSubtract'   , nodecl> end -- Subtract two matrices (left - right)
+function Raymath.MatrixTranslate(x: float32 <autocast>, y: float32 <autocast>, z: float32 <autocast>): Matrix                                                                                         <cimport'MatrixTranslate'  , nodecl> end -- Returns translation matrix
 
 -- Create rotation matrix from axis and angle
 -- NOTE: Angle should be provided in radians
-function Raymath.MatrixRotate(axis: Vector3, angle: float32 <autocast>): Matrix                                                                                                                       <cimport'MatrixRotate', nodecl> end
+function Raymath.MatrixRotate(axis: Vector3, angle: float32 <autocast>): Matrix                                                                                                                       <cimport'MatrixRotate'     , nodecl> end
 
-function Raymath.MatrixRotateXYZ(ang: Vector3): Matrix                                                                                                                                                <cimport'MatrixRotateXYZ', nodecl> end -- Returns xyz-rotation matrix (angles in radians)
-function Raymath.MatrixRotateX(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateX', nodecl> end -- Returns x-rotation matrix (angle in radians)
-function Raymath.MatrixRotateY(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateY', nodecl> end -- Returns y-rotation matrix (angle in radians)
-function Raymath.MatrixRotateZ(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateZ', nodecl> end -- Returns z-rotation matrix (angle in radians)
-function Raymath.MatrixScale(x: float32 <autocast>, y: float32 <autocast>, z: float32 <autocast>): Matrix                                                                                             <cimport'MatrixScale', nodecl> end -- Returns scaling matrix
+function Raymath.MatrixRotateXYZ(ang: Vector3): Matrix                                                                                                                                                <cimport'MatrixRotateXYZ'  , nodecl> end -- Returns xyz-rotation matrix (angles in radians)
+function Raymath.MatrixRotateX(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateX'    , nodecl> end -- Returns x-rotation matrix (angle in radians)
+function Raymath.MatrixRotateY(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateY'    , nodecl> end -- Returns y-rotation matrix (angle in radians)
+function Raymath.MatrixRotateZ(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateZ'    , nodecl> end -- Returns z-rotation matrix (angle in radians)
+function Raymath.MatrixScale(x: float32 <autocast>, y: float32 <autocast>, z: float32 <autocast>): Matrix                                                                                             <cimport'MatrixScale'      , nodecl> end -- Returns scaling matrix
 
 -- Returns two matrix multiplication
 -- NOTE: When multiplying matrices... the order matters!
-function Raymath.MatrixMultiply(left: Matrix, right: Matrix): Matrix                                                                                                                                  <cimport'MatrixMultiply', nodecl> end
+function Raymath.MatrixMultiply(left: Matrix, right: Matrix): Matrix                                                                                                                                  <cimport'MatrixMultiply'   , nodecl> end
 
-function Raymath.MatrixFrustum(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix   <cimport'MatrixFrustum', nodecl> end -- Returns perspective projection matrix
+function Raymath.MatrixFrustum(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix   <cimport'MatrixFrustum'    , nodecl> end -- Returns perspective projection matrix
 
 -- Returns perspective projection matrix
 -- NOTE: Angle should be provided in radians
 function Raymath.MatrixPerspective(fovy: float64 <autocast>, aspect: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix                                                   <cimport'MatrixPerspective', nodecl> end
 
-function Raymath.MatrixOrtho(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix                                                                                                                                                                                                                                                 <cimport'MatrixOrtho', nodecl> end -- Returns orthographic projection matrix
-function Raymath.MatrixLookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix                                                                                                                     <cimport'MatrixLookAt', nodecl> end -- Returns camera look-at matrix (view matrix)
-function Raymath.MatrixToFloatV(mat: Matrix): float16                                                                                                                                                 <cimport'MatrixToFloatV', nodecl> end -- Returns float array of matrix data
+function Raymath.MatrixOrtho(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix     <cimport'MatrixOrtho'      , nodecl> end -- Returns orthographic projection matrix
+function Raymath.MatrixLookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix                                                                                                                     <cimport'MatrixLookAt'     , nodecl> end -- Returns camera look-at matrix (view matrix)
 function Raymath.MatrixToFloatV(mat: Matrix): Float16                                                                                                                                                 <cimport'MatrixToFloatV'   , nodecl> end -- Returns float array of matrix data
 
 ------------------------------------------------------------------------------------
@@ -1948,50 +1947,49 @@ function Raymath.MatrixToFloatV(mat: Matrix): Float16                           
 ------------------------------------------------------------------------------------
 
 function Matrix.Determinant(mat: Matrix): float32                                                                                                                                              <cimport'MatrixDeterminant', nodecl> end -- Compute matrix determinant
-function Matrix.Trace(mat: Matrix): float32                                                                                                                                                    <cimport'MatrixTrace', nodecl> end -- Returns the trace of the matrix (sum of the values along the diagonal)
-function Matrix.Transpose(mat: Matrix): Matrix                                                                                                                                                 <cimport'MatrixTranspose', nodecl> end -- Transposes provided matrix
-function Matrix.Invert(mat: Matrix): Matrix                                                                                                                                                    <cimport'MatrixInvert', nodecl> end -- Invert provided matrix
-function Matrix.Normalize(mat: Matrix): Matrix                                                                                                                                                 <cimport'MatrixNormalize', nodecl> end -- Normalize provided matrix
-function Matrix.Identity(): Matrix                                                                                                                                                             <cimport'MatrixIdentity', nodecl> end -- Returns identity matrix
-function Matrix.Add(left: Matrix, right: Matrix): Matrix                                                                                                                                       <cimport'MatrixAdd', nodecl> end -- Add two matrices
-function Matrix.Subtract(left: Matrix, right: Matrix): Matrix                                                                                                                                  <cimport'MatrixSubtract', nodecl> end -- Subtract two matrices (left - right)
-function Matrix.Translate(x: float32 <autocast>, y: float32 <autocast>, z: float32 <autocast>): Matrix                                                                                         <cimport'MatrixTranslate', nodecl> end -- Returns translation matrix
+function Matrix.Trace(mat: Matrix): float32                                                                                                                                                    <cimport'MatrixTrace'      , nodecl> end -- Returns the trace of the matrix (sum of the values along the diagonal)
+function Matrix.Transpose(mat: Matrix): Matrix                                                                                                                                                 <cimport'MatrixTranspose'  , nodecl> end -- Transposes provided matrix
+function Matrix.Invert(mat: Matrix): Matrix                                                                                                                                                    <cimport'MatrixInvert'     , nodecl> end -- Invert provided matrix
+function Matrix.Normalize(mat: Matrix): Matrix                                                                                                                                                 <cimport'MatrixNormalize'  , nodecl> end -- Normalize provided matrix
+function Matrix.Identity(): Matrix                                                                                                                                                             <cimport'MatrixIdentity'   , nodecl> end -- Returns identity matrix
+function Matrix.Add(left: Matrix, right: Matrix): Matrix                                                                                                                                       <cimport'MatrixAdd'        , nodecl> end -- Add two matrices
+function Matrix.Subtract(left: Matrix, right: Matrix): Matrix                                                                                                                                  <cimport'MatrixSubtract'   , nodecl> end -- Subtract two matrices (left - right)
+function Matrix.Translate(x: float32 <autocast>, y: float32 <autocast>, z: float32 <autocast>): Matrix                                                                                         <cimport'MatrixTranslate'  , nodecl> end -- Returns translation matrix
 
 -- Create rotation matrix from axis and angle
 -- NOTE: Angle should be provided in radians
-function Matrix.Rotate(axis: Vector3, angle: float32 <autocast>): Matrix                                                                                                                       <cimport'MatrixRotate', nodecl> end
+function Matrix.Rotate(axis: Vector3, angle: float32 <autocast>): Matrix                                                                                                                       <cimport'MatrixRotate'     , nodecl> end
 
-function Matrix.RotateXYZ(ang: Vector3): Matrix                                                                                                                                                <cimport'MatrixRotateXYZ', nodecl> end -- Returns xyz-rotation matrix (angles in radians)
-function Matrix.RotateX(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateX', nodecl> end -- Returns x-rotation matrix (angle in radians)
-function Matrix.RotateY(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateY', nodecl> end -- Returns y-rotation matrix (angle in radians)
-function Matrix.RotateZ(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateZ', nodecl> end -- Returns z-rotation matrix (angle in radians)
-function Matrix.Scale(x: float32 <autocast>, y: float32 <autocast>, z: float32 <autocast>): Matrix                                                                                             <cimport'MatrixScale', nodecl> end -- Returns scaling matrix
+function Matrix.RotateXYZ(ang: Vector3): Matrix                                                                                                                                                <cimport'MatrixRotateXYZ'  , nodecl> end -- Returns xyz-rotation matrix (angles in radians)
+function Matrix.RotateX(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateX'    , nodecl> end -- Returns x-rotation matrix (angle in radians)
+function Matrix.RotateY(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateY'    , nodecl> end -- Returns y-rotation matrix (angle in radians)
+function Matrix.RotateZ(angle: float32 <autocast>): Matrix                                                                                                                                     <cimport'MatrixRotateZ'    , nodecl> end -- Returns z-rotation matrix (angle in radians)
+function Matrix.Scale(x: float32 <autocast>, y: float32 <autocast>, z: float32 <autocast>): Matrix                                                                                             <cimport'MatrixScale'      , nodecl> end -- Returns scaling matrix
 
 -- Returns two matrix multiplication
 -- NOTE: When multiplying matrices... the order matters!
-function Matrix.Multiply(left: Matrix, right: Matrix): Matrix                                                                                                                                  <cimport'MatrixMultiply', nodecl> end
+function Matrix.Multiply(left: Matrix, right: Matrix): Matrix                                                                                                                                  <cimport'MatrixMultiply'   , nodecl> end
 
-function Matrix.Frustum(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix   <cimport'MatrixFrustum', nodecl> end -- Returns perspective projection matrix
+function Matrix.Frustum(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix   <cimport'MatrixFrustum'    , nodecl> end -- Returns perspective projection matrix
 
 -- Returns perspective projection matrix
 -- NOTE: Angle should be provided in radians
 function Matrix.Perspective(fovy: float64 <autocast>, aspect: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix                                                   <cimport'MatrixPerspective', nodecl> end
 
-function Matrix.Ortho(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix                                                                                                                                                                                                                                                 <cimport'MatrixOrtho', nodecl> end -- Returns orthographic projection matrix
-function Matrix.LookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix                                                                                                                     <cimport'MatrixLookAt', nodecl> end -- Returns camera look-at matrix (view matrix)
-function Matrix.ToFloatV(mat: Matrix): float16                                                                                                                                                 <cimport'MatrixToFloatV', nodecl> end -- Returns float array of matrix data
+function Matrix.Ortho(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix     <cimport'MatrixOrtho'      , nodecl> end -- Returns orthographic projection matrix
+function Matrix.LookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix                                                                                                                     <cimport'MatrixLookAt'     , nodecl> end -- Returns camera look-at matrix (view matrix)
 function Matrix.ToFloatV(mat: Matrix): Float16                                                                                                                                                 <cimport'MatrixToFloatV'   , nodecl> end -- Returns float array of matrix data
 
 ------------------------------------------------------------------------------------
 -- Operator overloading to Matrix record - Matrix math [
 ------------------------------------------------------------------------------------
 
-function Matrix._add(left: Matrix, right: Matrix): Matrix                                                                                                                                       <cimport'MatrixAdd', nodecl> end -- Add two matrices
-function Matrix._sub(left: Matrix, right: Matrix): Matrix                                                                                                                                      <cimport'MatrixSubtract', nodecl> end -- Subtract two matrices (left - right)
+function Matrix._add(left: Matrix, right: Matrix): Matrix                                                                                                                                      <cimport'MatrixAdd'        , nodecl> end -- Add two matrices
+function Matrix._sub(left: Matrix, right: Matrix): Matrix                                                                                                                                      <cimport'MatrixSubtract'   , nodecl> end -- Subtract two matrices (left - right)
 
 -- Returns two matrix multiplication
 -- NOTE: When multiplying matrices... the order matters!
-function Matrix._mul(left: Matrix, right: Matrix): Matrix                                                                                                                                      <cimport'MatrixMultiply', nodecl> end
+function Matrix._mul(left: Matrix, right: Matrix): Matrix                                                                                                                                      <cimport'MatrixMultiply'   , nodecl> end
 
 ------------------------------------------------------------------------------------
 -- Operator overloading to Matrix record - Matrix math ]
