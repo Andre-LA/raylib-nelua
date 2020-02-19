@@ -1754,7 +1754,7 @@ function Raymath.Vector2Normalize(v: Vector2): Vector2                          
 function Raymath.Vector2Lerp(v1: Vector2, v2: Vector2, amount: float32 <autocast>): Vector2 <cimport'Vector2Lerp'      , nodecl> end -- Calculate linear interpolation between two vectors
 
 ------------------------------------------------------------------------------------
--- Applying to Vector2 records - Vector2 math [
+-- Applying to Vector2 record - Vector2 math [
 ------------------------------------------------------------------------------------
 
 function Vector2.Zero(): Vector2                                                     <cimport'Vector2Zero'      , nodecl> end -- Vector with components value 0.0f
@@ -1772,6 +1772,10 @@ function Vector2.Divide(v: Vector2, div: float32 <autocast>): Vector2           
 function Vector2.DivideV(v1: Vector2, v2: Vector2): Vector2                          <cimport'Vector2DivideV'   , nodecl> end -- Divide vector by vector
 function Vector2.Normalize(v: Vector2): Vector2                                      <cimport'Vector2Normalize' , nodecl> end -- Normalize provided vector
 function Vector2.Lerp(v1: Vector2, v2: Vector2, amount: float32 <autocast>): Vector2 <cimport'Vector2Lerp'      , nodecl> end -- Calculate linear interpolation between two vectors
+
+------------------------------------------------------------------------------------
+-- Operator overloading to Vector2 record - Vector2 math [
+------------------------------------------------------------------------------------
 
 function Vector2.__add(v1: Vector2, v2: Vector2): Vector2                            <cimport'Vector2Add'       , nodecl> end -- Add two vectors (v1 + v2)
 function Vector2.__sub(v1: Vector2, v2: Vector2): Vector2                            <cimport'Vector2Subtract'  , nodecl> end -- Subtract two vectors (v1 - v2)
@@ -1795,7 +1799,11 @@ function Vector2.__div(v: Vector2, divisor: #[concept(function(d) return d.type.
 end  -- either "Divide vector by vector" or "Divide vector by a float value"
 
 ------------------------------------------------------------------------------------
--- Applying to Vector2 records - Vector2 math ]
+-- Operator overloading to Vector2 record - Vector2 math ]
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-- Applying to Vector2 record - Vector2 math ]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
@@ -1839,7 +1847,7 @@ function Raymath.Vector3Barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector
 function Raymath.Vector3ToFloatV(v: Vector3): float32                                       <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
 
 ------------------------------------------------------------------------------------
--- Applying to Vector3 records - Vector3 math [
+-- Applying to Vector3 record - Vector3 math [
 ------------------------------------------------------------------------------------
 
 function Vector3.Zero(): Vector3                                                     <cimport'Vector3Zero'              , nodecl> end -- Vector with components value 0.0f
@@ -1875,6 +1883,10 @@ function Vector3.Max(v1: Vector3, v2: Vector3): Vector3                         
 function Vector3.Barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector3): Vector3 <cimport'Vector3Barycenter'        , nodecl> end
 function Vector3.ToFloatV(v: Vector3): float32                                       <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
 
+------------------------------------------------------------------------------------
+-- Operator overloading to Vector3 record - Vector3 math [
+------------------------------------------------------------------------------------
+
 function Vector3.__add(v1: Vector3, v2: Vector3): Vector3                            <cimport'Vector3Add'               , nodecl> end -- Add two vectors
 function Vector3.__sub(v1: Vector3, v2: Vector3): Vector3                            <cimport'Vector3Subtract'          , nodecl> end -- Subtract two vectors
 function Vector3.__len(v: Vector3): float32                                          <cimport'Vector3Length'            , nodecl> end -- Calculate vector length
@@ -1897,7 +1909,11 @@ function Vector3.__div(v: Vector3, divisor: #[concept(function(d) return d.type.
 end -- either "Divide vector by vector" or "Divide vector by a float value"
 
 ------------------------------------------------------------------------------------
--- Applying to Vector3 records - Vector3 math ]
+-- Operator overloading to Vector3 record - Vector3 math ]
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------
+-- Applying to Vector3 record - Vector3 math ]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
