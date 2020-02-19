@@ -37,9 +37,17 @@ global Raylib = @record{}
 -----------------------------------
 
 global Vector2    <cimport, nodecl> = @record{x: float32, y: float32}                                  -- Vector2 type
+## Vector2.value.is_vector2 = true
+
 global Vector3    <cimport, nodecl> = @record{x: float32, y: float32, z: float32}                      -- Vector3 type
+## Vector3.value.is_vector3 = true
+
 global Vector4    <cimport, nodecl> = @record{x: float32, y: float32, z: float32, w: float32}          -- Vector4 type
+## Vector4.value.is_vector4 = true
+
 global Quaternion <cimport, nodecl> = @record{x: float32, y: float32, z: float32, w: float32}          -- Quaternion type
+## Quaternion.value.is_quaternion = true
+
 global Matrix     <cimport, nodecl> = @record{                                                         -- Matrix type (OpenGL style 4x4)
    m0: float32, m4: float32, m8 : float32, m12: float32,
    m1: float32, m5: float32, m9 : float32, m13: float32,
@@ -1733,14 +1741,23 @@ function Vector2.Lerp(v1: Vector2, v2: Vector2, amount: float32 <autocast>): Vec
 function Vector2.__add(v1: Vector2, v2: Vector2): Vector2                            <cimport'Vector2Add'       , nodecl> end -- Add two vectors (v1 + v2)
 function Vector2.__sub(v1: Vector2, v2: Vector2): Vector2                            <cimport'Vector2Subtract'  , nodecl> end -- Subtract two vectors (v1 - v2)
 function Vector2.__len(v: Vector2): float32                                          <cimport'Vector2Length'    , nodecl> end -- Calculate vector length
-
-function Vector2.__mul(v: Vector2, scale: float32 <autocast>): Vector2               <cimport'Vector2Scale'     , nodecl> end -- Scale vector (multiply by value)
--- function Vector2.__mul(v1: Vector2, v2: Vector2): Vector2                         <cimport'Vector2MultiplyV' , nodecl> end -- Multiply vector by vector
 function Vector2.__unm(v: Vector2): Vector2                                          <cimport'Vector2Negate'    , nodecl> end -- Negate vector
-function Vector2.__div(v: Vector2, div: float32 <autocast>): Vector2                 <cimport'Vector2Divide'    , nodecl> end -- Divide vector by a float value
--- function Vector2.__div(v1: Vector2, v2: Vector2): Vector2                         <cimport'Vector2DivideV'   , nodecl> end -- Divide vector by vector
 
--- TODO: add __mul and __div to Vector2MultiplyV and Vector2DivideV respectively, probably using concepts.
+function Vector2.__mul(v: Vector2, multiplier: #[concept(function(m) return m.type.is_vector2 or m.type.is_arithmetic end)]#) <inline>
+   ## if multiplier.type.is_vector2 then
+      return Vector2.MultiplyV(v, multiplier)
+   ## else
+      return Vector2.Scale(v, multiplier)
+   ## end
+end  -- either "Scale vector (multiply by value)" or "Multiply vector by vector"
+
+function Vector2.__div(v: Vector2, divisor: #[concept(function(d) return m.type.is_vector2 or m.type.is_arithmetic end)]#) <inline>
+   ## if divisor.type.is_vector2 then
+      return Vector2.DivideV(v, divisor)
+   ## else
+      return Vector2.Divide(v, divisor)
+   ## end
+end  -- either "Divide vector by a float value" or "Divide vector by vector"
 
 ------------------------------------------------------------------------------------
 -- Applying to Vector2 records - Vector2 math ]
