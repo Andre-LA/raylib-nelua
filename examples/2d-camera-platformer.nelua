@@ -8,20 +8,6 @@ require 'raylib'
 require 'math'
 require 'vector'
 
--- TODO: Include 'raymath', 'camera' and 'gestures' extra modules into raylib.nelua
--- in a nelua-ish way (for example, import the subrourines below, but also implement
--- Vector2 methods for them)
-
--- ('raymath', 'camera', 'gestures', 'raygui', 'easings', 'physac 'are extra modules with
--- additional features, however only 'raymath', 'camera 'and 'gestures' are compiled
--- by default with raylib)
-
-## cinclude '<raymath.h>'
-local function Vector2Add(v1: Vector2, v2: Vector2): Vector2                <cimport 'Vector2Add'     , nodecl> end
-local function Vector2Subtract(v1: Vector2, v2: Vector2): Vector2           <cimport 'Vector2Subtract', nodecl> end
-local function Vector2Length(v: Vector2): float32                           <cimport 'Vector2Length'  , nodecl> end
-local function Vector2Scale(v: Vector2, scale: float32 <autocast>): Vector2 <cimport 'Vector2Scale'   , nodecl> end
-
 local G: integer <comptime> = 400
 local PLAYER_JUMP_SPD: number <comptime> = 350
 local PLAYER_HOR_SPD: number <comptime> = 200
@@ -112,12 +98,12 @@ local function UpdateCameraCenterSmoothFollow(camera: Camera2D*, player: Player*
    local fractionSpeed: number <comptime> = 0.8
 
    camera.offset = (@Vector2){ width/2, height/2 }
-   local diff = Vector2Subtract(player.position, camera.target)
-   local length = Vector2Length(diff)
+   local diff: Vector2 = player.position - camera.target
+   local length = #diff
 
    if length > minEffectLength then
       local speed = math.max(fractionSpeed * length, minSpeed)
-      camera.target = Vector2Add(camera.target, Vector2Scale(diff, speed * delta / length))
+      camera.target = camera.target + diff * (speed * delta / length)
    end
 end
 
