@@ -1687,6 +1687,10 @@ function Raylib.SetAudioStreamPitch(stream: AudioStream, pitch: float32 <autocas
 -- === RAYMATH === [
 ------------------------------------------------------------------------------------
 
+-- NOTE: Helper types to be used instead of array return types for *ToFloat functions
+global  Float3: type = @record{ v: float32[3]  }
+global Float16: type = @record{ v: float32[16] }
+
 ------------------------------------------------------------------------------------
 -- Defines and Macros [
 ------------------------------------------------------------------------------------
@@ -1695,31 +1699,11 @@ global PI     : number <cimport, nodecl>
 global DEG2RAD: number <cimport, nodecl>
 global RAD2DEG: number <cimport, nodecl>
 
---[[ -- macros
-// Return float vector for Matrix
-#ifndef MatrixToFloat
-    #define MatrixToFloat(mat) (MatrixToFloatV(mat).v)
-#endif
-
-// Return float vector for Vector3
-#ifndef Vector3ToFloat
-    #define Vector3ToFloat(vec) (Vector3ToFloatV(vec).v)
-#endif
---]]
+function Raymath.MatrixToFloat(mat: Matrix): float32[16]  <cimport'MatrixToFloat' , nodecl> end -- Return float vector for Matrix
+function Raymath.Vector3ToFloat(vec: Vector3): float32[3] <cimport'Vector3ToFloat', nodecl> end -- Return float vector for Vector3
 
 ------------------------------------------------------------------------------------
 -- Defines and Macros ]
-------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------
--- Types and Structures Definition [
-------------------------------------------------------------------------------------
-
--- NOTE: Helper types to be used instead of array return types for *ToFloat functions
-local  float3: type = @record{ v: float32[3]  }
-local float16: type = @record{ v: float32[16] }
-
-------------------------------------------------------------------------------------
--- Types and Structures Definition ]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
@@ -1844,7 +1828,7 @@ function Raymath.Vector3Max(v1: Vector3, v2: Vector3): Vector3                  
 -- Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c)
 -- NOTE: Assumes P is on the plane of the triangle
 function Raymath.Vector3Barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector3): Vector3 <cimport'Vector3Barycenter'        , nodecl> end
-function Raymath.Vector3ToFloatV(v: Vector3): float32                                       <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
+function Raymath.Vector3ToFloatV(v: Vector3): Float3                                        <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
 
 ------------------------------------------------------------------------------------
 -- Applying to Vector3 record - Vector3 math [
@@ -1881,7 +1865,7 @@ function Vector3.Max(v1: Vector3, v2: Vector3): Vector3                         
 -- Compute barycenter coordinates (u, v, w) for point p with respect to triangle (a, b, c)
 -- NOTE: Assumes P is on the plane of the triangle
 function Vector3.Barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector3): Vector3 <cimport'Vector3Barycenter'        , nodecl> end
-function Vector3.ToFloatV(v: Vector3): float32                                       <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
+function Vector3.ToFloatV(v: Vector3): Float3                                        <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
 
 ------------------------------------------------------------------------------------
 -- Operator overloading to Vector3 record - Vector3 math [
@@ -1957,6 +1941,7 @@ function Raymath.MatrixPerspective(fovy: float64 <autocast>, aspect: float64 <au
 function Raymath.MatrixOrtho(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix                                                                                                                                                                                                                                                 <cimport'MatrixOrtho', nodecl> end -- Returns orthographic projection matrix
 function Raymath.MatrixLookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix                                                                                                                     <cimport'MatrixLookAt', nodecl> end -- Returns camera look-at matrix (view matrix)
 function Raymath.MatrixToFloatV(mat: Matrix): float16                                                                                                                                                 <cimport'MatrixToFloatV', nodecl> end -- Returns float array of matrix data
+function Raymath.MatrixToFloatV(mat: Matrix): Float16                                                                                                                                                 <cimport'MatrixToFloatV'   , nodecl> end -- Returns float array of matrix data
 
 ------------------------------------------------------------------------------------
 -- Applying to Matrix record - Matrix math [
@@ -1995,6 +1980,7 @@ function Matrix.Perspective(fovy: float64 <autocast>, aspect: float64 <autocast>
 function Matrix.Ortho(left: float64 <autocast>, right: float64 <autocast>, bottom: float64 <autocast>, top: float64 <autocast>, near: float64 <autocast>, far: float64 <autocast>): Matrix                                                                                                                                                                                                                                                 <cimport'MatrixOrtho', nodecl> end -- Returns orthographic projection matrix
 function Matrix.LookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix                                                                                                                     <cimport'MatrixLookAt', nodecl> end -- Returns camera look-at matrix (view matrix)
 function Matrix.ToFloatV(mat: Matrix): float16                                                                                                                                                 <cimport'MatrixToFloatV', nodecl> end -- Returns float array of matrix data
+function Matrix.ToFloatV(mat: Matrix): Float16                                                                                                                                                 <cimport'MatrixToFloatV'   , nodecl> end -- Returns float array of matrix data
 
 ------------------------------------------------------------------------------------
 -- Operator overloading to Matrix record - Matrix math [
