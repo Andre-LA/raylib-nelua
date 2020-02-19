@@ -54,8 +54,13 @@ global Matrix     <cimport, nodecl> = @record{                                  
    m2: float32, m6: float32, m10: float32, m14: float32,
    m3: float32, m7: float32, m11: float32, m15: float32
 }
-global Color     <cimport, nodecl> = @record{r: uint8, g: uint8, b: uint8, a: uint8}              -- Color type, RGBA (32bit)
+## Matrix.value.is_matrix = true
+
+global Color     <cimport, nodecl> = @record{r: uint8, g: uint8, b: uint8, a: uint8}                  -- Color type, RGBA (32bit)
+## Color.value.is_color = true
+
 global Rectangle <cimport, nodecl> = @record{x: float32, y: float32, width: float32, height: float32} -- Rectangle type
+## Rectangle.value.is_rectangle = true
 
 -- Image type, bpp always RGBA (32bit)
 -- NOTE: Data stored in CPU memory (RAM)
@@ -66,6 +71,7 @@ global Image <cimport, nodecl> = @record{
    mipmaps: cint, -- Mipmap levels, 1 by default
    format:  cint  -- Data format (PixelFormat type)
 }
+## Image.value.is_image = true
 
 -- Texture2D type
 -- NOTE: Data stored in GPU memory
@@ -76,6 +82,7 @@ global Texture2D <cimport, nodecl> = @record{
    mipmaps: cint, -- Mipmap levels, 1 by default
    format:  cint  -- Data format (PixelFormat type)
 }
+## Texture2D.value.is_texture_2d = true
 
 -- Texture type, same as Texture2D
 global Texture: type = @Texture2D
@@ -90,6 +97,7 @@ global RenderTexture2D <cimport, nodecl> = @record{
    depth:      Texture2D, -- Depth buffer attachment texture
    depthTexture: boolean  -- Track if depth attachment is a texture or renderbuffer
 }
+## RenderTexture2D.value.is_render_texture_2d = true
 
 -- RenderTexture type, same as RenderTexture2D
 global RenderTexture: type = @RenderTexture2D
@@ -103,6 +111,7 @@ global NPatchInfo <cimport, nodecl> = @record{
    bottom:         cint, -- bottom border offset
    type:           cint  -- layout of the n-patch: 3x3, 1x3 or 3x1
 }
+## NPatchInfo.value.is_npatch_info = true
 
 -- Font character info
 global CharInfo <cimport, nodecl> = @record{
@@ -112,6 +121,7 @@ global CharInfo <cimport, nodecl> = @record{
    advanceX:  cint, -- Character advance position X
    image:    Image, -- Character image data
 }
+## CharInfo.value.is_char_info = true
 
 -- Font type, includes texture and charSet array data
 global Font <cimport, nodecl> = @record{
@@ -121,6 +131,7 @@ global Font <cimport, nodecl> = @record{
    recs:       Rectangle*, -- Characters rectangles in texture
    chars:       CharInfo*  -- Characters info data
 }
+## Font.value.is_font = true
 
 -- Camera type, defines a camera position/orientation in 3d space
 global Camera3D <cimport, nodecl> = @record{
@@ -130,9 +141,9 @@ global Camera3D <cimport, nodecl> = @record{
    fovy:     float32, -- Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic
    type:        cint  -- Camera type, defines projection type: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
 }
+## Camera3D.value.is_camera_3d = true
 
 global Camera: type = @Camera3D -- Camera type fallback, defaults to Camera3D
-
 
 -- Camera2D type, defines a 2d camera
 global Camera2D <cimport, nodecl> = @record{
@@ -141,6 +152,7 @@ global Camera2D <cimport, nodecl> = @record{
    rotation: float32, -- Camera rotation in degrees
    zoom:     float32  -- Camera zoom (scaling), should be 1.0f by default
 }
+## Camera2D.value.is_camera_2d = true
 
 -- Vertex data definning a mesh
 -- NOTE: Data stored in CPU memory (and GPU)
@@ -167,13 +179,14 @@ global Mesh <cimport, nodecl> = @record{
    vaoId:           cuint, -- OpenGL Vertex Array Object id
    vboId:          cuint*  -- OpenGL Vertex Buffer Objects id (default vertex data)
 }
-
+## Mesh.value.is_mesh = true
 
 -- Shader type (generic)
 global Shader <cimport, nodecl> = @record{
    id:   cuint, -- Shader program id
    locs: cint*  -- Shader locations array (MAX_SHADER_LOCATIONS)
 }
+## Shader.value.is_shader = true
 
 -- Material texture map
 global MaterialMap <cimport, nodecl> = @record{
@@ -181,6 +194,7 @@ global MaterialMap <cimport, nodecl> = @record{
    color:       Color, -- Material map color
    value:     float32  -- Material map value
 }
+## MaterialMap.value.is_material_map = true
 
 -- Material type (generic)
 global Material <cimport, nodecl> = @record{
@@ -188,6 +202,7 @@ global Material <cimport, nodecl> = @record{
    maps:   MaterialMap*, -- Material maps array (MAX_MATERIAL_MAPS)
    params:     float32*  -- Material generic parameters (if required)
 }
+## Material.value.is_material = true
 
 -- Transformation properties
 global Transform <cimport, nodecl> = @record{
@@ -195,12 +210,14 @@ global Transform <cimport, nodecl> = @record{
    rotation:    Quaternion, -- Rotation
    scale:          Vector3  -- Scale
 }
+## Transform.value.is_transform = true
 
 -- Bone information
 global BoneInfo <cimport, nodecl> = @record{
    name:   cchar[32], -- Bone name
    parent:      cint  -- Bone parent
 }
+## BoneInfo.value.is_bone_info = true
 
 -- Model type
 global Model <cimport, nodecl> = @record{
@@ -218,6 +235,7 @@ global Model <cimport, nodecl> = @record{
    bones:         BoneInfo*, -- Bones information (skeleton)
    bindPose:     Transform*  -- Bones base transformation (pose)
 }
+## Model.value.is_model = true
 
 -- Model animation
 global ModelAnimation <cimport, nodecl> = @record{
@@ -227,12 +245,14 @@ global ModelAnimation <cimport, nodecl> = @record{
    frameCount:        cint, -- Number of animation frames
    framePoses: Transform**  -- Poses array by frame
 }
+## ModelAnimation.value.is_model_animation = true
 
 -- Ray type (useful for raycast)
 global Ray <cimport, nodecl> = @record{
    position:  Vector3, -- Ray position (origin)
    direction: Vector3  -- Ray direction
 }
+## Ray.value.is_ray = true
 
 -- Raycast hit information
 global RayHitInfo <cimport, nodecl> = @record{
@@ -241,12 +261,14 @@ global RayHitInfo <cimport, nodecl> = @record{
    position: Vector3, -- Position of nearest hit
    normal:   Vector3  -- Surface normal of hit
 }
+## RayHitInfo.value.is_ray_hit_info = true
 
 -- Bounding box type
 global BoundingBox <cimport, nodecl> = @record{
    min: Vector3, -- Minimum vertex box-corner
    max: Vector3  -- Maximum vertex box-corner
 }
+## BoundingBox.value.is_bounding_box = true
 
 -- Wave type, defines audio wave data
 global Wave <cimport, nodecl> = @record{
@@ -256,6 +278,7 @@ global Wave <cimport, nodecl> = @record{
    channels:      cuint, -- Number of channels (1-mono, 2-stereo)
    data:        pointer  -- Buffer data pointer
 }
+## Wave.value.is_wave = true
 
 global rAudioBuffer <cimport, nodecl> = @record{}
 
@@ -268,12 +291,14 @@ global AudioStream <cimport, nodecl> = @record{
 
    buffer:     rAudioBuffer*  -- Pointer to internal data used by the audio system
 }
+## AudioStream.value.is_audio_stream = true
 
 -- Sound source type
 global Sound <cimport, nodecl> = @record{
    sampleCount:       cuint, -- Total number of samples
    stream:      AudioStream  -- Audio stream
 }
+## Sound.value.is_sound = true
 
 -- Music stream type (audio file streaming from memory)
 -- NOTE: Anything longer than ~10 seconds should be streamed
@@ -286,6 +311,7 @@ global Music <cimport, nodecl> = @record{
 
    stream:      AudioStream  -- Audio stream
 }
+## Music.value.is_music = true
 
 -- Head-Mounted-Display device parameters
 global VrDeviceInfo <cimport, nodecl> = @record{
@@ -300,6 +326,7 @@ global VrDeviceInfo <cimport, nodecl> = @record{
    lensDistortionValues:   float32[4], -- HMD lens distortion constant parameters
    chromaAbCorrection:     float32[4]  -- HMD chromatic aberration correction parameters
 }
+## VrDeviceInfo.value.is_vr_device_info = true
 
 -----------------------------------
 -- import structs ]              --
