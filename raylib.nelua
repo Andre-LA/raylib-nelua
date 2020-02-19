@@ -1770,21 +1770,21 @@ function Vector2.__sub(v1: Vector2, v2: Vector2): Vector2                       
 function Vector2.__len(v: Vector2): float32                                          <cimport'Vector2Length'    , nodecl> end -- Calculate vector length
 function Vector2.__unm(v: Vector2): Vector2                                          <cimport'Vector2Negate'    , nodecl> end -- Negate vector
 
-function Vector2.__mul(v: Vector2, multiplier: #[concept(function(m) return m.type.is_vector2 or m.type.is_arithmetic end)]#) <inline>
+function Vector2.__mul(v: Vector2, multiplier: #[concept(function(m) return m.type.is_vector2 or m.type.is_arithmetic end)]#): Vector2 <inline>
    ## if multiplier.type.is_vector2 then
       return Vector2.MultiplyV(v, multiplier)
    ## else
       return Vector2.Scale(v, multiplier)
    ## end
-end  -- either "Scale vector (multiply by value)" or "Multiply vector by vector"
+end  -- either "Multiply vector by vector" or "Scale vector (multiply by value)"
 
-function Vector2.__div(v: Vector2, divisor: #[concept(function(d) return m.type.is_vector2 or m.type.is_arithmetic end)]#) <inline>
+function Vector2.__div(v: Vector2, divisor: #[concept(function(d) return d.type.is_vector2 or d.type.is_arithmetic end)]#): Vector2 <inline>
    ## if divisor.type.is_vector2 then
       return Vector2.DivideV(v, divisor)
    ## else
       return Vector2.Divide(v, divisor)
    ## end
-end  -- either "Divide vector by a float value" or "Divide vector by vector"
+end  -- either "Divide vector by vector" or "Divide vector by a float value"
 
 ------------------------------------------------------------------------------------
 -- Applying to Vector2 records - Vector2 math ]
