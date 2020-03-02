@@ -24,7 +24,7 @@ while (not Raylib.WindowShouldClose()) do
       Raylib.ClearBackground(RaylibColors.Raywhite)
       Raylib.DrawRectangle(screenWidth/2 - 40, boxPositionY, 80, 80, RaylibColors.Maroon)
       Raylib.DrawText("use mouse wheel to move the cube up and down!", 10, 10, 20, RaylibColors.Gray)
-      Raylib.DrawText(TextFormat("Box position Y: %03i", boxPositionY), 10, 40, 20, RaylibColors.Lightgray)
+      Raylib.DrawText(Raylib.TextFormat("Box position Y: %03i", boxPositionY), 10, 40, 20, RaylibColors.Lightgray)
    Raylib.EndDrawing()
 end
 

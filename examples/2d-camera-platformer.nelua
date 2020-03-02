@@ -198,7 +198,7 @@ local camera: Camera2D = {
 
 local cameraOption = 0_u
 
-local cameraDescriptions: string[5] = {
+local cameraDescriptions: stringview[5] = {
    "Follow player center",
    "Follow player center, but clamp to map edges",
    "Follow player center; smoothed",
