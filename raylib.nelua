@@ -2,9 +2,9 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
--- Raylib 2.5 wrapper, based on raylib.h (https://github.com/raysan5/raylib/blob/master/src/raylib.h)
+-- Raylib 2.6 wrapper, based on raylib.h (https://github.com/raysan5/raylib/blob/2.6/src/raylib.h)
 
--- TODO: Include 'raymath', 'camera' and 'gestures' extra modules into raylib.nelua
+-- TODO: Include 'camera' and 'gestures' extra modules into raylib.nelua
 -- in a nelua-ish way (for example, import the subrourines below, but also implement
 -- Vector2 methods for them)
 
@@ -37,11 +37,11 @@ global Raylib = @record{}
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
--- === RECORDS === [
+-- === RECORDS === [[
 ------------------------------------------------------------------------------------------------------------------------
 
 -----------------------------------
--- import structs [              --
+-- import structs [[[
 -----------------------------------
 
 global Vector2    <cimport, nodecl> = @record{x: float32, y: float32}                                  -- Vector2 type
@@ -337,16 +337,13 @@ global VrDeviceInfo <cimport, nodecl> = @record{
 ## VrDeviceInfo.value.is_vr_device_info = true
 
 -----------------------------------
--- import structs ]              --
------------------------------------
-
------------------------------------
--- import enums [                --
+-- import structs ]]]
 -----------------------------------
 
 ------------------------------------------------------------------------------------
--- Enumerators Definition
+-- Enumerators [[[
 ------------------------------------------------------------------------------------
+
 -- System config flags
 -- NOTE: Used for bit masks
 local _ConfigFlag <cimport, nodecl> = @enum {
@@ -1053,15 +1050,11 @@ global NPatchType <cimport, nodecl> = @enum {
    NPT_3PATCH_HORIZONTAL   -- Npatch defined by 3x1 tiles
 }
 
------------------------------------
--- import enums ]                --
------------------------------------
 
 -- This is a callback, is used as parameter by "SetTraceLogCallback" (in core module)
 -- since is used as parameter type, I decided to declare it as record
 global TraceLogCallback <cimport, nodecl> = @record{}
 
--- import colors --[
 local LIGHTGRAY:  Color <cimport, nodecl>; local GRAY:       Color <cimport, nodecl>
 local DARKGRAY:   Color <cimport, nodecl>; local YELLOW:     Color <cimport, nodecl>
 local GOLD:       Color <cimport, nodecl>; local ORANGE:     Color <cimport, nodecl>
@@ -1089,15 +1082,17 @@ global RaylibColors: record {
    BEIGE           , BROWN          , DARKBROWN       , WHITE        , BLACK        , BLANK            ,
    MAGENTA         , RAYWHITE
 }
--- ]
 
-
-------------------------------------------------------------------------------------------------------------------------
--- === RECORDS === ]
-------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+-- Enumerators ]]]
+------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
--- === CORE MODULE === [
+-- === RECORDS === ]]
+------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === CORE MODULE === [[
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Window-related functions
@@ -1277,11 +1272,11 @@ function Raylib.SetCameraSmoothZoomControl(szKey: cint <autocast>)              
 function Raylib.SetCameraMoveControls(frontKey: cint <autocast>, backKey: cint <autocast>, rightKey: cint <autocast>, leftKey: cint <autocast>, upKey: cint <autocast>, downKey: cint <autocast>) <cimport'SetCameraMoveControls', nodecl> end -- Set camera move controls (1st person and 3rd person cameras)
 
 ------------------------------------------------------------------------------------------------------------------------
--- === CORE MODULE === ]
+-- === CORE MODULE === ]]
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
--- === SHAPES MODULE === [
+-- === SHAPES MODULE === [[
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Basic shapes drawing functions
@@ -1330,11 +1325,11 @@ function Raylib.CheckCollisionPointCircle(point: Vector2, center: Vector2, radiu
 function Raylib.CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2): boolean                                                                                                       <cimport'CheckCollisionPointTriangle', nodecl> end -- Check if point is inside a triangle
 
 ------------------------------------------------------------------------------------------------------------------------
--- === SHAPES MODULE === ]
+-- === SHAPES MODULE === ]]
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
--- === TEXTURES MODULE === [
+-- === TEXTURES MODULE === [[
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Image/Texture2D data loading/unloading/saving functions
@@ -1418,11 +1413,11 @@ function Raylib.DrawTexturePro(texture: Texture2D, sourceRec: Rectangle, destRec
 function Raylib.DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, destRec: Rectangle, origin: Vector2, rotation: float32 <autocast>, tint: Color)                  <cimport'DrawTextureNPatch'      , nodecl> end -- Draws a texture (or part of it) that stretches or shrinks nicely
 
 ------------------------------------------------------------------------------------------------------------------------
--- === TEXTURES MODULE === ]
+-- === TEXTURES MODULE === ]]
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
--- === TEXT MODULE === [
+-- === TEXT MODULE === [[
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Font loading/unloading functions
@@ -1473,11 +1468,11 @@ function Raylib.GetNextCodepoint(text: cstring, bytesProcessed: cint*): cint    
 function Raylib.CodepointToUtf8(codepoint: cint <autocast>, byteLength: cint*): cstring                                                                                                        <cimport'CodepointToUtf8'   , nodecl> end -- Encode codepoint into utf8 text (char array length returned as parameter)
 
 ------------------------------------------------------------------------------------------------------------------------
--- === TEXT MODULE === ]
+-- === TEXT MODULE === ]]
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
--- === MODELS MODULE === [
+-- === MODELS MODULE === [[
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Basic geometric 3D shapes drawing functions
@@ -1560,11 +1555,11 @@ function Raylib.GetCollisionRayTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: 
 function Raylib.GetCollisionRayGround(ray: Ray, groundHeight: float32 <autocast>): RayHitInfo                                                                                            <cimport'GetCollisionRayGround'     , nodecl> end -- Get collision info between ray and ground plane (Y-normal plane)
 
 ------------------------------------------------------------------------------------------------------------------------
--- === MODELS MODULE === ]
+-- === MODELS MODULE === ]]
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
--- === SHADERS MODULE === [
+-- === SHADERS MODULE === [[
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Shader loading/unloading functions
@@ -1607,11 +1602,11 @@ function Raylib.BeginVrDrawing()                                                
 function Raylib.EndVrDrawing()                                                                                                                     <cimport'EndVrDrawing'         , nodecl> end -- End VR simulator stereo rendering
 
 ------------------------------------------------------------------------------------------------------------------------
--- === SHADERS MODULE === ]
+-- === SHADERS MODULE === ]]
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
--- === AUDIO MODULE === [
+-- === AUDIO MODULE === [[
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Audio device management functions
@@ -1676,7 +1671,7 @@ function Raylib.SetAudioStreamVolume(stream: AudioStream, volume: float32 <autoc
 function Raylib.SetAudioStreamPitch(stream: AudioStream, pitch: float32 <autocast>)                                                                                <cimport'SetAudioStreamPitch'   , nodecl> end -- Set pitch for audio stream (1.0 is base level)
 
 ------------------------------------------------------------------------------------------------------------------------
--- === AUDIO MODULE === ]
+-- === AUDIO MODULE === ]]
 -----------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -1692,7 +1687,7 @@ global  Float3: type = @record{ v: float32[3]  }
 global Float16: type = @record{ v: float32[16] }
 
 ------------------------------------------------------------------------------------
--- Defines and Macros [
+-- Defines and Macros [[
 ------------------------------------------------------------------------------------
 
 global PI     : number <cimport, nodecl>
@@ -1703,22 +1698,22 @@ function Raymath.MatrixToFloat(mat: Matrix): float32[16]  <cimport'MatrixToFloat
 function Raymath.Vector3ToFloat(vec: Vector3): float32[3] <cimport'Vector3ToFloat', nodecl> end -- Return float vector for Vector3
 
 ------------------------------------------------------------------------------------
--- Defines and Macros ]
+-- Defines and Macros ]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Utils math [
+-- Module Functions Definition - Utils math [[
 ------------------------------------------------------------------------------------
 
 function Raymath.Clamp(value: float32 <autocast>, min: float32 <autocast>, max: float32 <autocast>): float32    <cimport'Clamp', nodecl> end -- Clamp float value
 function Raymath.Lerp(start: float32 <autocast>, _end: float32 <autocast>, amount: float32 <autocast>): float32 <cimport'Lerp' , nodecl> end -- Calculate linear interpolation between two floats
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Utils math ]
+-- Module Functions Definition - Utils math ]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Vector2 math [
+-- Module Functions Definition - Vector2 math [[
 ------------------------------------------------------------------------------------
 
 function Raymath.Vector2Zero(): Vector2                                                     <cimport'Vector2Zero'      , nodecl> end -- Vector with components value 0.0f
@@ -1738,7 +1733,7 @@ function Raymath.Vector2Normalize(v: Vector2): Vector2                          
 function Raymath.Vector2Lerp(v1: Vector2, v2: Vector2, amount: float32 <autocast>): Vector2 <cimport'Vector2Lerp'      , nodecl> end -- Calculate linear interpolation between two vectors
 
 ------------------------------------------------------------------------------------
--- Applying to Vector2 record - Vector2 math [
+-- Applying to Vector2 record - Vector2 math [[[
 ------------------------------------------------------------------------------------
 
 function Vector2.Zero(): Vector2                                                     <cimport'Vector2Zero'      , nodecl> end -- Vector with components value 0.0f
@@ -1758,7 +1753,7 @@ function Vector2.Normalize(v: Vector2): Vector2                                 
 function Vector2.Lerp(v1: Vector2, v2: Vector2, amount: float32 <autocast>): Vector2 <cimport'Vector2Lerp'      , nodecl> end -- Calculate linear interpolation between two vectors
 
 ------------------------------------------------------------------------------------
--- Operator overloading to Vector2 record - Vector2 math [
+-- Operator overloading to Vector2 record - Vector2 math [[[[
 ------------------------------------------------------------------------------------
 
 function Vector2.__add(v1: Vector2, v2: Vector2): Vector2                            <cimport'Vector2Add'       , nodecl> end -- Add two vectors (v1 + v2)
@@ -1783,19 +1778,19 @@ function Vector2.__div(v: Vector2, divisor: #[concept(function(d) return d.type.
 end  -- either "Divide vector by vector" or "Divide vector by a float value"
 
 ------------------------------------------------------------------------------------
--- Operator overloading to Vector2 record - Vector2 math ]
+-- Operator overloading to Vector2 record - Vector2 math ]]]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Applying to Vector2 record - Vector2 math ]
+-- Applying to Vector2 record - Vector2 math ]]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Vector2 math ]
+-- Module Functions Definition - Vector2 math ]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Vector3 math [
+-- Module Functions Definition - Vector3 math [[
 ------------------------------------------------------------------------------------
 function Raymath.Vector3Zero(void): Vector3                                                 <cimport'Vector3Zero'              , nodecl> end -- Vector with components value 0.0f
 function Raymath.Vector3One(void): Vector3                                                  <cimport'Vector3One'               , nodecl> end -- Vector with components value 1.0f
@@ -1831,7 +1826,7 @@ function Raymath.Vector3Barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector
 function Raymath.Vector3ToFloatV(v: Vector3): Float3                                        <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
 
 ------------------------------------------------------------------------------------
--- Applying to Vector3 record - Vector3 math [
+-- Applying to Vector3 record - Vector3 math [[[
 ------------------------------------------------------------------------------------
 
 function Vector3.Zero(): Vector3                                                     <cimport'Vector3Zero'              , nodecl> end -- Vector with components value 0.0f
@@ -1868,7 +1863,7 @@ function Vector3.Barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector3): Vec
 function Vector3.ToFloatV(v: Vector3): Float3                                        <cimport'Vector3ToFloatV'          , nodecl> end -- Returns Vector3 as float array
 
 ------------------------------------------------------------------------------------
--- Operator overloading to Vector3 record - Vector3 math [
+-- Operator overloading to Vector3 record - Vector3 math [[[[
 ------------------------------------------------------------------------------------
 
 function Vector3.__add(v1: Vector3, v2: Vector3): Vector3                            <cimport'Vector3Add'               , nodecl> end -- Add two vectors
@@ -1893,19 +1888,19 @@ function Vector3.__div(v: Vector3, divisor: #[concept(function(d) return d.type.
 end -- either "Divide vector by vector" or "Divide vector by a float value"
 
 ------------------------------------------------------------------------------------
--- Operator overloading to Vector3 record - Vector3 math ]
+-- Operator overloading to Vector3 record - Vector3 math ]]]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Applying to Vector3 record - Vector3 math ]
+-- Applying to Vector3 record - Vector3 math ]]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Vector3 math ]
+-- Module Functions Definition - Vector3 math ]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Matrix math [
+-- Module Functions Definition - Matrix math [[
 ------------------------------------------------------------------------------------
 
 function Raymath.MatrixDeterminant(mat: Matrix): float32                                                                                                                                              <cimport'MatrixDeterminant', nodecl> end -- Compute matrix determinant
@@ -1943,7 +1938,7 @@ function Raymath.MatrixLookAt(eye: Vector3, target: Vector3, up: Vector3): Matri
 function Raymath.MatrixToFloatV(mat: Matrix): Float16                                                                                                                                                 <cimport'MatrixToFloatV'   , nodecl> end -- Returns float array of matrix data
 
 ------------------------------------------------------------------------------------
--- Applying to Matrix record - Matrix math [
+-- Applying to Matrix record - Matrix math [[[
 ------------------------------------------------------------------------------------
 
 function Matrix.Determinant(mat: Matrix): float32                                                                                                                                              <cimport'MatrixDeterminant', nodecl> end -- Compute matrix determinant
@@ -1981,7 +1976,7 @@ function Matrix.LookAt(eye: Vector3, target: Vector3, up: Vector3): Matrix      
 function Matrix.ToFloatV(mat: Matrix): Float16                                                                                                                                                 <cimport'MatrixToFloatV'   , nodecl> end -- Returns float array of matrix data
 
 ------------------------------------------------------------------------------------
--- Operator overloading to Matrix record - Matrix math [
+-- Operator overloading to Matrix record - Matrix math [[[[
 ------------------------------------------------------------------------------------
 
 function Matrix._add(left: Matrix, right: Matrix): Matrix                                                                                                                                      <cimport'MatrixAdd'        , nodecl> end -- Add two matrices
@@ -1992,19 +1987,19 @@ function Matrix._sub(left: Matrix, right: Matrix): Matrix                       
 function Matrix._mul(left: Matrix, right: Matrix): Matrix                                                                                                                                      <cimport'MatrixMultiply'   , nodecl> end
 
 ------------------------------------------------------------------------------------
--- Operator overloading to Matrix record - Matrix math ]
+-- Operator overloading to Matrix record - Matrix math ]]]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Applying to Matrix record - Matrix math ]
+-- Applying to Matrix record - Matrix math ]]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Matrix math ]
+-- Module Functions Definition - Matrix math ]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Quaternion math [
+-- Module Functions Definition - Quaternion math [[
 ------------------------------------------------------------------------------------
 
 function Raymath.QuaternionIdentity(): Quaternion                                                                     <cimport'QuaternionIdentity'            , nodecl> end -- Returns identity quaternion
@@ -2033,7 +2028,7 @@ function Raymath.QuaternionToEuler(q: Quaternion): Vector3                      
 function Raymath.QuaternionTransform(q: Quaternion, mat: Matrix): Quaternion                                          <cimport'QuaternionTransform'           , nodecl> end-- Transform a quaternion given a transformation matrix
 
 ------------------------------------------------------------------------------------
--- Applying to Matrix record - Matrix math [
+-- Applying to Matrix record - Matrix math [[[
 ------------------------------------------------------------------------------------
 
 function Quaternion.Identity(): Quaternion                                                                              <cimport'QuaternionIdentity'            , nodecl> end -- Returns identity quaternion
@@ -2062,22 +2057,22 @@ function Quaternion.ToEuler(q: Quaternion): Vector3                             
 function Quaternion.Transform(q: Quaternion, mat: Matrix): Quaternion                                                   <cimport'QuaternionTransform'           , nodecl> end-- Transform a quaternion given a transformation matrix
 
 ------------------------------------------------------------------------------------
--- Operator overloading to Matrix record - Matrix math [
+-- Operator overloading to Matrix record - Matrix math [[[[
 ------------------------------------------------------------------------------------
 
 function Quaternion.__len(q: Quaternion): float32                                                                       <cimport'QuaternionLength'              , nodecl> end-- Computes the length of a quaternion
 function Quaternion.__mul(q1: Quaternion, q2: Quaternion): Quaternion                                                   <cimport'QuaternionMultiply'            , nodecl> end-- Calculate two quaternion multiplication
 
 ------------------------------------------------------------------------------------
--- Operator overloading to Matrix record - Matrix math ]
+-- Operator overloading to Matrix record - Matrix math ]]]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Applying to Matrix record - Matrix math ]
+-- Applying to Matrix record - Matrix math ]]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------
--- Module Functions Definition - Quaternion math ]
+-- Module Functions Definition - Quaternion math ]]
 ------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
