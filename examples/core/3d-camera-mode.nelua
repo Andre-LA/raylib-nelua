@@ -1,0 +1,57 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "3d camera mode" example by raysan5, available at: https://www.raylib.com/examples.html
+
+require 'raylib'
+
+-- [ Initialization [
+local screenWidth <comptime> = 800
+local screenHeight <comptime> = 450
+
+
+Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - 3d camera mode")
+
+-- define the camera to look into our 3d world
+local camera: Camera3D = {
+   position = (@Vector3){ 0, 10, 10 }, -- camera position
+   target   = (@Vector3){ 0,  0,  0 }, -- camera looking at point
+   up       = (@Vector3){ 0,  1,  0 }, -- camera up vector (rotation towards target)
+   fovy = 45,                          -- camera field-of-view Y
+   type = CameraType.PERSPECTIVE       -- camera mode type
+}
+
+local cubePosition: Vector3 = { 0, 0, 0 }
+
+Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
+
+-- ] Initialization ]
+
+-- main game loop
+while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
+   -- [ Draw [
+
+   Raylib.BeginDrawing()
+      Raylib.ClearBackground(RaylibColors.Raywhite)
+
+      Raylib.BeginMode3D(camera)
+
+         Raylib.DrawCube(cubePosition, 2, 2, 2, RaylibColors.Red)
+         Raylib.DrawCubeWires(cubePosition, 2, 2, 2, RaylibColors.Maroon)
+
+         Raylib.DrawGrid(10, 1)
+
+      Raylib.EndMode3D()
+
+      Raylib.DrawText("welcome to the third dimension!", 10, 40, 20, RaylibColors.Darkgray)
+
+      Raylib.DrawFPS(10, 10)
+
+   Raylib.EndDrawing()
+
+   -- ] Draw ]
+end
+
+-- de-initialization
+Raylib.CloseWindow() -- close window and OpenGL context
