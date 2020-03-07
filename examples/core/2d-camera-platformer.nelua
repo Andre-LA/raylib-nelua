@@ -64,12 +64,12 @@ local function UpdatePlayer(player: Player*, envItems: vector(EnvItem)*, delta: 
    end
 end
 
-local function UpdateCameraCenter(camera: Camera2D*, player: Player*, width: integer, height: integer)
+local function UpdateCameraCenter(camera: Camera2D*, player: Player*, envItems: vector(EnvItem)*, delta: number, width: integer, height: integer)
    camera.offset = (@Vector2){ width/2, height/2 }
    camera.target = player.position
 end
 
-local function UpdateCameraCenterInsideMap(camera: Camera2D*, player: Player*, envItems: vector(EnvItem)*, width: integer, height: integer)
+local function UpdateCameraCenterInsideMap(camera: Camera2D*, player: Player*, envItems: vector(EnvItem)*, delta: number, width: integer, height: integer)
    camera.target = player.position
    camera.offset = (@Vector2){ width/2, height/2 }
    local minX, minY, maxX, maxY = 1000.0, 1000.0, -1000.0, -1000.0
@@ -92,7 +92,7 @@ local function UpdateCameraCenterInsideMap(camera: Camera2D*, player: Player*, e
    if min.y > 0 then camera.offset.y = height/2 - min.y end
 end
 
-local function UpdateCameraCenterSmoothFollow(camera: Camera2D*, player: Player*, delta: number, width: integer, height: integer)
+local function UpdateCameraCenterSmoothFollow(camera: Camera2D*, player: Player*, envItems: vector(EnvItem)*, delta: number, width: integer, height: integer)
    local minSpeed: number <comptime> = 30
    local minEffectLength: number <comptime> = 10
    local fractionSpeed: number <comptime> = 0.8
@@ -107,7 +107,7 @@ local function UpdateCameraCenterSmoothFollow(camera: Camera2D*, player: Player*
    end
 end
 
-local function UpdateCameraEvenOutOnLanding(camera: Camera2D*, player: Player*, delta: number, width: integer, height: integer)
+local function UpdateCameraEvenOutOnLanding(camera: Camera2D*, player: Player*, envItems: vector(EnvItem)*, delta: number, width: integer, height: integer)
    local evenOutSpeed: number <comptime> = 700
    local eveningOut: boolean <static> = false
    local evenOutTarget: number <static>;
@@ -139,7 +139,7 @@ local function UpdateCameraEvenOutOnLanding(camera: Camera2D*, player: Player*, 
    end
 end
 
-local function UpdateCameraPlayerBoundsPush(camera: Camera2D*, player: Player*, width: integer, height: integer)
+local function UpdateCameraPlayerBoundsPush(camera: Camera2D*, player: Player*, envItems: vector(EnvItem)*, delta: number, width: integer, height: integer)
    local bbox: Vector2 <const> = { 0.2, 0.2 }
 
    local bboxWorldMin = Raylib.GetScreenToWorld2D((@Vector2){ (1-bbox.x) * 0.5 * width, (1-bbox.y) * 0.5 * height }, $camera)
@@ -150,26 +150,6 @@ local function UpdateCameraPlayerBoundsPush(camera: Camera2D*, player: Player*, 
    if player.position.y < bboxWorldMin.y then camera.target.y = player.position.y end
    if player.position.x > bboxWorldMax.x then camera.target.x = bboxWorldMin.x + (player.position.x - bboxWorldMax.x) end
    if player.position.y > bboxWorldMax.y then camera.target.y = bboxWorldMin.y + (player.position.y - bboxWorldMax.y) end
-end
-
-local function UpdateCamera(cameraOption: uinteger, camera: Camera2D*, player: Player*, envItems: vector(EnvItem)*, delta: number, width: integer, height: integer)
-   -- TODO: change to C callbacks:
-   -- https://github.com/edubart/nelua-lang/commit/cf006db8fb7b85e5cc44fd8cc13da8bdcb1ad3a3
-
-   switch cameraOption
-   case 0 then
-      UpdateCameraCenter(camera, player, width, height)
-   case 1 then
-      UpdateCameraCenterInsideMap(camera, player, envItems, width, height)
-   case 2 then
-      UpdateCameraCenterSmoothFollow(camera, player, delta, width, height)
-   case 3 then
-      UpdateCameraEvenOutOnLanding(camera, player, delta, width, height)
-   case 4 then
-      UpdateCameraPlayerBoundsPush(camera, player, width, height)
-   else
-      print("invalid camera mode")
-   end
 end
 
 -- [ Initialization [
@@ -199,6 +179,14 @@ local camera: Camera2D = {
    zoom = 1
 }
 
+local cameraUpdaters: array(function(Camera2D*, Player*, vector(EnvItem)*, number, integer, integer), 5) = {
+   UpdateCameraCenter,
+   UpdateCameraCenterInsideMap,
+   UpdateCameraCenterSmoothFollow,
+   UpdateCameraEvenOutOnLanding,
+   UpdateCameraPlayerBoundsPush
+}
+
 local cameraOption = 0_u
 
 local cameraDescriptions: stringview[5] = {
@@ -218,7 +206,7 @@ while not Raylib.WindowShouldClose() do
    local deltaTime = Raylib.GetFrameTime()
 
    -- TODO: there is a way to simplify this?
-   UpdatePlayer(&player, &envItems, deltaTime)
+   UpdatePlayer(player, envItems, deltaTime)
 
    camera.zoom = math.max(math.min(camera.zoom + Raylib.GetMouseWheelMove() * 0.05, 3), 0.25)
 
@@ -231,7 +219,9 @@ while not Raylib.WindowShouldClose() do
      cameraOption = (cameraOption + 1)  % #cameraDescriptions
    end
 
-   UpdateCamera(cameraOption, &camera, &player, &envItems, deltaTime, screenWidth, screenHeight)
+   cameraUpdaters[cameraOption](camera, player, envItems, deltaTime, screenWidth, screenHeight)
+
+
    -- ] Update ]
 
    -- [ Draw [
