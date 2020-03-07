@@ -4,7 +4,6 @@
 
 -- This code is based on the "input mouse" example by raysan5, available at: https://www.raylib.com/examples.html
 
-## strict = true
 require 'raylib'
 
 local screenWidth: integer <comptime> = 800

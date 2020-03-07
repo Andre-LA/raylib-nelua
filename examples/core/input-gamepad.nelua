@@ -6,7 +6,6 @@
 
 -- Note: unfortunately my controller doens't worked, so, I can't really test this
 
-## strict = true
 require 'raylib'
 
 ##[=[ cemit([[

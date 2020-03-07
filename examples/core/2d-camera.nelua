@@ -4,9 +4,8 @@
 
 -- This code is based on the "2d camera" example by raysan5, available at: https://www.raylib.com/examples.html
 
--- Note: unfortunately my controller doens't worked, so, I can't really test this
+-- Note: unfortunately my controller doens't worked on my SO, so, I can't really test this
 
-## strict = true
 require 'raylib'
 
 local MAX_BUILDINGS <comptime> = 100
