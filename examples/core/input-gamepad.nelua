@@ -172,5 +172,7 @@ while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
 end
 
 -- de-initialization
+Raylib.UnloadTexture(texPs3Pad)
+Raylib.UnloadTexture(texXboxPad)
 
 Raylib.CloseWindow() -- close window and OpenGL context
