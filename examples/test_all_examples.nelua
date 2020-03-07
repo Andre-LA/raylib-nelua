@@ -1,0 +1,15 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "input keys" example by raysan5, available at: https://www.raylib.com/examples.html
+
+
+require 'examples/core/2d-camera'
+require 'examples/core/2d-camera-platformer'
+require 'examples/core/3d-camera-mode'
+require 'examples/core/basic-window'
+require 'examples/core/input-keys'
+require 'examples/core/input-mouse'
+require 'examples/core/input-mouse_wheel'
+-- require 'examples/core/input-gamepad'
