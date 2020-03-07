@@ -1,0 +1,73 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "3d camera free" example by raysan5, available at: https://www.raylib.com/examples.html
+
+require 'raylib'
+
+-- [ Initialization [
+local screenWidth <comptime> = 800
+local screenHeight <comptime> = 450
+
+
+Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - 3d camera free")
+
+-- define the camera to look into our 3d world
+local camera: Camera3D = {
+   position = (@Vector3){ 0, 10, 10 }, -- camera position
+   target   = (@Vector3){ 0,  0,  0 }, -- camera looking at point
+   up       = (@Vector3){ 0,  1,  0 }, -- camera up vector (rotation towards target)
+   fovy = 45,                          -- camera field-of-view Y
+   type = CameraType.PERSPECTIVE       -- camera mode type
+}
+
+local cubePosition: Vector3 = { 0, 0, 0 }
+
+Raylib.SetCameraMode(camera, CameraMode.FREE) -- set a free camera mode
+
+Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
+
+-- ] Initialization ]
+
+-- main game loop
+while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
+   -- [ update [
+   Raylib.UpdateCamera(&camera) -- update camera
+
+   if Raylib.IsKeyDown(KeyboardKey.Z) then
+      camera.target = (@Vector3){ 0, 0, 0 }
+   end
+   -- ] update ]
+
+   -- [ draw [
+
+   Raylib.BeginDrawing()
+      Raylib.ClearBackground(RaylibColors.Raywhite)
+
+      Raylib.BeginMode3D(camera)
+
+         Raylib.DrawCube(cubePosition, 2, 2, 2, RaylibColors.Red)
+         Raylib.DrawCubeWires(cubePosition, 2, 2, 2, RaylibColors.Maroon)
+
+         Raylib.DrawGrid(10, 1)
+
+      Raylib.EndMode3D()
+
+      Raylib.DrawRectangle(10, 10, 320, 133, Raylib.Fade(RaylibColors.Skyblue, 0.5))
+      Raylib.DrawRectangleLines(10, 10, 320, 133, RaylibColors.Blue)
+
+      Raylib.DrawText("Free camera default controls:", 20, 20, 10, RaylibColors.Black)
+      Raylib.DrawText("- Mouse Wheel to Zoom in-out", 40, 40, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("- Mouse Wheel Pressed to Pan", 40, 60, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("- Alt + Mouse Wheel Pressed to Rotate", 40, 80, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom", 40, 100, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("- Z to zoom to (0, 0, 0)", 40, 120, 10, RaylibColors.Darkgray)
+
+   Raylib.EndDrawing()
+
+   -- ] draw ]
+end
+
+-- de-initialization
+Raylib.CloseWindow() -- close window and OpenGL context
