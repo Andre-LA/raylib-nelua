@@ -23,19 +23,22 @@ require 'raylib'
 local XBOX360_NAME_ID: cstring <cimport, nodecl>
 local PS3_NAME_ID: cstring <cimport, nodecl>
 
+-- [ initialization [
+
 local screenWidth: integer <comptime> = 800
 local screenHeight: integer <comptime> = 450
 
-Raylib.SetConfigFlags(ConfigFlag.MSAA_4X_HINT)
+Raylib.SetConfigFlags(ConfigFlag.MSAA_4X_HINT) -- set MSAA 4x hint before windows creation
 
 Raylib.InitWindow(screenWidth, screenHeight, "Raylib [core] example - gamepad input")
 
 local texPs3Pad: Texture2D = Raylib.LoadTexture("examples/resources/ps3.png")
 local texXboxPad: Texture2D = Raylib.LoadTexture("examples/resources/xbox.png")
 
-Raylib.SetTargetFPS(60)
+Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
+-- ] initialization ]
 
--- FIXME: temporary hack
+-- TODO: temporary hack
 local function TextFormat_i(str: cstring, vl: cint): cstring
    local finalstring: cstring;
    ## cemit ('finalstring = TextFormat(str, vl);')
@@ -54,7 +57,8 @@ local function TextFormat_if(str: cstring, vl1: cint, vl2: float32): cstring
    return finalstring
 end
 
-while not Raylib.WindowShouldClose() do
+-- main game loop
+while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
    Raylib.BeginDrawing()
       Raylib.ClearBackground(RaylibColors.Raywhite)
 
@@ -167,5 +171,6 @@ while not Raylib.WindowShouldClose() do
    Raylib.EndDrawing()
 end
 
+-- de-initialization
 
-Raylib.CloseWindow()
+Raylib.CloseWindow() -- close window and OpenGL context

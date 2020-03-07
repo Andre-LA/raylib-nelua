@@ -153,6 +153,9 @@ local function UpdateCameraPlayerBoundsPush(camera: Camera2D*, player: Player*, 
 end
 
 local function UpdateCamera(cameraOption: uinteger, camera: Camera2D*, player: Player*, envItems: vector(EnvItem)*, delta: number, width: integer, height: integer)
+   -- TODO: change to C callbacks:
+   -- https://github.com/edubart/nelua-lang/commit/cf006db8fb7b85e5cc44fd8cc13da8bdcb1ad3a3
+
    switch cameraOption
    case 0 then
       UpdateCameraCenter(camera, player, width, height)
@@ -256,4 +259,4 @@ while not Raylib.WindowShouldClose() do
 end
 
 -- De-initialization
-Raylib.CloseWindow()
+Raylib.CloseWindow() -- close window and OpenGL context
