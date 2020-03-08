@@ -33,7 +33,7 @@ Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
 -- main game loop
 while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
    -- [ update [
-   Raylib.UpdateCamera(&camera) -- update camera
+   Raylib.UpdateCamera(camera) -- update camera
 
    if Raylib.IsKeyDown(KeyboardKey.Z) then
       camera.target = (@Vector3){ 0, 0, 0 }

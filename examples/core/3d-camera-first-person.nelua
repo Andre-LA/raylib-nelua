@@ -1,0 +1,82 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "3d camera free" example by raysan5, available at: https://www.raylib.com/examples.html
+
+require 'raylib'
+
+local MAX_COLUMNS <comptime> = 20
+
+-- [ Initialization [
+local screenWidth <comptime> = 800
+local screenHeight <comptime> = 450
+
+Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - 3d camera first person")
+
+-- define the camera to look into our 3d world (position, target, up vector)
+local camera: Camera = {
+   position = (@Vector3){ 4,   2, 4 },
+   target   = (@Vector3){ 0, 1.8, 0 },
+   up       = (@Vector3){ 0,   1, 0 },
+   fovy = 60,
+   type = CameraType.PERSPECTIVE
+}
+
+-- generate some random columns
+local heights: number[MAX_COLUMNS];
+local positions: Vector3[MAX_COLUMNS];
+local colors: Color[MAX_COLUMNS];
+
+for i = 0, < MAX_COLUMNS do
+   heights[i] = (@number)(Raylib.GetRandomValue(1, 12))
+   positions[i] = (@Vector3){ Raylib.GetRandomValue(-15, 15), heights[i] / 2, Raylib.GetRandomValue(-15, 15) }
+   colors[i] = (@Color){ (@uint8)(Raylib.GetRandomValue(20, 255)), (@uint8)(Raylib.GetRandomValue(10, 55)), 30, 255 }
+
+end
+
+Raylib.SetCameraMode(camera, CameraMode.FIRST_PERSON) -- set a first person camera mode
+
+Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
+
+-- ] Initialization ]
+
+-- main game loop
+while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
+   -- [ update [
+   Raylib.UpdateCamera(camera) -- update camera
+   -- ] update ]
+
+   -- [ draw [
+
+   Raylib.BeginDrawing()
+      Raylib.ClearBackground(RaylibColors.Raywhite)
+
+      Raylib.BeginMode3D(camera)
+
+         Raylib.DrawPlane((@Vector3){ 0, 0, 0 }, (@Vector2){ 32, 32 }, RaylibColors.Lightgray) -- draw ground
+         Raylib.DrawCube((@Vector3){ -16, 2.5, 0 }, 1, 5, 32, RaylibColors.Blue) -- draw blue wall
+         Raylib.DrawCube((@Vector3){  16, 2.5, 0 }, 1, 5, 32, RaylibColors.Lime) -- draw green wall
+         Raylib.DrawCube((@Vector3){   0, 2.5, 16 }, 32, 5, 1, RaylibColors.Gold) -- Draw a yellow wall
+
+         for i = 0, < MAX_COLUMNS do
+            Raylib.DrawCube(positions[i], 2, heights[i], 2, colors[i])
+            Raylib.DrawCubeWires(positions[i], 2, heights[i], 2, RaylibColors.Maroon)
+         end
+
+      Raylib.EndMode3D()
+
+      Raylib.DrawRectangle(10, 10, 220, 70, Raylib.Fade(RaylibColors.Skyblue, 0.5))
+      Raylib.DrawRectangleLines(10, 10, 220, 70, RaylibColors.Blue)
+
+      Raylib.DrawText("First person camera default controls", 20, 20, 10, RaylibColors.Black)
+      Raylib.DrawText("- Move with keys: W, A, S, D", 40, 40, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("- Mouse move to look around", 40, 60, 10, RaylibColors.Darkgray)
+
+   Raylib.EndDrawing()
+
+   -- ] draw ]
+end
+
+-- de-initialization
+Raylib.CloseWindow() -- close window and OpenGL context
