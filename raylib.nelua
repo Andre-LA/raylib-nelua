@@ -2,15 +2,9 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
--- Raylib 2.6 wrapper, based on raylib.h (https://github.com/raysan5/raylib/blob/2.6/src/raylib.h)
-
--- TODO: Include 'camera' and 'gestures' extra modules into raylib.nelua
--- in a nelua-ish way (for example, import the subrourines below, but also implement
--- Vector2 methods for them)
-
--- ('raymath', 'camera', 'gestures', 'raygui', 'easings', 'physac 'are extra modules with
--- additional features, however only 'raymath', 'camera 'and 'gestures' are compiled
--- by default with raylib)
+-- Raylib and Raymath 2.6 wrapper
+-- based on raylib.h (https://github.com/raysan5/raylib/blob/2.6/src/raylib.h)
+-- and raymath.h (https://github.com/raysan5/raylib/blob/2.6/src/raymath.h)
 
 ## linklib 'raylib'
 ## linklib 'GL'
