@@ -24,7 +24,7 @@
 ## cinclude '<raymath.h>'
 
 global Raymath = @record{}
-global Raylib = @record{}
+global Raylib  = @record{}
 
 ------------------------------------------------------------------------------------------------------------------------
 -- === RAYLIB === [
@@ -1048,6 +1048,17 @@ global NPatchType <cimport, nodecl> = @enum {
 -- This is a callback, is used as parameter by "SetTraceLogCallback" (in core module)
 -- since is used as parameter type, I decided to declare it as record
 global TraceLogCallback <cimport, nodecl> = @record{}
+------------------------------------------------------------------------------------
+-- Enumerators ]]]
+------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === RECORDS === ]]
+------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+-- === CONSTANTS === [[
+------------------------------------------------------------------------------------------------------------------------
 
 local LIGHTGRAY:  Color <cimport, nodecl>; local GRAY:       Color <cimport, nodecl>
 local DARKGRAY:   Color <cimport, nodecl>; local YELLOW:     Color <cimport, nodecl>
@@ -1063,26 +1074,38 @@ local DARKBROWN:  Color <cimport, nodecl>; local WHITE:      Color <cimport, nod
 local BLACK:      Color <cimport, nodecl>; local BLANK:      Color <cimport, nodecl>
 local MAGENTA:    Color <cimport, nodecl>; local RAYWHITE:   Color <cimport, nodecl>
 
-global RaylibColors: record {
-   Lightgray: Color, Gray:     Color, Darkgray:  Color, Yellow: Color, Gold:   Color, Orange:     Color,
-   Pink:      Color, Red:      Color, Maroon:    Color, Green:  Color, Lime:   Color, Darkgreen:  Color,
-   Skyblue:   Color, Blue:     Color, Darkblue:  Color, Purple: Color, Violet: Color, Darkpurple: Color,
-   Beige:     Color, Brown:    Color, Darkbrown: Color, White:  Color, Black:  Color, Blank:      Color,
-   Magenta:   Color, Raywhite: Color
+global RaylibConstants: record{
+   Lightgray: Color, Gray      : Color,
+   Darkgray : Color, Yellow    : Color,
+   Gold     : Color, Orange    : Color,
+   Pink     : Color, Red       : Color,
+   Maroon   : Color, Green     : Color,
+   Lime     : Color, Darkgreen : Color,
+   Skyblue  : Color, Blue      : Color,
+   Darkblue : Color, Purple    : Color,
+   Violet   : Color, Darkpurple: Color,
+   Beige    : Color, Brown     : Color,
+   Darkbrown: Color, White     : Color,
+   Black    : Color, Blank     : Color,
+   Magenta  : Color, Raywhite  : Color
 } = {
-   LIGHTGRAY       , GRAY           , DARKGRAY        , YELLOW       , GOLD         , ORANGE           ,
-   PINK            , RED            , MAROON          , GREEN        , LIME         , DARKGREEN        ,
-   SKYBLUE         , BLUE           , DARKBLUE        , PURPLE       , VIOLET       , DARKPURPLE       ,
-   BEIGE           , BROWN          , DARKBROWN       , WHITE        , BLACK        , BLANK            ,
-   MAGENTA         , RAYWHITE
+   Lightgray = LIGHTGRAY, Gray       = GRAY,
+   Darkgray  = DARKGRAY , Yellow     = YELLOW,
+   Gold      = GOLD     , Orange     = ORANGE,
+   Pink      = PINK     , Red        = RED,
+   Maroon    = MAROON   , Green      = GREEN,
+   Lime      = LIME     , Darkgreen  = DARKGREEN,
+   Skyblue   = SKYBLUE  , Blue       = BLUE,
+   Darkblue  = DARKBLUE , Purple     = PURPLE,
+   Violet    = VIOLET   , Darkpurple = DARKPURPLE,
+   Beige     = BEIGE    , Brown      = BROWN,
+   Darkbrown = DARKBROWN, White      = WHITE,
+   Black     = BLACK    , Blank      = BLANK,
+   Magenta   = MAGENTA  , Raywhite   = RAYWHITE
 }
 
-------------------------------------------------------------------------------------
--- Enumerators ]]]
-------------------------------------------------------------------------------------
-
 ------------------------------------------------------------------------------------------------------------------------
--- === RECORDS === ]]
+-- === CONSTANTS === ]]
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -1097,6 +1120,7 @@ function Raylib.IsWindowReady(): boolean                                        
 function Raylib.IsWindowMinimized(): boolean                                                                                    <cimport'IsWindowMinimized'          , nodecl> end -- Check if window has been minimized (or lost focus)
 function Raylib.IsWindowResized(): boolean                                                                                      <cimport'IsWindowResized'            , nodecl> end -- Check if window has been resized
 function Raylib.IsWindowHidden(): boolean                                                                                       <cimport'IsWindowHidden'             , nodecl> end -- Check if window is currently hidden
+function Raylib.IsWindowFullscreen(): boolean                                                                                   <cimport'IsWindowFullscreen'         , nodecl> end -- Check if window is currently fullscreen
 function Raylib.ToggleFullscreen()                                                                                              <cimport'ToggleFullscreen'           , nodecl> end -- Toggle fullscreen mode (only PLATFORM_DESKTOP)
 function Raylib.UnhideWindow()                                                                                                  <cimport'UnhideWindow'               , nodecl> end -- Show the window
 function Raylib.HideWindow()                                                                                                    <cimport'HideWindow'                 , nodecl> end -- Hide the window
@@ -1173,6 +1197,10 @@ function Raylib.TakeScreenshot(fileName: cstring)                               
 function Raylib.GetRandomValue(min: cint <autocast>, max: cint <autocast>): cint                                                <cimport'GetRandomValue'             , nodecl> end -- Returns a random value between min and max (both included)
 
 -- Files management functions
+function Raylib.LoadFileData(fileName: cstring, bytesRead: cuint*): cuint*                                                      <cimport'LoadFileData'               , nodecl> end -- Load file data as byte array (read)
+function Raylib.SaveFileData(fileName: cstring, data: pointer, bytesToWrite: cint <autocast>)                                   <cimport'SaveFileData'               , nodecl> end -- Save data to file from byte array (write)
+function Raylib.LoadFileText(fileName: cstring): cstring                                                                        <cimport'LoadFileText'               , nodecl> end -- Load text data from file (read), returns a '\0' terminated string
+function Raylib.SaveFileText(fileName: cstring, text: cstring)                                                                  <cimport'SaveFileText'               , nodecl> end -- Save text data to file (write), string must be '\0' terminated
 function Raylib.FileExists(fileName: cstring): boolean                                                                          <cimport'FileExists'                 , nodecl> end -- Check if file exists
 function Raylib.IsFileExtension(fileName: cstring, ext: cstring): boolean                                                       <cimport'IsFileExtension'            , nodecl> end -- Check file extension
 function Raylib.DirectoryExists(dirPath: cstring): boolean                                                                      <cimport'DirectoryExists'            , nodecl> end -- Check if a directory path exists
@@ -1194,8 +1222,8 @@ function Raylib.CompressData(data: cuchar*, dataLength: cint <autocast>, compDat
 function Raylib.DecompressData(compData: cuchar*, compDataLength: cint <autocast>, dataLength: cint*): cuchar*                  <cimport'DecompressData'             , nodecl> end -- Decompress data (DEFLATE algorythm)
 
 -- Persistent storage management
-function Raylib.StorageSaveValue(position: cint <autocast>, value: cint <autocast>)                                             <cimport'StorageSaveValue'           , nodecl> end -- Save integer value to storage file (to defined position)
-function Raylib.StorageLoadValue(position: cint <autocast>): cint                                                               <cimport'StorageLoadValue'           , nodecl> end -- Load integer value from storage file (from defined position)
+function Raylib.SaveStorageValue(position: cuint <autocast>, value: cint <autocast>)                                            <cimport'SaveStorageValue'           , nodecl> end -- Save integer value to storage file (to defined position)
+function Raylib.LoadStorageValue(position: cuint <autocast>): cint                                                             <cimport'LoadStorageValue'           , nodecl> end -- Load integer value from storage file (from defined position)
 
 function Raylib.OpenURL(url: cstring)                                                                                           <cimport'OpenURL'                    , nodecl> end -- Open URL with default system browser (if available)
 
@@ -1326,31 +1354,33 @@ function Raylib.CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vec
 -- === TEXTURES MODULE === [[
 ------------------------------------------------------------------------------------------------------------------------
 
--- Image/Texture2D data loading/unloading/saving functions
+-- Image loading functions
+-- NOTE: This functions do not require GPU access
 function Raylib.LoadImage(fileName: cstring): Image                                                                                                                            <cimport'LoadImage'              , nodecl> end -- Load image from file into CPU memory (RAM)
 function Raylib.LoadImageEx(pixels: Color*, width: cint <autocast>, height: cint <autocast>): Image                                                                            <cimport'LoadImageEx'            , nodecl> end -- Load image from Color array data (RGBA - 32bit)
 function Raylib.LoadImagePro(data: pointer, width: cint <autocast>, height: cint <autocast>, format: cint <autocast>): Image                                                   <cimport'LoadImagePro'           , nodecl> end -- Load image from raw data with parameters
 function Raylib.LoadImageRaw(fileName: cstring, width: cint <autocast>, height: cint <autocast>, format: cint <autocast>, headerSize: cint <autocast>): Image                  <cimport'LoadImageRaw'           , nodecl> end -- Load image from RAW file data
+function Raylib.UnloadImage(image: Image)                                                                                                                                      <cimport'UnloadImage'            , nodecl> end -- Unload image from CPU memory (RAM)
 function Raylib.ExportImage(image: Image, fileName: cstring)                                                                                                                   <cimport'ExportImage'            , nodecl> end -- Export image data to file
 function Raylib.ExportImageAsCode(image: Image, fileName: cstring)                                                                                                             <cimport'ExportImageAsCode'      , nodecl> end -- Export image as code file defining an array of bytes
-function Raylib.LoadTexture(fileName: cstring): Texture2D                                                                                                                      <cimport'LoadTexture'            , nodecl> end -- Load texture from file into GPU memory (VRAM)
-function Raylib.LoadTextureFromImage(image: Image): Texture2D                                                                                                                  <cimport'LoadTextureFromImage'   , nodecl> end -- Load texture from image data
-function Raylib.LoadTextureCubemap(image: Image, layoutType: cint <autocast>): TextureCubemap                                                                                  <cimport'LoadTextureCubemap'     , nodecl> end -- Load cubemap from image, multiple image cubemap layouts supported
-function Raylib.LoadRenderTexture(width: cint <autocast>, height: cint <autocast>): RenderTexture2D                                                                            <cimport'LoadRenderTexture'      , nodecl> end -- Load texture for rendering (framebuffer)
-function Raylib.UnloadImage(image: Image)                                                                                                                                      <cimport'UnloadImage'            , nodecl> end -- Unload image from CPU memory (RAM)
-function Raylib.UnloadTexture(texture: Texture2D)                                                                                                                              <cimport'UnloadTexture'          , nodecl> end -- Unload texture from GPU memory (VRAM)
-function Raylib.UnloadRenderTexture(target: RenderTexture2D)                                                                                                                   <cimport'UnloadRenderTexture'    , nodecl> end -- Unload render texture from GPU memory (VRAM)
 function Raylib.GetImageData(image: Image): Color*                                                                                                                             <cimport'GetImageData'           , nodecl> end -- Get pixel data from image as a Color struct array
 function Raylib.GetImageDataNormalized(image: Image): Vector4*                                                                                                                 <cimport'GetImageDataNormalized' , nodecl> end -- Get pixel data from image as Vector4 array (float normalized)
-function Raylib.GetImageAlphaBorder(image: Image, threshold: float32 <autocast>): Rectangle                                                                                    <cimport'GetImageAlphaBorder'    , nodecl> end -- Get image alpha border rectangle
-function Raylib.GetPixelDataSize(width: cint <autocast>, height: cint <autocast>, format: cint <autocast>): cint                                                               <cimport'GetPixelDataSize'       , nodecl> end -- Get pixel data size in bytes (image or texture)
-function Raylib.GetTextureData(texture: Texture2D): Image                                                                                                                      <cimport'GetTextureData'         , nodecl> end -- Get pixel data from GPU texture and return an Image
-function Raylib.GetScreenData(): Image                                                                                                                                         <cimport'GetScreenData'          , nodecl> end -- Get pixel data from screen buffer and return an Image (screenshot)
-function Raylib.UpdateTexture(texture: Texture2D, pixels: pointer)                                                                                                             <cimport'UpdateTexture'          , nodecl> end -- Update GPU texture with new data
+
+-- Image generation functions
+function Raylib.GenImageColor(width: cint <autocast>, height: cint <autocast>, color: Color): Image                                                                            <cimport'GenImageColor'          , nodecl> end -- Generate image: plain color
+function Raylib.GenImageGradientV(width: cint <autocast>, height: cint <autocast>, top: Color, bottom: Color): Image                                                           <cimport'GenImageGradientV'      , nodecl> end -- Generate image: vertical gradient
+function Raylib.GenImageGradientH(width: cint <autocast>, height: cint <autocast>, left: Color, right: Color): Image                                                           <cimport'GenImageGradientH'      , nodecl> end -- Generate image: horizontal gradient
+function Raylib.GenImageGradientRadial(width: cint <autocast>, height: cint <autocast>, density: float32 <autocast>, inner: Color, outer: Color): Image                        <cimport'GenImageGradientRadial' , nodecl> end -- Generate image: radial gradient
+function Raylib.GenImageChecked(width: cint <autocast>, height: cint <autocast>, checksX: cint <autocast>, checksY: cint <autocast>, col1: Color, col2: Color): Image          <cimport'GenImageChecked'        , nodecl> end -- Generate image: checked
+function Raylib.GenImageWhiteNoise(width: cint <autocast>, height: cint <autocast>, factor: float32 <autocast>): Image                                                         <cimport'GenImageWhiteNoise'     , nodecl> end -- Generate image: white noise
+function Raylib.GenImagePerlinNoise(width: cint <autocast>, height: cint <autocast>, offsetX: cint <autocast>, offsetY: cint <autocast>, scale: float32 <autocast>): Image     <cimport'GenImagePerlinNoise'    , nodecl> end -- Generate image: perlin noise
+function Raylib.GenImageCellular(width: cint <autocast>, height: cint <autocast>, tileSize: cint <autocast>): Image                                                            <cimport'GenImageCellular'       , nodecl> end -- Generate image: cellular algorithm. Bigger tileSize means bigger cells
 
 -- Image manipulation functions
 function Raylib.ImageCopy(image: Image): Image                                                                                                                                 <cimport'ImageCopy'              , nodecl> end -- Create an image duplicate (useful for transformations)
 function Raylib.ImageFromImage(image: Image, rec: Rectangle): Image                                                                                                            <cimport'ImageFromImage'         , nodecl> end -- Create an image from another image piece
+function Raylib.ImageText(text: cstring, fontSize: cint <autocast>, color: Color): Image                                                                                       <cimport'ImageText'              , nodecl> end -- Create an image from text (default font)
+function Raylib.ImageTextEx(font: Font <autocast>, text: cstring, fontSize: float32 <autocast>, spacing: float32 <autocast>, tint: Color): Image                               <cimport'ImageTextEx'            , nodecl> end -- Create an image from text (custom sprite font)
 function Raylib.ImageToPOT(image: Image*, fillColor: Color)                                                                                                                    <cimport'ImageToPOT'             , nodecl> end -- Convert image to POT (power-of-two)
 function Raylib.ImageFormat(image: Image*, newFormat: cint <autocast>)                                                                                                         <cimport'ImageFormat'            , nodecl> end -- Convert image data to desired format
 function Raylib.ImageAlphaMask(image: Image*, alphaMask: Image)                                                                                                                <cimport'ImageAlphaMask'         , nodecl> end -- Apply alpha mask to image
@@ -1363,14 +1393,6 @@ function Raylib.ImageResizeNN(image: Image*, newWidth: cint ,newHeight: cint <au
 function Raylib.ImageResizeCanvas(image: Image*, newWidth: cint <autocast>, newHeight: cint <autocast>, offsetX: cint <autocast>, offsetY: cint <autocast>, color: Color)      <cimport'ImageResizeCanvas'      , nodecl> end -- Resize canvas and fill with color
 function Raylib.ImageMipmaps(image: Image*)                                                                                                                                    <cimport'ImageMipmaps'           , nodecl> end -- Generate all mipmap levels for a provided image
 function Raylib.ImageDither(image: Image*, rBpp: cint <autocast>, gBpp: cint <autocast>, bBpp: cint <autocast>, aBpp: cint <autocast>)                                         <cimport'ImageDither'            , nodecl> end -- Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
-function Raylib.ImageExtractPalette(image: Image, maxPaletteSize: cint <autocast>, extractCount: cint*): Color*                                                                <cimport'ImageExtractPalette'    , nodecl> end -- Extract color palette from image to maximum size (memory should be freed)
-function Raylib.ImageText(text: cstring, fontSize: cint <autocast>, color: Color): Image                                                                                       <cimport'ImageText'              , nodecl> end -- Create an image from text (default font)
-function Raylib.ImageTextEx(font: Font <autocast>, text: cstring, fontSize: float32 <autocast>, spacing: float32 <autocast>, tint: Color): Image                               <cimport'ImageTextEx'            , nodecl> end -- Create an image from text (custom sprite font)
-function Raylib.ImageDraw(dst: Image*, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color)                                                                          <cimport'ImageDraw'              , nodecl> end -- Draw a source image within a destination image (tint applied to source)
-function Raylib.ImageDrawRectangle(dst: Image*, rec: Rectangle, color: Color)                                                                                                  <cimport'ImageDrawRectangle'     , nodecl> end -- Draw rectangle within an image
-function Raylib.ImageDrawRectangleLines(dst: Image*, rec: Rectangle, thick: cint <autocast>, color: Color)                                                                     <cimport'ImageDrawRectangleLines', nodecl> end -- Draw rectangle lines within an image
-function Raylib.ImageDrawText(dst: Image*, position: Vector2, text: cstring, fontSize: cint <autocast>, color: Color)                                                          <cimport'ImageDrawText'          , nodecl> end -- Draw text (default font) within an image (destination)
-function Raylib.ImageDrawTextEx(dst: Image*, position: Vector2, font: Font <autocast>, text: cstring, fontSize: float32 <autocast>, spacing: float32 <autocast>, color: Color) <cimport'ImageDrawTextEx'        , nodecl> end -- Draw text (custom sprite font) within an image (destination)
 function Raylib.ImageFlipVertical(image: Image*)                                                                                                                               <cimport'ImageFlipVertical'      , nodecl> end -- Flip image vertically
 function Raylib.ImageFlipHorizontal(image: Image*)                                                                                                                             <cimport'ImageFlipHorizontal'    , nodecl> end -- Flip image horizontally
 function Raylib.ImageRotateCW(image: Image*)                                                                                                                                   <cimport'ImageRotateCW'          , nodecl> end -- Rotate image clockwise 90deg
@@ -1381,23 +1403,43 @@ function Raylib.ImageColorGrayscale(image: Image*)                              
 function Raylib.ImageColorContrast(image: Image*, contrast: float32 <autocast>)                                                                                                <cimport'ImageColorContrast'     , nodecl> end -- Modify image color: contrast (-100 to 100)
 function Raylib.ImageColorBrightness(image: Image*, brightness: cint <autocast>)                                                                                               <cimport'ImageColorBrightness'   , nodecl> end -- Modify image color: brightness (-255 to 255)
 function Raylib.ImageColorReplace(image: Image*, color: Color, replace: Color)                                                                                                 <cimport'ImageColorReplace'      , nodecl> end -- Modify image color: replace color
+function Raylib.ImageExtractPalette(image: Image, maxPaletteSize: cint <autocast>, extractCount: cint*): Color*                                                                <cimport'ImageExtractPalette'    , nodecl> end -- Extract color palette from image to maximum size (memory should be freed)
+function Raylib.GetImageAlphaBorder(image: Image, threshold: float32 <autocast>): Rectangle                                                                                    <cimport'GetImageAlphaBorder'    , nodecl> end -- Get image alpha border rectangle
 
--- Image generation functions
-function Raylib.GenImageColor(width: cint <autocast>, height: cint <autocast>, color: Color): Image                                                                            <cimport'GenImageColor'          , nodecl> end -- Generate image: plain color
-function Raylib.GenImageGradientV(width: cint <autocast>, height: cint <autocast>, top: Color, bottom: Color): Image                                                           <cimport'GenImageGradientV'      , nodecl> end -- Generate image: vertical gradient
-function Raylib.GenImageGradientH(width: cint <autocast>, height: cint <autocast>, left: Color, right: Color): Image                                                           <cimport'GenImageGradientH'      , nodecl> end -- Generate image: horizontal gradient
-function Raylib.GenImageGradientRadial(width: cint <autocast>, height: cint <autocast>, density: float32 <autocast>, inner: Color, outer: Color): Image                        <cimport'GenImageGradientRadial' , nodecl> end -- Generate image: radial gradient
-function Raylib.GenImageChecked(width: cint <autocast>, height: cint <autocast>, checksX: cint <autocast>, checksY: cint <autocast>, col1: Color, col2: Color): Image          <cimport'GenImageChecked'        , nodecl> end -- Generate image: checked
-function Raylib.GenImageWhiteNoise(width: cint <autocast>, height: cint <autocast>, factor: float32 <autocast>): Image                                                         <cimport'GenImageWhiteNoise'     , nodecl> end -- Generate image: white noise
-function Raylib.GenImagePerlinNoise(width: cint <autocast>, height: cint <autocast>, offsetX: cint <autocast>, offsetY: cint <autocast>, scale: float32 <autocast>): Image     <cimport'GenImagePerlinNoise'    , nodecl> end -- Generate image: perlin noise
-function Raylib.GenImageCellular(width: cint <autocast>, height: cint <autocast>, tileSize: cint <autocast>): Image                                                            <cimport'GenImageCellular'       , nodecl> end -- Generate image: cellular algorithm. Bigger tileSize means bigger cells
+-- Image drawing functions
+-- NOTE: Image software-rendering functions (CPU)
+function Raylib.ImageClearBackground(dst: Image*, color: Color)                                                                                                                <cimport'ImageClearBackground'   , nodecl> end -- Clear image background with given color
+function Raylib.ImageDrawPixel(dst: Image*, posX: cint <autocast>, posY: cint <autocast>, color: Color)                                                                        <cimport'ImageDrawPixel'         , nodecl> end -- Draw pixel within an image
+function Raylib.ImageDrawPixelV(dst: Image*, position: Vector2, color: Color)                                                                                                  <cimport'ImageDrawPixelV'        , nodecl> end -- Draw pixel within an image (Vector version)
+function Raylib.ImageDrawLine(dst: Image*, startPosX: cint <autocast>, startPosY: cint <autocast>, endPosX: cint <autocast>, endPosY: cint <autocast>, color: Color)           <cimport'ImageDrawLine'          , nodecl> end -- Draw line within an image
+function Raylib.ImageDrawLineV(dst: Image*, start: Vector2, _end: Vector2, color: Color)                                                                                        <cimport'ImageDrawLineV'        , nodecl> end -- Draw line within an image (Vector version)
+function Raylib.ImageDrawCircle(dst: Image*, centerX: cint <autocast>, centerY: cint <autocast>, radius: cint <autocast>, color: Color)                                        <cimport'ImageDrawCircle'        , nodecl> end -- Draw circle within an image
+function Raylib.ImageDrawCircleV(dst: Image*, center: Vector2, radius: cint <autocast>, color: Color)                                                                          <cimport'ImageDrawCircleV'       , nodecl> end -- Draw circle within an image (Vector version)
+function Raylib.ImageDrawRectangle(dst: Image*, rec: Rectangle, color: Color)                                                                                                  <cimport'ImageDrawRectangle'     , nodecl> end -- Draw rectangle within an image
+function Raylib.ImageDrawRectangleV(dst: Image*, position: Vector2, size: Vector2, color: Color)                                                                               <cimport'ImageDrawRectangleV'    , nodecl> end -- Draw rectangle within an image (Vector version)
+function Raylib.ImageDrawRectangleRec(dst: Image*, rec: Rectangle, color: Color)                                                                                               <cimport'ImageDrawRectangleRec'  , nodecl> end -- Draw rectangle within an image
+function Raylib.ImageDrawRectangleLines(dst: Image*, rec: Rectangle, thick: cint <autocast>, color: Color)                                                                     <cimport'ImageDrawRectangleLines', nodecl> end -- Draw rectangle lines within an image
+function Raylib.ImageDraw(dst: Image*, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color)                                                                          <cimport'ImageDraw'              , nodecl> end -- Draw a source image within a destination image (tint applied to source)
+function Raylib.ImageDrawText(dst: Image*, position: Vector2, text: cstring, fontSize: cint <autocast>, color: Color)                                                          <cimport'ImageDrawText'          , nodecl> end -- Draw text (default font) within an image (destination)
+function Raylib.ImageDrawTextEx(dst: Image*, position: Vector2, font: Font <autocast>, text: cstring, fontSize: float32 <autocast>, spacing: float32 <autocast>, color: Color) <cimport'ImageDrawTextEx'        , nodecl> end -- Draw text (custom sprite font) within an image (destination)
 
--- Texture2D configuration functions
+-- Texture loading functions
+function Raylib.LoadTexture(fileName: cstring): Texture2D                                                                                                                      <cimport'LoadTexture'            , nodecl> end -- Load texture from file into GPU memory (VRAM)
+function Raylib.LoadTextureFromImage(image: Image): Texture2D                                                                                                                  <cimport'LoadTextureFromImage'   , nodecl> end -- Load texture from image data
+function Raylib.LoadTextureCubemap(image: Image, layoutType: cint <autocast>): TextureCubemap                                                                                  <cimport'LoadTextureCubemap'     , nodecl> end -- Load cubemap from image, multiple image cubemap layouts supported
+function Raylib.LoadRenderTexture(width: cint <autocast>, height: cint <autocast>): RenderTexture2D                                                                            <cimport'LoadRenderTexture'      , nodecl> end -- Load texture for rendering (framebuffer)
+function Raylib.UnloadTexture(texture: Texture2D)                                                                                                                              <cimport'UnloadTexture'          , nodecl> end -- Unload texture from GPU memory (VRAM)
+function Raylib.UnloadRenderTexture(target: RenderTexture2D)                                                                                                                   <cimport'UnloadRenderTexture'    , nodecl> end -- Unload render texture from GPU memory (VRAM)
+function Raylib.UpdateTexture(texture: Texture2D, pixels: pointer)                                                                                                             <cimport'UpdateTexture'          , nodecl> end -- Update GPU texture with new data
+function Raylib.GetTextureData(texture: Texture2D): Image                                                                                                                      <cimport'GetTextureData'         , nodecl> end -- Get pixel data from GPU texture and return an Image
+function Raylib.GetScreenData(): Image                                                                                                                                         <cimport'GetScreenData'          , nodecl> end -- Get pixel data from screen buffer and return an Image (screenshot)
+
+-- Texture configuration functions
 function Raylib.GenTextureMipmaps(texture: Texture2D*)                                                                                                                         <cimport'GenTextureMipmaps'      , nodecl> end -- Generate GPU mipmaps for a texture
 function Raylib.SetTextureFilter(texture: Texture2D, filterMode: cint <autocast>)                                                                                              <cimport'SetTextureFilter'       , nodecl> end -- Set texture scaling filter mode
 function Raylib.SetTextureWrap(texture: Texture2D, wrapMode: cint <autocast>)                                                                                                  <cimport'SetTextureWrap'         , nodecl> end -- Set texture wrapping mode
 
--- Texture2D drawing functions
+-- Texture drawing functions
 function Raylib.DrawTexture(texture: Texture2D, posX: cint <autocast>, posY: cint <autocast>, tint: Color)                                                                     <cimport'DrawTexture'            , nodecl> end -- Draw a Texture2D
 function Raylib.DrawTextureV(texture: Texture2D, position: Vector2, tint: Color)                                                                                               <cimport'DrawTextureV'           , nodecl> end -- Draw a Texture2D with position defined as Vector2
 function Raylib.DrawTextureEx(texture: Texture2D, position: Vector2, rotation: float32 <autocast>, scale: float32 <autocast>, tint: Color)                                     <cimport'DrawTextureEx'          , nodecl> end -- Draw a Texture2D with extended parameters
@@ -1405,6 +1447,9 @@ function Raylib.DrawTextureRec(texture: Texture2D, sourceRec: Rectangle, positio
 function Raylib.DrawTextureQuad(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color)                                                            <cimport'DrawTextureQuad'        , nodecl> end -- Draw texture quad with tiling and offset parameters
 function Raylib.DrawTexturePro(texture: Texture2D, sourceRec: Rectangle, destRec: Rectangle, origin: Vector2, rotation: float32 <autocast>, tint: Color)                       <cimport'DrawTexturePro'         , nodecl> end -- Draw a part of a texture defined by a rectangle with 'pro' parameters
 function Raylib.DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, destRec: Rectangle, origin: Vector2, rotation: float32 <autocast>, tint: Color)                  <cimport'DrawTextureNPatch'      , nodecl> end -- Draws a texture (or part of it) that stretches or shrinks nicely
+
+-- Image/Texture misc functions
+function Raylib.GetPixelDataSize(width: cint <autocast>, height: cint <autocast>, format: cint <autocast>): cint                                                               <cimport'GetPixelDataSize'       , nodecl> end -- Get pixel data size in bytes (image or texture)
 
 ------------------------------------------------------------------------------------------------------------------------
 -- === TEXTURES MODULE === ]]
