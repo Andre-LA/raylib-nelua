@@ -99,7 +99,7 @@ while not Raylib.WindowShouldClose() do
 
          Raylib.DrawRectangle(-6000, 320, 13000, 8000, RaylibColors.Darkgray)
 
-         for i = 0, MAX_BUILDINGS do
+         for i = 0, < MAX_BUILDINGS do
             Raylib.DrawRectangleRec(buildings[i], buildColors[i])
          end
 
