@@ -67,13 +67,11 @@ local function detach_comment(split_line)
    return new_split_line, comment
 end
 
-local ignored_defines = {
-   'RAYLIB_H',
-}
-
 local primitive_types = {
    ['void'] = true,
    ['int'] = true,
+   ['short'] = true,
+   ['long'] = true,
    ['char'] = true,
    ['*'] = true,
    ['float'] = true,
@@ -90,6 +88,7 @@ local RLAPIs = {}
 local structs = {}
 local enums = {}
 local defines = {}
+local aliases = {}
 
 local function find_name(tbl, name)
    for i = 1, #tbl do
@@ -117,7 +116,7 @@ local function RLAPI_line(split_line)
    local uncomment_split_line, comment = detach_comment(split_line)
    RLAPI.comment = comment
 
-   print ('UN RLAPI: ' .. ins(uncomment_split_line))
+   --print ('UN RLAPI: ' .. ins(uncomment_split_line))
 
    local s = 1
 
@@ -128,8 +127,9 @@ local function RLAPI_line(split_line)
       local is_prim_type = primitive_types[word]
       local is_qualifier = qualifiers[word]
       local is_known_struct = find_name(structs, word)
+      local is_typealias = find_name(aliases, word)
 
-      if is_prim_type or is_qualifier or is_known_struct then
+      if is_prim_type or is_qualifier or is_known_struct or is_typealias then
          table.insert(RLAPI.return_type, word)
       else
          s = i
@@ -150,8 +150,9 @@ local function RLAPI_line(split_line)
       local is_prim_type = primitive_types[word]
       local is_qualifier = qualifiers[word]
       local is_known_struct = find_name(structs, word)
+      local is_typealias = find_name(aliases, word)
 
-      if is_prim_type or is_qualifier or is_known_struct then
+      if is_prim_type or is_qualifier or is_known_struct or is_typealias then
          table.insert(RLAPI.args[#RLAPI.args].type, word)
       else
          RLAPI.args[#RLAPI.args].name = word
@@ -161,7 +162,7 @@ local function RLAPI_line(split_line)
 
    table.remove(RLAPI.args)
 
-   print('RLAPI added to RLAPIs: ' .. ins(RLAPI))
+   --print('RLAPI added to RLAPIs: ' .. ins(RLAPI))
 
    table.insert(RLAPIs, RLAPI)
 end
@@ -178,7 +179,7 @@ local function struct_typedef_line(split_line, prev_comments)
       struct.comment = table.concat(prev_comments, '\n')
    end
 
-   print('struct added to structs: ' .. ins(struct))
+   --print('struct added to structs: ' .. ins(struct))
 
    table.insert(structs, struct)
 end
@@ -207,8 +208,9 @@ local function struct_member_line(split_line)
       local is_prim_type = primitive_types[word]
       local is_qualifier = qualifiers[word]
       local is_known_struct = find_name(structs, word)
+      local is_typealias = find_name(aliases, word)
 
-      if is_prim_type or is_qualifier or is_known_struct then
+      if is_prim_type or is_qualifier or is_known_struct or tonumber(word) or is_typealias then
          table.insert(member_type, word)
       else
          table.insert(members_name, word)
@@ -217,7 +219,7 @@ local function struct_member_line(split_line)
 
    for i = 1, #members_name do
       local member = new_struct_member(members_name[i], member_type, comment)
-      print('struct member added: ' .. ins(member))
+      --print('struct member added: ' .. ins(member))
       table.insert(last_struct.members, member)
    end
 end
@@ -239,44 +241,55 @@ end
 local function enum_member_line(split_line)
    local last_enum = enums[#enums]
 
-   local new_member = {
-      name = '',
-      value = (#last_enum.members > 0 and (
-            last_enum.members[#last_enum.members].value + 1
-         ) or (
-            0
-         )
-      ),
-      comment = '',
-   }
+   if split_line[1] ~= '//' then
+      local new_member = {
+         name = '',
+         value = (#last_enum.members > 0 and (
+               (last_enum.members[#last_enum.members].value or 0) + 1
+            ) or (
+               0
+            )
+         ),
+         comment = '',
+      }
 
-   print('inspect enum member line: ', ins(split_line))
+      --print('inspect enum member line: ', ins(split_line))
 
-   local uncomment_split_line, comment = detach_comment(split_line)
+      local uncomment_split_line, comment = detach_comment(split_line)
 
-   if comment then
-      new_member.comment = comment
-   end
-
-   if #uncomment_split_line > 1 then
-      new_member.name = split_line[1]
-      new_member.value = split_line[2]
-
-      print('enum member added: ' .. ins(new_member))
-      table.insert(last_enum.members, new_member)
-   else
-      local uppername = string.upper(split_line[1])
-
-      print('uppertest', uppername, split_line[1])
-      if uppername == split_line[1] then -- is enum member
-         new_member.name = split_line[1]
-
-         print('enum member added: ' .. ins(new_member))
-         table.insert(last_enum.members, new_member)
-      else -- then is the end of enum
-         last_enum.name = split_line[1]
-         return true
+      if comment then
+         new_member.comment = comment
       end
+
+      if #uncomment_split_line > 1 then
+         new_member.name = split_line[1]
+         new_member.value = split_line[2]
+
+         --print('enum member added: ' .. ins(new_member))
+         table.insert(last_enum.members, new_member)
+      else
+         local uppername = string.upper(split_line[1])
+
+         --print('uppertest', uppername, split_line[1])
+         if uppername == split_line[1] or split_line[1]:find'%d' then -- is enum member
+            new_member.name = split_line[1]
+
+            --print('enum member added: ' .. ins(new_member))
+            table.insert(last_enum.members, new_member)
+         else -- then is the end of enum
+            last_enum.name = split_line[1]
+            return true
+         end
+      end
+   else
+      table.insert(
+         last_enum.members,
+         {
+            name = '',
+            value = nil,
+            comment = join(split_line, #split_line, 2),
+         }
+      )
    end
 
    return false
@@ -300,99 +313,106 @@ local function define_line(split_line, comments_split_lines)
    end
    new_define.comment = comment
 
-   print('new define added: ' .. ins(new_define))
+   --print('new define added: ' .. ins(new_define))
 
    table.insert(defines, new_define)
 end
 
 -- main:
-local state = 'neutral' -- can be
-local raylib_h = io.open'raylib.h'
 
-local comments_split_lines = {}
-local line_number =  0
+local function read(header)
 
-for line in raylib_h:lines() do
-   line_number = line_number + 1
+   local state = 'neutral' -- can be
+   local raylib_h = io.open(header)
 
-   -- separate * so the split function will split it as different words
-   print("line! " .. line)
-   line = line:gsub('CLITERAL%(Color%)', '')
-   line = line:gsub('%*', '* ')
-   line = line:gsub('//', '// ')
-   line = line:gsub('%(', ' ( ')
-   line = line:gsub('%)', ' ) ')
+   local comments_split_lines = {}
+   local line_number =  0
 
-   -- split the line
-   local split_line = split(line)
+   for line in raylib_h:lines() do
+      line_number = line_number + 1
 
-   print('line split: ' .. line ..  ' ~> ' .. ins(split_line))
+      -- separate * so the split function will split it as different words
+      --print("line! " .. line)
+      line = line:gsub('CLITERAL%(Color%)', '')
+      line = line:gsub('%*', '* ')
+      line = line:gsub('//', '// ')
+      line = line:gsub('%(', ' ( ')
+      line = line:gsub('%)', ' ) ')
 
-   -- if the line have contents and it's after 123th line
-   if #split_line > 0 and line_number > 123 then
-      if state == 'neutral' then
-         -- if the line start with a "RLAPI"
-         if split_line[1] == 'RLAPI' then
-            RLAPI_line(split_line)
-         elseif split_line[1] == '//' then
-            local _, comment = detach_comment(split_line)
-            if comment then
-               table.insert(comments_split_lines, line:sub(3))
+      -- split the line
+      local split_line = split(line)
+
+      --print('line split: ' .. line ..  ' ~> ' .. ins(split_line))
+
+      -- if the line have contents and it's after 123th line
+      if #split_line > 0 and line_number > 123 then
+         if state == 'neutral' then
+            -- if the line start with a "RLAPI"
+            if split_line[1] == 'RLAPI' then
+               RLAPI_line(split_line)
+            elseif split_line[1] == '//' then
+               local _, comment = detach_comment(split_line)
+               if comment then
+                  table.insert(comments_split_lines, line:sub(3))
+               end
+            elseif join(split_line, 2) == 'typedef struct' then
+               if #split_line < 4 then
+                  state = 'typedef struct'
+               end
+               struct_typedef_line(split_line, comments_split_lines)
+               comments_split_lines = {}
+            elseif join(split_line, 2) == 'typedef enum' then
+               state = 'typedef enum'
+               enum_typedef_line(split_line, comments_split_lines)
+               comments_split_lines = {}
+            elseif split_line[1] == 'define' then
+               define_line(split_line, comments_split_lines)
+               comments_split_lines = {}
+            elseif join(split_line, 2) == 'if defined' then
+               state = 'pif'
+            elseif split_line[1] == 'typedef' and split_line[2] ~= 'void' then
+               table.insert(aliases, {
+                  name = split_line[3],
+                  from = split_line[2]
+               })
             end
-         elseif join(split_line, 2) == 'typedef struct' then
-            if #split_line < 4 then
-               state = 'typedef struct'
+         elseif state == 'typedef struct' then
+            --print('then typedef struct state', ins(split_line))
+
+            -- if struct declaration ends
+            if split_line[1] == (structs[#structs]).name then
+               --print('"typedef struct" state ends: ' .. ins(structs[#structs]))
+               state = 'neutral'
+            else
+               struct_member_line(split_line)
             end
-            struct_typedef_line(split_line, comments_split_lines)
-            comments_split_lines = {}
-         elseif join(split_line, 2) == 'typedef enum' then
-            state = 'typedef enum'
-            enum_typedef_line(split_line, comments_split_lines)
-            comments_split_lines = {}
-         elseif split_line[1] == 'define' then
-            define_line(split_line, comments_split_lines)
-            comments_split_lines = {}
-         elseif join(split_line, 2) == 'if defined' then
-            state = 'pif'
-         end
-      elseif state == 'typedef struct' then
-         print('then typedef struct state', ins(split_line))
+         elseif state == 'typedef enum' then
+            --print('then typedef enum state', ins(split_line))
+            local should_end_state = enum_member_line(split_line)
 
-         -- if struct declaration ends
-         if split_line[1] == (structs[#structs]).name then
-            print('"typedef struct" state ends: ' .. ins(structs[#structs]))
-            state = 'neutral'
-         else
-            struct_member_line(split_line)
-         end
-      elseif state == 'typedef enum' then
-         print('then typedef enum state', ins(split_line))
-         local should_end_state = enum_member_line(split_line)
-
-         if should_end_state then
-            state = 'neutral'
-            print('"typedef enum" state ends: ' .. ins(enums[#enums]))
-         end
-      elseif state == 'pif' then
-         if split_line[1] == 'endif' then
-            state = 'neutral'
+            if should_end_state then
+               state = 'neutral'
+               --print('"typedef enum" state ends: ' .. ins(enums[#enums]))
+            end
+         elseif state == 'pif' then
+            if split_line[1] == 'endif' then
+               state = 'neutral'
+            end
          end
       end
    end
+
+   raylib_h:close()
+
+   return {
+      defines = defines,
+      structs = structs,
+      enums = enums,
+      RLAPIs = RLAPIs,
+      aliases = aliases
+   }
 end
 
-raylib_h:close()
-
-print(ins{
-   defines = defines,
-   structs = structs,
-   enums = enums,
-   RLAPIs = RLAPIs,
-})
-
 return {
-   defines = defines,
-   structs = structs,
-   enums = enums,
-   RLAPIs = RLAPIs,
+   read = read
 }
