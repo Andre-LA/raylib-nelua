@@ -282,6 +282,29 @@ local function enum_member_line(split_line)
    return false
 end
 
+local function define_line(split_line, comments_split_lines)
+   local last_define = defines[#defines]
+
+   local new_define = {
+      name = '',
+      comment = '',
+      value = {},
+   }
+
+   local uncomment_split_line, comment = detach_comment(split_line)
+
+   new_define.name = uncomment_split_line[2]
+
+   for i = 3, #uncomment_split_line do
+      table.insert(new_define.value, uncomment_split_line[i])
+   end
+   new_define.comment = comment
+
+   print('new define added: ' .. ins(new_define))
+
+   table.insert(defines, new_define)
+end
+
 -- main:
 local state = 'neutral' -- can be
 local raylib_h = io.open'raylib.h'
@@ -293,16 +316,20 @@ for line in raylib_h:lines() do
    line_number = line_number + 1
 
    -- separate * so the split function will split it as different words
-   local line = line:gsub('%*', '* ')
-   local line = line:gsub('//', '// ')
+   print("line! " .. line)
+   line = line:gsub('CLITERAL%(Color%)', '')
+   line = line:gsub('%*', '* ')
+   line = line:gsub('//', '// ')
+   line = line:gsub('%(', ' ( ')
+   line = line:gsub('%)', ' ) ')
 
    -- split the line
    local split_line = split(line)
 
-   print('line split: ' .. ins(split_line))
+   print('line split: ' .. line ..  ' ~> ' .. ins(split_line))
 
    -- if the line have contents and it's after 123th line
-   if #split_line > 0 and line_number > 171 then
+   if #split_line > 0 and line_number > 123 then
       if state == 'neutral' then
          -- if the line start with a "RLAPI"
          if split_line[1] == 'RLAPI' then
@@ -322,6 +349,11 @@ for line in raylib_h:lines() do
             state = 'typedef enum'
             enum_typedef_line(split_line, comments_split_lines)
             comments_split_lines = {}
+         elseif split_line[1] == 'define' then
+            define_line(split_line, comments_split_lines)
+            comments_split_lines = {}
+         elseif join(split_line, 2) == 'if defined' then
+            state = 'pif'
          end
       elseif state == 'typedef struct' then
          print('then typedef struct state', ins(split_line))
@@ -341,23 +373,26 @@ for line in raylib_h:lines() do
             state = 'neutral'
             print('"typedef enum" state ends: ' .. ins(enums[#enums]))
          end
+      elseif state == 'pif' then
+         if split_line[1] == 'endif' then
+            state = 'neutral'
+         end
       end
    end
 end
 
-
 raylib_h:close()
 
 print(ins{
-   structs = structs,
-   RLAPIs = RLAPIs,
-   enums = enums,
    defines = defines,
+   structs = structs,
+   enums = enums,
+   RLAPIs = RLAPIs,
 })
 
 return {
-   structs = structs,
-   RLAPIs = RLAPIs,
-   enums = enums,
    defines = defines,
+   structs = structs,
+   enums = enums,
+   RLAPIs = RLAPIs,
 }
