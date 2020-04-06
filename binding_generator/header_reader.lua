@@ -89,6 +89,7 @@ local qualifiers = {
 local RLAPIs = {}
 local structs = {}
 local enums = {}
+local defines = {}
 
 local function find_name(tbl, name)
    for i = 1, #tbl do
@@ -189,7 +190,7 @@ local function struct_member_line(split_line)
       return {
          name = _name or '',
          type = _type and table_clone(_type) or {},
-         comment = _comment or {},
+         comment = _comment or '',
       }
    end
 
@@ -299,6 +300,7 @@ for line in raylib_h:lines() do
    local split_line = split(line)
 
    print('line split: ' .. ins(split_line))
+
    -- if the line have contents and it's after 123th line
    if #split_line > 0 and line_number > 171 then
       if state == 'neutral' then
@@ -322,7 +324,7 @@ for line in raylib_h:lines() do
             comments_split_lines = {}
          end
       elseif state == 'typedef struct' then
-         print(ins(split_line))
+         print('then typedef struct state', ins(split_line))
 
          -- if struct declaration ends
          if split_line[1] == (structs[#structs]).name then
@@ -343,7 +345,19 @@ for line in raylib_h:lines() do
    end
 end
 
-print'result:'
-print(ins{structs, RLAPIs})
 
 raylib_h:close()
+
+print(ins{
+   structs = structs,
+   RLAPIs = RLAPIs,
+   enums = enums,
+   defines = defines,
+})
+
+return {
+   structs = structs,
+   RLAPIs = RLAPIs,
+   enums = enums,
+   defines = defines,
+}
