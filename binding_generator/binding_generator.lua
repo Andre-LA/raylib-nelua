@@ -1,8 +1,11 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
 local indent = '   '
 
 local ins = require'inspect'
 local header_reader = require 'binding_generator.header_reader'
-
 
 local raylib_table = header_reader.read 'binding_generator/raylib.h'
 
