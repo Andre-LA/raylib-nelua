@@ -24,7 +24,7 @@ end
 
 local function split(line)
    local split_line = {}
-   for cap in line:gmatch'[%w%*%/]+' do
+   for cap in line:gmatch'[%w%*%/_]+' do
       table.insert(split_line, cap)
    end
    return split_line
@@ -221,6 +221,66 @@ local function struct_member_line(split_line)
    end
 end
 
+local function enum_typedef_line(split_line, prev_comments)
+   local new_enum =  {
+      comment = '',
+      name = '',
+      members = {}
+   }
+
+   if prev_comments then
+      new_enum.comment = table.concat(prev_comments, '\n')
+   end
+
+   table.insert(enums, new_enum)
+end
+
+local function enum_member_line(split_line)
+   local last_enum = enums[#enums]
+
+   local new_member = {
+      name = '',
+      value = (#last_enum.members > 0 and (
+            last_enum.members[#last_enum.members].value + 1
+         ) or (
+            0
+         )
+      ),
+      comment = '',
+   }
+
+   print('inspect enum member line: ', ins(split_line))
+
+   local uncomment_split_line, comment = detach_comment(split_line)
+
+   if comment then
+      new_member.comment = comment
+   end
+
+   if #uncomment_split_line > 1 then
+      new_member.name = split_line[1]
+      new_member.value = split_line[2]
+
+      print('enum member added: ' .. ins(new_member))
+      table.insert(last_enum.members, new_member)
+   else
+      local uppername = string.upper(split_line[1])
+
+      print('uppertest', uppername, split_line[1])
+      if uppername == split_line[1] then -- is enum member
+         new_member.name = split_line[1]
+
+         print('enum member added: ' .. ins(new_member))
+         table.insert(last_enum.members, new_member)
+      else -- then is the end of enum
+         last_enum.name = split_line[1]
+         return true
+      end
+   end
+
+   return false
+end
+
 -- main:
 local state = 'neutral' -- can be
 local raylib_h = io.open'raylib.h'
@@ -233,10 +293,12 @@ for line in raylib_h:lines() do
 
    -- separate * so the split function will split it as different words
    local line = line:gsub('%*', '* ')
+   local line = line:gsub('//', '// ')
 
    -- split the line
    local split_line = split(line)
 
+   print('line split: ' .. ins(split_line))
    -- if the line have contents and it's after 123th line
    if #split_line > 0 and line_number > 171 then
       if state == 'neutral' then
@@ -254,6 +316,10 @@ for line in raylib_h:lines() do
             end
             struct_typedef_line(split_line, comments_split_lines)
             comments_split_lines = {}
+         elseif join(split_line, 2) == 'typedef enum' then
+            state = 'typedef enum'
+            enum_typedef_line(split_line, comments_split_lines)
+            comments_split_lines = {}
          end
       elseif state == 'typedef struct' then
          print(ins(split_line))
@@ -264,6 +330,14 @@ for line in raylib_h:lines() do
             state = 'neutral'
          else
             struct_member_line(split_line)
+         end
+      elseif state == 'typedef enum' then
+         print('then typedef enum state', ins(split_line))
+         local should_end_state = enum_member_line(split_line)
+
+         if should_end_state then
+            state = 'neutral'
+            print('"typedef enum" state ends: ' .. ins(enums[#enums]))
          end
       end
    end
