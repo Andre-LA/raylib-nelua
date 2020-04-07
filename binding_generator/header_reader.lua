@@ -72,6 +72,7 @@ local function detach_comment(split_line)
 end
 
 local primitive_types = {
+   ['va_list'] = true, -- not primitive I know
    ['void'] = true,
    ['int'] = true,
    ['short'] = true,
@@ -93,6 +94,7 @@ local structs = {}
 local enums = {}
 local defines = {}
 local aliases = {}
+local callbacks = {}
 
 local function find_name(tbl, name)
    for i = 1, #tbl do
@@ -101,6 +103,39 @@ local function find_name(tbl, name)
       end
    end
    return nil
+end
+
+local function RLAPI_continue_line(split_line)
+   local last_RLAPI = RLAPIs[#RLAPIs]
+
+   local function add_rlapi_arg()
+      table.insert(last_RLAPI.args, {type = {}, name = ''})
+   end
+
+   local uncomment_split_line, comment = detach_comment(split_line)
+   last_RLAPI.comment = comment
+
+   -- collect RLAPI arguments
+   add_rlapi_arg()
+
+   for i = 1, #uncomment_split_line do
+      local word = uncomment_split_line[i]
+
+      local is_prim_type = primitive_types[word]
+      local is_qualifier = qualifiers[word]
+      local is_known_struct = find_name(structs, word)
+      local is_typealias = find_name(aliases, word)
+      local is_callback = find_name(callbacks, word)
+
+      if is_prim_type or is_qualifier or is_known_struct or is_typealias or is_callback then
+         table.insert(last_RLAPI.args[#last_RLAPI.args].type, word)
+      else
+         last_RLAPI.args[#last_RLAPI.args].name = word
+         add_rlapi_arg()
+      end
+   end
+
+   table.remove(last_RLAPI.args)
 end
 
 local function RLAPI_line(split_line)
@@ -132,8 +167,9 @@ local function RLAPI_line(split_line)
       local is_qualifier = qualifiers[word]
       local is_known_struct = find_name(structs, word)
       local is_typealias = find_name(aliases, word)
+      local is_callback = find_name(callbacks, word)
 
-      if is_prim_type or is_qualifier or is_known_struct or is_typealias then
+      if is_prim_type or is_qualifier or is_known_struct or is_typealias or is_callback then
          table.insert(RLAPI.return_type, word)
       else
          s = i
@@ -155,8 +191,9 @@ local function RLAPI_line(split_line)
       local is_qualifier = qualifiers[word]
       local is_known_struct = find_name(structs, word)
       local is_typealias = find_name(aliases, word)
+      local is_callback = find_name(callbacks, word)
 
-      if is_prim_type or is_qualifier or is_known_struct or is_typealias then
+      if is_prim_type or is_qualifier or is_known_struct or is_typealias or is_callback then
          table.insert(RLAPI.args[#RLAPI.args].type, word)
       else
          RLAPI.args[#RLAPI.args].name = word
@@ -179,7 +216,7 @@ local function struct_typedef_line(split_line, prev_comments)
    }
 
    struct.name = split_line[3]
-   if prev_comments then
+   if prev_comments and #prev_comments > 0 then
       struct.comment = table.concat(prev_comments, '\n')
    end
 
@@ -201,7 +238,7 @@ local function struct_member_line(split_line)
 
    local uncomment_split_line, comment = detach_comment(split_line)
 
-   print('add struct member: ', ins(uncomment_split_line))
+   --print('add struct member: ', ins(uncomment_split_line))
 
    local member_type = {}
    local members_name = {}
@@ -213,8 +250,9 @@ local function struct_member_line(split_line)
       local is_qualifier = qualifiers[word]
       local is_known_struct = find_name(structs, word)
       local is_typealias = find_name(aliases, word)
+      local is_callback = find_name(callbacks, word)
 
-      if is_prim_type or is_qualifier or is_known_struct or tonumber(word) or is_typealias then
+      if is_prim_type or is_qualifier or is_known_struct or tonumber(word) or is_typealias or is_callback then
          table.insert(member_type, word)
       else
          table.insert(members_name, word)
@@ -235,7 +273,7 @@ local function enum_typedef_line(split_line, prev_comments)
       members = {}
    }
 
-   if prev_comments then
+   if prev_comments and #prev_comments > 0 then
       new_enum.comment = table.concat(prev_comments, '\n')
    end
 
@@ -299,7 +337,7 @@ local function enum_member_line(split_line)
    return false
 end
 
-local function define_line(split_line, comments_split_lines)
+local function define_line(split_line, prev_comments)
    local last_define = defines[#defines]
 
    local new_define = {
@@ -320,6 +358,46 @@ local function define_line(split_line, comments_split_lines)
    --print('new define added: ' .. ins(new_define))
 
    table.insert(defines, new_define)
+end
+
+local function callback_line(split_line, prev_comments)
+   local new_callback = {
+      name = split_line[4],
+      args = {},
+      comment = '',
+   }
+
+   if prev_comments and #prev_comments > 0 then
+      new_callback.comment = table.concat(prev_comments, '\n')
+   end
+
+   local function add_callback_arg()
+      table.insert(new_callback.args, {type = {}, name = ''})
+   end
+
+   -- collect callback arguments
+   add_callback_arg()
+
+   for i = 5, #split_line do
+      local word = split_line[i]
+
+      local is_prim_type = primitive_types[word]
+      local is_qualifier = qualifiers[word]
+      local is_known_struct = find_name(structs, word)
+      local is_typealias = find_name(aliases, word)
+      local is_callback = find_name(callbacks, word)
+
+      if is_prim_type or is_qualifier or is_known_struct or is_typealias or is_callback then
+         table.insert(new_callback.args[#new_callback.args].type, word)
+      else
+         new_callback.args[#new_callback.args].name = word
+         add_callback_arg()
+      end
+   end
+
+   table.remove(new_callback.args)
+
+   table.insert(callbacks, new_callback)
 end
 
 -- main:
@@ -354,6 +432,9 @@ local function read(header)
             -- if the line start with a "RLAPI"
             if split_line[1] == 'RLAPI' then
                RLAPI_line(split_line)
+               if not RLAPIs[#RLAPIs].comment then
+                  state = 'giant RLAPI'
+               end
             elseif split_line[1] == '//' then
                local _, comment = detach_comment(split_line)
                if comment then
@@ -374,11 +455,16 @@ local function read(header)
                comments_split_lines = {}
             elseif join(split_line, 2) == 'if defined' then
                state = 'pif'
-            elseif split_line[1] == 'typedef' and split_line[2] ~= 'void' then
-               table.insert(aliases, {
-                  name = split_line[3],
-                  from = split_line[2]
-               })
+            elseif split_line[1] == 'typedef' then
+               if split_line[2] ~= 'void' then
+                  table.insert(aliases, {
+                     name = split_line[3],
+                     from = split_line[2]
+                  })
+               elseif split_line[3] == '*' then
+                  callback_line(split_line, comments_split_lines)
+                  comments_split_lines = {}
+               end
             end
          elseif state == 'typedef struct' then
             --print('then typedef struct state', ins(split_line))
@@ -402,6 +488,9 @@ local function read(header)
             if split_line[1] == 'endif' then
                state = 'neutral'
             end
+         elseif state == 'giant RLAPI' then
+            RLAPI_continue_line(split_line)
+            state = 'neutral'
          end
       end
    end
@@ -413,7 +502,8 @@ local function read(header)
       structs = structs,
       enums = enums,
       RLAPIs = RLAPIs,
-      aliases = aliases
+      aliases = aliases,
+      callbacks = callbacks
    }
 end
 

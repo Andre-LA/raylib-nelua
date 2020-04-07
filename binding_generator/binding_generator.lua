@@ -43,7 +43,7 @@ local function c_type(t)
    local _type = ''
 
    for i = 1, #t do
-      print('t[i]: ', i, t[i])
+      --print('t[i]: ', i, t[i])
 
       local ti = t[i]
 
@@ -56,10 +56,10 @@ local function c_type(t)
       local types_ti = types[ti]
 
       local i_type = types_ti and types_ti(_type or '', as_number) or ti
-      print('i_type ' .. tostring(i) .. ' ' .. i_type)
+      --print('i_type ' .. tostring(i) .. ' ' .. i_type)
 
 
-      print('end/i_type ' .. tostring(i) .. ' ' .. i_type)
+      --print('end/i_type ' .. tostring(i) .. ' ' .. i_type)
       _type = i_type
 
       if i_type == 'char' or i_type == 'uchar' or i_type == 'int'
@@ -68,16 +68,24 @@ local function c_type(t)
          _type = 'c' .. _type
       end
 
-      print('type_i ' .. tostring(i) .. ' ' .. _type .. '\n')
+      --print('type_i ' .. tostring(i) .. ' ' .. _type .. '\n')
    end
 
-   print('_type ' .. _type)
+   --print('_type ' .. _type)
 
    return _type
 end
 
 local function generate_type(t)
-   return c_type(t)
+   local type_result = c_type(t)
+
+   if type_result == 'pointer(cchar)' then
+      type_result = 'cstring'
+   elseif type_result == 'pointer(void)' then
+      type_result = 'pointer'
+   end
+
+   return type_result
 end
 
 local function generate_record(struct)
@@ -111,6 +119,7 @@ local function generate_record(struct)
 end
 
 local function generate_alias(alias)
+   print('alias gen: ', ins(alias))
    return {'global', alias.name .. ':', 'type', '=', '@' .. alias.from, '\n'}
 end
 
@@ -146,6 +155,64 @@ local function generate_enum(enum)
    return new_enum
 end
 
+local function generate_RLAPI(RLAPI)
+   local new_RLAPI = {
+      '\n' .. fmt_comment(RLAPI.comment),
+      '\nfunction' ,
+      'Raylib.' .. RLAPI.name .. '('
+   }
+
+   for i = 1, #RLAPI.args do
+      local _arg = RLAPI.args[i]
+
+      table.insert(
+         new_RLAPI,
+         table.concat({
+            _arg.name ~= 'end' and _arg.name or '_end',
+            ': ',
+            generate_type(_arg.type),
+            i <  #RLAPI.args and ',' or ''
+         })
+      )
+   end
+
+   table.insert(new_RLAPI, '): ')
+   table.insert(new_RLAPI, generate_type(RLAPI.return_type))
+   table.insert(new_RLAPI, '<cimport')
+   table.insert(new_RLAPI, "'" .. RLAPI.name .. "', nodecl> end")
+
+   return new_RLAPI
+end
+
+-- "global TraceLogCallback: type = function(logType: cint, text: cstring, args: va_list)",
+
+local function generate_callback(callback)
+   local new_callback = {
+      fmt_comment(callback.comment),
+      '\nglobal',
+      callback.name .. ':',
+      'type',
+      '=',
+      '@function('
+   }
+
+   for i = 1, #callback.args do
+      local _arg = callback.args[i]
+
+      table.insert(
+         new_callback,
+         table.concat({
+            generate_type(_arg.type),
+            i <  #callback.args and ',' or ''
+         })
+      )
+   end
+
+   table.insert(new_callback, ')')
+
+   return new_callback
+end
+
 local generated_lines = {
    "--[[ This Source Code Form is subject to the terms of the Mozilla Public",
    "     License, v. 2.0. If a copy of the MPL was not distributed with this",
@@ -174,7 +241,17 @@ local generated_lines = {
    "",
    "global Raymath = @record{}",
    "global Raylib  = @record{}",
+   "",
+   "local va_list <cimport, nodecl> = @record{}",
 }
+
+for i = 1, #raylib_table.callbacks do
+   local callback = raylib_table.callbacks[i]
+   local generated_line = table.concat(generate_callback(callback), ' ')
+   table.insert(generated_lines, generated_line)
+end
+
+table.insert(generated_lines, "")
 
 for i = 1, #raylib_table.enums do
    local enum = raylib_table.enums[i]
@@ -182,23 +259,34 @@ for i = 1, #raylib_table.enums do
    table.insert(generated_lines, generated_line)
 end
 
+table.insert(generated_lines, "")
+
 for i = 1, #raylib_table.structs do
    local struct = raylib_table.structs[i]
    local generated_line = table.concat(generate_record(struct), ' ')
    table.insert(generated_lines, generated_line)
 
 
-   for i = 1, #raylib_table.aliases do
-      local alias = raylib_table.aliases[i]
+   for j = 1, #raylib_table.aliases do
+      local alias = raylib_table.aliases[j]
 
       if alias.from == struct.name then
          local generated_alias = generate_alias(alias)
          local generated_line = table.concat(generated_alias, ' ')
          table.insert(generated_lines, generated_line)
-         break
       end
    end
 end
+
+table.insert(generated_lines, "")
+
+for i = 1, #raylib_table.RLAPIs do
+   local RLAPI = raylib_table.RLAPIs[i]
+   local generated_line = table.concat(generate_RLAPI(RLAPI), ' ')
+   table.insert(generated_lines, generated_line)
+end
+
+table.insert(generated_lines, "")
 
 local result = table.concat(generated_lines, '\n')
 
