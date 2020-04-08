@@ -155,7 +155,7 @@ local function RLAPI_line(split_line)
    local uncomment_split_line, comment = detach_comment(split_line)
    RLAPI.comment = comment
 
-   --print ('UN RLAPI: ' .. ins(uncomment_split_line))
+   print ('UN RLAPI: ' .. ins(uncomment_split_line))
 
    local s = 1
 
@@ -416,6 +416,7 @@ local function read(header)
       -- separate * so the split function will split it as different words
       --print("line! " .. line)
       line = line:gsub('CLITERAL%(Color%)', '')
+      line = line:gsub('%.%.%.', 'DOTDOTDOT')
       line = line:gsub('%*', '* ')
       line = line:gsub('//', '// ')
       line = line:gsub('%(', ' ( ')
@@ -450,7 +451,7 @@ local function read(header)
                state = 'typedef enum'
                enum_typedef_line(split_line, comments_split_lines)
                comments_split_lines = {}
-            elseif split_line[1] == 'define' then
+            elseif split_line[1] == 'define' and line_number < 153 then -- I only want to get the colors
                define_line(split_line, comments_split_lines)
                comments_split_lines = {}
             elseif join(split_line, 2) == 'if defined' then

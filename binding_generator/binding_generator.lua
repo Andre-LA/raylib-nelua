@@ -3,13 +3,14 @@
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
 local indent = '   '
+local subindent = indent:sub(1, #indent-1)
 
 local ins = require'inspect'
 local header_reader = require 'binding_generator.header_reader'
 
 local raylib_table = header_reader.read 'binding_generator/raylib.h'
 
-print(ins(raylib_table.aliases))
+print(ins(raylib_table.RLAPIs))
 
 local function fmt_comment(comment)
    if comment:sub(1, 2) ~= '--' then
@@ -103,11 +104,11 @@ local function generate_record(struct)
       table.insert(
          new_record,
          table.concat({
-            indent:sub(1, #indent-1) .. member.name,
+            subindent .. fmt_comment(member.comment),
+            (member.comment ~= '' and '\n' .. indent or '') .. member.name,
             ': ',
-            generate_type(member.type),
+            struct.name ~= 'Color' and generate_type(member.type) or 'uint8',
             ',',
-            ' ' .. fmt_comment(member.comment),
             '\n'
          })
       )
@@ -119,7 +120,6 @@ local function generate_record(struct)
 end
 
 local function generate_alias(alias)
-   print('alias gen: ', ins(alias))
    return {'global', alias.name .. ':', 'type', '=', '@' .. alias.from, '\n'}
 end
 
@@ -132,22 +132,26 @@ local function generate_enum(enum)
       '@enum {\n'
    }
 
+   local last_was_comment = false
    for i = 1, #enum.members do
       local member = enum.members[i]
       local m_value = member.value
+      local v_or_1st = member.value or i == 1
       local underline_pos = member.name:find'_'
 
       table.insert(
          new_enum,
          table.concat({
-            ((m_value or i == 1) and '' or '\n'),
-            indent:sub(1, #indent-1) .. member.name,
+            (v_or_1st and '' or (last_was_comment and '\n' or '')),
+            ((v_or_1st) and subindent or (last_was_comment and indent or subindent)) .. fmt_comment(member.comment),
+            ((member.comment ~= '' and m_value) and '\n' .. indent or '') .. member.name,
             m_value and ' = ' or '',
             (m_value and math.tointeger(m_value) or '') .. (m_value and ',' or ''),
-            (m_value and ' ' or '') .. fmt_comment(member.comment),
             '\n'
          })
       )
+
+      last_was_comment = v_or_1st
    end
 
    new_enum[#new_enum] = new_enum[#new_enum] .. '}\n'
@@ -164,12 +168,14 @@ local function generate_RLAPI(RLAPI)
 
    for i = 1, #RLAPI.args do
       local _arg = RLAPI.args[i]
+      _arg.name = _arg.name ~= 'end' and _arg.name or '_end'
+      _arg.name = _arg.name ~= 'DOTDOTDOT' and _arg.name or '...'
 
       table.insert(
          new_RLAPI,
          table.concat({
-            _arg.name ~= 'end' and _arg.name or '_end',
-            ': ',
+            _arg.name,
+            _arg.name ~= '...' and ': ' or '',
             generate_type(_arg.type),
             i <  #RLAPI.args and ',' or ''
          })
@@ -213,14 +219,24 @@ local function generate_callback(callback)
    return new_callback
 end
 
+-- this is specific for Color constants
+local function generate_define(define)
+   return {
+      'global',
+      define.name .. ':',
+      'Color',
+      '<cimport, nodecl>'
+   }
+end
+
 local generated_lines = {
    "--[[ This Source Code Form is subject to the terms of the Mozilla Public",
    "     License, v. 2.0. If a copy of the MPL was not distributed with this",
    "     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]",
    "",
-   "-- Raylib and Raymath 2.6 wrapper",
-   "-- based on raylib.h (https://github.com/raysan5/raylib/blob/2.6/src/raylib.h)",
-   "-- and raymath.h (https://github.com/raysan5/raylib/blob/2.6/src/raymath.h)",
+   "-- Raylib and Raymath 3.0 wrapper",
+   "-- based on raylib.h (https://github.com/raysan5/raylib/blob/3.0.0/src/raylib.h)",
+   "-- and raymath.h (https://github.com/raysan5/raylib/blob/3.0.0/src/raymath.h)",
    "",
    "## linklib 'raylib'",
    "## linklib 'GL'",
@@ -287,6 +303,14 @@ for i = 1, #raylib_table.RLAPIs do
 end
 
 table.insert(generated_lines, "")
+
+for i = 1, #raylib_table.defines do
+   local define = raylib_table.defines[i]
+   local generated_line = table.concat(generate_define(define), ' ')
+   table.insert(generated_lines, generated_line)
+end
+
+table.insert(generated_lines, " ")
 
 local result = table.concat(generated_lines, '\n')
 
