@@ -379,13 +379,13 @@ c_patterns.ops = c_patterns.unary_ops + c_patterns.binary_ops + c_patterns.terna
 
 c_patterns.comment_line = lpeg.P{
    'comment_line';
-   comment_line = lpeg.P'//' * possible_spaces * lpeg.V'comment',
+   comment_line = lpeg.P'//' * space^0 * lpeg.V'comment',
    comment = (word + space - newline)^0 / captures.comment
 }
 
 c_patterns.comment_multiline = lpeg.P{
    'comment_multiline';
-   comment_multiline = lpeg.P'/*' * possible_spaces * lpeg.V'comment' * lpeg.P'*/',
+   comment_multiline = lpeg.P'/*' * space^0 * lpeg.V'comment' * lpeg.P'*/',
    comment = ((word - lpeg.P'*') + space + (lpeg.P'*' - (lpeg.P'*/')))^0 / captures.comment
 }
 
@@ -393,7 +393,7 @@ c_patterns.identifier = identifier / captures.identifier
 c_patterns.comment = c_patterns.comment_line + c_patterns.comment_multiline
 c_patterns.void = kw'void' / captures.void
 c_patterns.pointer = lpeg.P'*'^1 / captures.pointer
-c_patterns.array = lbracket * possible_spaces * (digit^1 / captures.array) * possible_spaces * rbracket
+c_patterns.array = lbracket * space^0 * (digit^1 / captures.array) * space^0 * rbracket
 c_patterns.variadic_arg = lpeg.P'...' / captures.variadic_arg
 
 c_patterns.basic_type = lpeg.P{
@@ -404,26 +404,26 @@ c_patterns.basic_type = lpeg.P{
 
    character = (
       kw'char' +
-      kw'signed' * spaces * kw'char' +
-      kw'unsigned' * spaces * kw'char'
+      kw'signed' * space^1 * kw'char' +
+      kw'unsigned' * space^1 * kw'char'
    ),
 
    integer = (
-      kw'unsigned' * spaces * kw'long' * spaces * kw'long' * (spaces * kw'int')^-1 +
+      kw'unsigned' * space^1 * kw'long' * space^1 * kw'long' * (space^1 * kw'int')^-1 +
 
-      (kw'signed' * spaces)^-1 * kw'long' * spaces * kw'long' * (spaces * kw'int')^-1 +
+      (kw'signed' * space^1)^-1 * kw'long' * space^1 * kw'long' * (space^1 * kw'int')^-1 +
 
-      kw'unsigned' * spaces * kw'long' * (spaces * kw'int')^-1 +
+      kw'unsigned' * space^1 * kw'long' * (space^1 * kw'int')^-1 +
 
-      (kw'signed' * spaces)^-1 * kw'long' * (spaces * kw'int')^-1 +
+      (kw'signed' * space^1)^-1 * kw'long' * (space^1 * kw'int')^-1 +
 
-      kw'unsigned' * spaces * kw'short' * (spaces * kw'int')^-1 +
+      kw'unsigned' * space^1 * kw'short' * (space^1 * kw'int')^-1 +
 
-      (kw'signed' * spaces)^-1 * kw'short' * (spaces * kw'int')^-1 +
+      (kw'signed' * space^1)^-1 * kw'short' * (space^1 * kw'int')^-1 +
 
-      kw'unsigned' * (spaces * kw'int')^-1 +
+      kw'unsigned' * (space^1 * kw'int')^-1 +
 
-      ((kw'signed' * spaces * kw'int') + (kw'signed' + kw'int'))
+      ((kw'signed' * space^1 * kw'int') + (kw'signed' + kw'int'))
    ),
 
    floating = lpeg.V'floating_complex' + lpeg.V'floating_imaginary' + lpeg.V'floating_real',
@@ -432,26 +432,26 @@ c_patterns.basic_type = lpeg.P{
       -- NYI Note (from cppreference):
       -- as with all type specifiers, any order is permitted: long double complex, complex long double,
       -- and even double complex long name the same type.
-      kw'long' * spaces * kw'double' * spaces * kw'_Complex' +
+      kw'long' * space^1 * kw'double' * space^1 * kw'_Complex' +
 
-      kw'double' * spaces * kw'_Complex' +
+      kw'double' * space^1 * kw'_Complex' +
 
-      kw'float' * spaces * kw'_Complex'
+      kw'float' * space^1 * kw'_Complex'
    ),
 
    floating_imaginary = (
       -- NYI Note (from cppreference):
       -- as with all type specifiers, any order is permitted: long double imaginary, imaginary long double,
       -- and even double imaginary long name the same type.
-      kw'long' * spaces * kw'double' * spaces * kw'_Imaginary' +
+      kw'long' * space^1 * kw'double' * space^1 * kw'_Imaginary' +
 
-      kw'double' * spaces * kw'_Imaginary' +
+      kw'double' * space^1 * kw'_Imaginary' +
 
-      kw'float' * spaces * kw'_Imaginary'
+      kw'float' * space^1 * kw'_Imaginary'
    ),
 
    floating_real = (
-      kw'long' * spaces * kw'double' +
+      kw'long' * space^1 * kw'double' +
 
       kw'double' +
 
@@ -459,7 +459,7 @@ c_patterns.basic_type = lpeg.P{
    ),
 }
 
-c_patterns.alignment_specifier = kw'_Alignas' -- * possible_spaces * lpeg.P'(' * c_patterns.type * lpeg.P')'
+c_patterns.alignment_specifier = kw'_Alignas' -- * space^0 * lpeg.P'(' * c_patterns.type * lpeg.P')'
 c_patterns.storage_class_specifier = kw'auto' + kw'register' + kw'static' + kw'extern' + kw'_Thread_local'
 c_patterns.function_specifier = kw'inline' + kw'_Noreturn'
 
@@ -481,7 +481,7 @@ c_patterns.specifiers_and_qualifiers = lpeg.P{
          c_patterns.specifier +
          c_patterns.qualifier
       ) / captures.specifiers_and_qualifiers
-   ) * (spaces * lpeg.V'specifiers_and_qualifiers')^-1,
+   ) * (space^1 * lpeg.V'specifiers_and_qualifiers')^-1,
 }
 
 c_patterns.declarator_and_initializer = lpeg.P{
@@ -495,8 +495,8 @@ c_patterns.declarator_and_initializer = lpeg.P{
 c_patterns.var_decl = lpeg.P{
    'var_decl';
    var_decl = (
-      c_patterns.specifiers_and_qualifiers * possible_spaces * c_patterns.declarator_and_initializer * (
-         possible_spaces * comma * possible_spaces * c_patterns.declarator_and_initializer
+      c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator_and_initializer * (
+         space^0 * comma * space^0 * c_patterns.declarator_and_initializer
       )^0
    ) / captures.var_decl
 }
@@ -511,8 +511,8 @@ c_patterns.func_decl = lpeg.P{
 
    func_arg = (
       c_patterns.variadic_arg + (
-         c_patterns.specifiers_and_qualifiers * possible_spaces * c_patterns.declarator_and_initializer * (
-            possible_spaces * comma * possible_spaces * lpeg.V'func_arg'^-1
+         c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator * (
+            space^0 * comma * space^0 * lpeg.V'func_arg'^-1
          )^0
       ) +
       c_patterns.void
@@ -522,13 +522,13 @@ c_patterns.func_decl = lpeg.P{
 c_patterns.callback = lpeg.P{
    'callback';
    callback = (
-      c_patterns.specifiers_and_qualifiers * possible_spaces * lparan * c_patterns.pointer * c_patterns.declarator_and_initializer * rparan *
-      possible_spaces * lparan * possible_spaces * (lpeg.V'func_arg'^-1 / captures.func_arg) * possible_spaces * rparan
+      c_patterns.specifiers_and_qualifiers * space^0 * lparen * c_patterns.pointer * c_patterns.declarator_and_initializer * rparen *
+      space^0 * lparen * space^0 * (lpeg.V'func_arg'^-1 / captures.func_arg) * space^0 * rparen
    ) / captures.callback,
 
    func_arg = (
-      c_patterns.specifiers_and_qualifiers * possible_spaces * c_patterns.declarator_and_initializer * (
-         possible_spaces * comma * possible_spaces * lpeg.V'func_arg'^-1
+      c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator_and_initializer * (
+         space^0 * comma * space^0 * lpeg.V'func_arg'^-1
       )^0
    )
 }
@@ -536,16 +536,16 @@ c_patterns.callback = lpeg.P{
 c_patterns.struct_decl = lpeg.P{
    'struct_declaration';
    struct_declaration = (
-      kw'struct' * spaces * lpeg.V'struct_name'^-1 * (
-         possible_spaces * lbrace * possible_spaces * lpeg.V'struct_declaration_list' * possible_spaces * rbrace
+      kw'struct' * space^1 * lpeg.V'struct_name'^-1 * (
+         space^0 * lbrace * space^0 * lpeg.V'struct_declaration_list' * space^0 * rbrace
       )^-1
    ) / captures.struct_decl,
 
    struct_declaration_list = lpeg.V'struct_member_decl'^1 / captures.struct_declaration_list,
 
    struct_member_decl = (
-      (possible_spaces * c_patterns.var_decl * possible_spaces * semicolon * possible_spaces * c_patterns.comment^-1) +
-      (possible_spaces * c_patterns.comment^1)
+      (space^0 * c_patterns.var_decl * space^0 * semicolon * space^0 * c_patterns.comment^-1) +
+      (space^0 * c_patterns.comment^1)
    ),
 
    struct_name = identifier / captures.struct_name
@@ -554,16 +554,16 @@ c_patterns.struct_decl = lpeg.P{
 c_patterns.enum_decl = lpeg.P{
    'enum_declaration';
    enum_declaration = (
-      kw'enum' * spaces * lpeg.V'enum_name'^-1 * possible_spaces * lbrace * possible_spaces *
+      kw'enum' * space^1 * lpeg.V'enum_name'^-1 * space^0 * lbrace * space^0 *
       lpeg.V'enum_member_list' *
-      possible_spaces * rbrace
+      space^0 * rbrace
    ) / captures.enum_decl,
 
    enum_member_list = lpeg.V'enum_member_decl'^1 / captures.enum_member_list,
 
    enum_member_decl = (
-      (possible_spaces * c_patterns.declarator_and_initializer * possible_spaces * comma^-1 * possible_spaces * c_patterns.comment^-1) +
-      (possible_spaces * c_patterns.comment^1)
+      (space^0 * c_patterns.declarator_and_initializer * space^0 * comma^-1 * space^0 * c_patterns.comment^-1) +
+      (space^0 * c_patterns.comment^1)
    ),
 
    enum_name = identifier / captures.enum_name,
@@ -573,7 +573,7 @@ c_patterns.type_decl = c_patterns.struct_decl + c_patterns.enum_decl
 
 c_patterns.typedef = lpeg.P{
    'typedef';
-   typedef = kw'typedef' * spaces * lpeg.V'type_definition' * spaces * lpeg.V'typedef_alias' * possible_spaces * semicolon / captures.typedef,
+   typedef = kw'typedef' * space^1 * lpeg.V'type_definition' * space^1 * lpeg.V'typedef_alias' * space^0 * semicolon / captures.typedef,
    typedef_alias = identifier / captures.typedef_alias,
    type_definition = (c_patterns.type_decl + c_patterns.custom_type) / captures.typedef_type_definition,
 }
@@ -594,7 +594,7 @@ local raylib_pattern = (
    c_patterns.define +
    c_patterns.typedef +
    c_patterns.func_decl +
-   spaces / function(spaces_str)
+   space^1 / function(spaces_str)
       return gen_capture('empty_space', spaces_str, {'string'})
    end
 )
@@ -700,7 +700,7 @@ print(ins(test(c_patterns.var_decl, teste1)))
 print(ins(test(c_patterns.var_decl, teste1_25)))
 print(ins(test(c_patterns.var_decl, teste1_30)))
 print(ins(test(c_patterns.var_decl, teste1_5)))
-print(ins(test(c_patterns.var_decl * possible_spaces * semicolon * possible_spaces * c_patterns.var_decl, teste1_75)))
+print(ins(test(c_patterns.var_decl * space^0 * semicolon * space^0 * c_patterns.var_decl, teste1_75)))
 
 print(ins(test(c_patterns.struct_decl, teste1_999)))
 print(ins(test(c_patterns.struct_decl, teste2)))
