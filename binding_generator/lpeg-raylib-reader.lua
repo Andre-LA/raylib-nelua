@@ -583,6 +583,17 @@ c_patterns.struct_decl = lpeg.P{
    struct_name = identifier / captures.struct_name
 }
 
+c_patterns.values_on_braces = lpeg.P{
+   'values_on_braces';
+   values_on_braces = (
+      lbrace * space^0 * lpeg.V'values' * space^0 * rbrace
+   ) / captures.values_on_braces,
+
+   values = lpeg.V'value' * (space^0 * comma * space^0 * lpeg.V'values')^-1,
+
+   value = c_patterns.literal + c_patterns.identifier + c_patterns.expression
+}
+
 c_patterns.enum_decl = lpeg.P{
    'enum_declaration';
    enum_declaration = (
