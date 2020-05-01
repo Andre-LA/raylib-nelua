@@ -177,6 +177,10 @@ local captures = {
       return gen_capture('identifier', identifier_name, {'string'})
    end,
 
+   declarator = function(...)
+      return gen_capture('declarator', {...}, {'table'})
+   end,
+
    initializer = function (initializer_value)
       return gen_capture('initializer', initializer_value, {'string'})
    end,
@@ -286,7 +290,43 @@ local captures = {
 
    callback = function(...)
       return gen_capture('callback', {...}, {'table'})
-   end
+   end,
+
+   literal = function(value)
+      return gen_capture('literal', value, {'string'})
+   end,
+
+   unary_operator = function(operator)
+      return gen_capture('unary_operator', operator, {'string'})
+   end,
+
+   binary_operator = function(operator)
+      return gen_capture('binary_operator', operator, {'string'})
+   end,
+
+   ternary_operator = function(operator)
+      return gen_capture('ternary_operator', operator, {'string'})
+   end,
+
+   arithmetic_expr = function(...)
+      return gen_capture('arithmetic_expr:', {...}, {'table'})
+   end,
+
+   parentheses = function(paren)
+      return gen_capture('parentheses', paren, {'string'})
+   end,
+
+   bracket = function(bracket)
+      return gen_capture('bracket', bracket, {'string'})
+   end,
+
+   brace = function(brace)
+      return gen_capture('brace', brace, {'string'})
+   end,
+
+   values_on_braces = function(...)
+      return gen_capture('values_on_braces', {...}, {'table'})
+   end,
 }
 
 -- collection of literal patterns
