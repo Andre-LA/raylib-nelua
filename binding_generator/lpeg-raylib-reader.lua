@@ -543,6 +543,28 @@ c_patterns.callback = lpeg.P{
    )
 }
 
+c_patterns.arithmetic_expr = lpeg.P{
+   'arithmetic_expr';
+   arithmetic_expr = (
+      (
+         (
+            (c_patterns.unary_ops * lpeg.V'value') +
+            (lpeg.V'value' * space^0 * c_patterns.binary_ops * space^0 * lpeg.V'value') +
+            (lpeg.V'value' * space^0 * c_patterns.ternary_ops * space^0 * lpeg.V'value' * space^0 * c_patterns.ternary_ops * space^0 * lpeg.V'value') +
+            lpeg.V'value'
+         ) * space^0
+      )^1 + (
+         (lparen / captures.parentheses) *
+         lpeg.V'arithmetic_expr'^1 *
+         (rparen / captures.parentheses)
+      )
+   ) / captures.arithmetic_expr,
+
+   value = c_patterns.literal + c_patterns.identifier
+}
+
+c_patterns.expression = c_patterns.arithmetic_expr
+
 c_patterns.struct_decl = lpeg.P{
    'struct_declaration';
    struct_declaration = (
