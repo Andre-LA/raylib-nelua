@@ -496,10 +496,8 @@ c_patterns.declarator = lpeg.P{
 
 c_patterns.declarator_and_initializer = lpeg.P{
    'declarator_and_initializer';
-   declarator_and_initializer = (c_patterns.pointer)^0 * possible_spaces * c_patterns.identifier * possible_spaces * (
-      c_patterns.array
-   )^0 * possible_spaces * lpeg.V'initializer'^-1 / captures.declarator_and_initializer,
-   initializer = eq * possible_spaces * ((number^1 + identifier) / captures.initializer)
+   declarator_and_initializer = c_patterns.declarator * space^0 * lpeg.V'initializer'^-1 / captures.declarator_and_initializer,
+   initializer = eq * space^0 * ((number^1 + identifier) / captures.initializer)
 }
 
 c_patterns.var_decl = lpeg.P{
