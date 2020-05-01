@@ -367,6 +367,16 @@ c_patterns.custom_type = lpeg.P(function(subj, pos)
    return result, match
 end)
 
+c_patterns.parentheses = lparen + rparen / captures.parentheses
+c_patterns.bracket = lbracket + rbracket / captures.bracket
+c_patterns.brace = lbrace + rbrace / captures.brace
+
+c_patterns.unary_ops = unary_ops / captures.unary_operator
+c_patterns.binary_ops = binary_ops / captures.binary_operator
+c_patterns.ternary_ops = ternary_ops / captures.ternary_operator
+
+c_patterns.ops = c_patterns.unary_ops + c_patterns.binary_ops + c_patterns.ternary_ops
+
 c_patterns.comment_line = lpeg.P{
    'comment_line';
    comment_line = lpeg.P'//' * possible_spaces * lpeg.V'comment',
