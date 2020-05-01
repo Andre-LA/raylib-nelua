@@ -50,9 +50,17 @@ local space = lpeg.S'\t\v\f\n\r '
 
 local eq = lpeg.P'='
 local ops = lpeg.S'=/*-+%'
-local unary_ops = lpeg.P'-' + lpeg.P'+' + lpeg.P'++' + lpeg.P'--' + lpeg.P'!' + lpeg.P'&' + lpeg.P'*' + lpeg.P'~'
 
-local lparan, rparan = lpeg.P'(', lpeg.P')'
+local unary_ops = lpeg.P'++' + lpeg.P'--' + lpeg.S'-+!&*~^'
+
+local binary_ops = (
+   lpeg.P'<<' + lpeg.P'>>' + lpeg.P'<=' + lpeg.P'>=' + lpeg.P'==' + lpeg.P'!=' +
+   lpeg.P'&&' + lpeg.P'||' + lpeg.S'&|^<>*%/+-='
+)
+
+local ternary_ops = lpeg.S'?:'
+
+local lparen, rparen = lpeg.P'(', lpeg.P')'
 local lbrace, rbrace = lpeg.P'{', lpeg.P'}'
 local lbracket, rbracket = lpeg.P'[', lpeg.P']'
 
@@ -63,13 +71,6 @@ local semicolon = lpeg.P';'
 
 local word = (lpeg.P(1) - space)^1
 
-local binary_ops = (
-   lpeg.P'*' + lpeg.P'%' + lpeg.P'/' + lpeg.P'+' + lpeg.P'-' +
-   lpeg.P'<<' + lpeg.P'>>' + lpeg.P'<' + lpeg.P'>' + lpeg.P'<=' + lpeg.P'>=' +
-   lpeg.P'==' + lpeg.P'!=' + lpeg.P'&' + lpeg.P'|' + lpeg.P'^' + lpeg.P'&&' +
-   lpeg.P'||'
-)
-local ternary_ops = {'?', ':'}
 
 local function typecheck_assert(value, _types)
    local valuetype = type(value)
