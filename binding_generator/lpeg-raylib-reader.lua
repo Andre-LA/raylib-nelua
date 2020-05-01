@@ -809,37 +809,40 @@ line5
 ))
 --]=]
 
-print'------------------------------'
+return {
+   read = function(filename)
+      local raylib_h = io.open(filename)
+      local raylib_h_str = raylib_h:read'a'
+      raylib_h:close()
 
-local raylib_h = io.open'modified-raylib.h'
-local raylib_h_str = raylib_h:read'a'
-raylib_h:close()
+      raylib_h_str = raylib_h_str:gsub("/%*(.-)%*/", "") --:gsub("\n+", "\n")
 
-raylib_h_str = raylib_h_str:gsub("/%*(.-)%*/", "") --:gsub("\n+", "\n")
+      local len = raylib_h_str:len()
+      local pos = 1
+      local results = {}
 
-local len = raylib_h_str:len()
-local pos = 1
-local results = {}
+      -- another hack, sorry
+      table.insert(
+         results,
+         lpeg.match(c_patterns.callback, [[void (*TraceLogCallback)(int logType, const char *text, va_list args)]])
+      )
+      c_patterns:update_custom_types('TraceLogCallback')
 
--- another hack, sorry
-table.insert(
-   results,
-   lpeg.match(c_patterns.callback, [[void (*TraceLogCallback)(int logType, const char *text, va_list args)]])
-)
-c_patterns:update_custom_types('TraceLogCallback')
+      repeat
+         local result, _pos = lpeg.match(raylib_pattern * lpeg.Cp(), raylib_h_str, pos)
 
-repeat
-   local result, _pos = lpeg.match(raylib_pattern * lpeg.Cp(), raylib_h_str, pos)
+         if not _pos then -- _pos is nil when something is wrong
+            print('_pos is nil ~> ' .. raylib_h_str:sub(pos))
+            print(ins(results))
+            error('error on lpeg raylib reader')
+         end
 
-   if not _pos then -- _pos is nil when something is wrong
-      print('_pos is nil ~> ' .. raylib_h_str:sub(pos))
-      print(ins(results))
-   end
+         pos = _pos
+         table.insert(results, result)
+      until pos >= len
 
-   pos = _pos
-   table.insert(results, result)
-until pos >= len
+      --print(ins(results))
 
--- print(ins(results))
-
-return results
+      return results
+   end,
+}
