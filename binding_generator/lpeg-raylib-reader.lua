@@ -721,7 +721,7 @@ local teste11 = [[/*******
 *   *comment*
 *******/]]
 
-local teste12 = "#define MAX_TOUCH_POINTS        10      // Maximum number of touch points supported\n"
+local teste12 = "#define MAX_TOUCH_POINTS 10 // Maximum number of touch points supported"
 local teste13 = "#define FormatText  TextFormat\n"
 local teste14 = "#define MAGENTA    { 255, 0, 255, 255 }     // Magenta\n"
 
@@ -732,8 +732,15 @@ local teste15 = [[typedef struct Shader {
 
 local teste16 = "float myarray[16]"
 
-local teste17 = "int addsubroutine(int a, int b)"
-local teste18 = "void *other(Color **a, int b)"
+local teste17 = "int addsubroutine(int a, int b);"
+local teste18 = "void *other(Color **a, int b);"
+
+local teste19 = '3.14f'
+local teste20 = '(3.14f)'
+local teste21 = '(3.14f + 10)'
+local teste22 = '#define PI (3.14f)'
+
+local teste23 = '{ 255, 0, 255, 255 }'
 
 local function test(patt, str)
    print('\nstring to parse:{' .. str .. '}')
@@ -776,6 +783,15 @@ print(ins(test(c_patterns.var_decl, teste16)))
 
 print(ins(test(c_patterns.func_decl, teste17)))
 print(ins(test(c_patterns.func_decl, teste18)))
+
+print(ins(test(c_patterns.expression, teste19)))
+print(ins(test(c_patterns.expression, teste20)))
+print(ins(test(c_patterns.expression, teste21)))
+
+print(ins(test(c_patterns.define, teste22)))
+
+print(ins(test(c_patterns.values_on_braces, teste23)))
+
 
 print((
    ("/*this should not*/exist"):gsub("/%*(.-)%*/", "")
