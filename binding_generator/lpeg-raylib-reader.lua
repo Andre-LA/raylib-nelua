@@ -45,11 +45,8 @@ local number = digit^1 * lpeg.S'uUlLfF'^-1
 local alphanumeric = alphabet + digit
 
 local newline = lpeg.P'\r'^-1 * '\n'
-local nonnewline = -newline
 
 local space = lpeg.S'\t\v\f\n\r '
-local spaces = space^1
-local possible_spaces = space^0
 
 local eq = lpeg.P'='
 local ops = lpeg.S'=/*-+%'
