@@ -5,13 +5,181 @@
 local indent = '   '
 local subindent = indent:sub(1, #indent-1)
 
-local ins = require'inspect'
-local header_reader = require 'binding_generator.header_reader'
+local ins = require 'inspect'
+local lpeg_raylib_reader = require 'binding_generator/lpeg-raylib-reader'
 
-local raylib_table = header_reader.read 'binding_generator/raylib.h'
+local function typecheck_assert(value, _types)
+   local valuetype = type(value)
+   local result = false
 
-print(ins(raylib_table.RLAPIs))
+   for i = 1, #_types do
+      result = result or valuetype == _types[i]
+   end
 
+   if not result then
+      local msg = "typechecking assert: '" .. table.concat(_types, "' or '") .. "' expected, got '" .. valuetype .. "' (value: '" .. tostring(value) .. "')"
+      error(msg, 2)
+   end
+
+   return value
+end
+
+-- returns {...} (like table.pack) with the following metatable:
+-- __index: set result_mt as __index, result_mt contains useful methods:
+--          -> insert(self, str): works like table.insert, it also verifies if str is a string
+--          -> concat(self): returns table.concat(self, ' '), for example: {'x', 'y'} -> "x y"
+-- __newindex: does typechecking when inserting a new index on result table,
+--             so trying to insert a non-number field or non-string value will trigger an error.
+
+local function new_result(...)
+   local result = {}
+
+   local result_mt = {
+      insert = function(self, str)
+         self[#self+1] = typecheck_assert(str, {'string'})
+      end,
+      concat = function(self)
+         typecheck_assert(self, {'table'})
+         return table.concat(self, ' ')
+      end,
+   }
+
+   setmetatable(result, {
+      __newindex = function(tbl, key, value)
+         rawset(
+            tbl,
+            typecheck_assert(key, {'number'}),
+            typecheck_assert(value, {'string'})
+         )
+      end,
+      __index = result_mt
+   })
+
+   local pre_values = {...}
+   table.move(pre_values, 1, #pre_values, 1, result)
+
+   return result
+end
+
+local converters = {}
+
+local function traverse(values)
+   local result = new_result()
+   for i = 1, #values do
+      print('traversing ' .. i .. ' ~> ' .. values[i].name)
+      local value_result = converters.convert(values[i].value):concat()
+      result:insert(value_result)
+   end
+   return result
+end
+
+function converters.empty_space(value)
+   return new_result(value)
+end
+
+function converters.parentheses(value)
+   return new_result(value)
+end
+
+function converters.literal(value)
+   return new_result(value)
+end
+
+function converters.arithmetic_expr(value)
+   return new_result(traverse(value):concat())
+end
+
+function converters.comment(value)
+   return new_result('--', value)
+end
+
+function converters.identifier(value)
+   return new_result(value)
+end
+
+function converters.define_replacement(value)
+   return new_result(traverse(value):concat())
+end
+
+function converters.define(value)
+   return new_result('global', traverse(value):concat(), '\n')
+end
+
+function converters.convert(subject)
+   print('subject: ', subject)
+   local result = new_result()
+
+   if type(subject) == 'string' then
+      print('subject is string: ' .. subject)
+      result:insert(subject)
+   elseif type(subject) == 'table' then
+      for i = 1, #subject do
+         print('trying to convert subject: ' .. subject[i].name)
+         local converter = converters[subject[i].name]
+         if converter then
+            print ('converting subsubject [' .. i .. '] -> ' .. subject[i].name)
+            result:insert(converter(subject[i].value):concat())
+         else
+            print ('**FAIL** to convert subsubject [' .. i .. '] -> ' .. subject[i].name)
+         end
+      end
+   end
+
+   return result
+end
+
+local linklibs = {
+   'raylib',
+   'GL',
+   'glfw',
+   'openal',
+   'm',
+   'pthread',
+   'dl',
+   'X11',
+   'Xrandr',
+   'Xinerama',
+   'Xi',
+   'Xxf86vm',
+   'Xcursor'
+}
+
+local cincludes = {
+   '<raylib.h>', '<raymath.h>'
+}
+
+local raylib_table = lpeg_raylib_reader.read'binding_generator/modified-raylib.h'
+local raylib_result = converters.convert(raylib_table)
+
+print ("#raylib_table " .. #raylib_table)
+
+local final_result = {}
+
+table.insert(final_result, '-- links: \n')
+
+for i = 1, #linklibs do
+   table.insert(final_result, "## linklib '" .. linklibs[i] .. "' \n")
+end
+
+table.insert(final_result, '\n-- includes: \n')
+
+for i = 1, #cincludes do
+   table.insert(final_result, "## cinclude '" .. cincludes[i] .. "' \n")
+end
+
+table.insert(final_result, '\n-- raylib binding: \n')
+
+for i = 1, #raylib_result do
+   table.insert(final_result, raylib_result[i])
+end
+
+table.insert(final_result, '')
+
+local file_to_generate = io.open('raylib.nelua', 'w+')
+file_to_generate:write(table.concat(final_result))
+file_to_generate:close()
+
+--[=[
 local function fmt_comment(comment)
    if comment:sub(1, 2) ~= '--' then
       comment = '-- ' .. comment
@@ -317,3 +485,4 @@ local result = table.concat(generated_lines, '\n')
 local file_to_generate = io.open('raylib.nelua', 'w+')
 file_to_generate:write(result)
 file_to_generate:close()
+--]=]
