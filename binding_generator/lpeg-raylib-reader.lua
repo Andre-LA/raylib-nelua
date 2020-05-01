@@ -622,12 +622,15 @@ c_patterns.typedef = lpeg.P{
 c_patterns.define = lpeg.P{
    'define';
    define = (
-      lpeg.P'#define' * spaces * lpeg.V'define_identifier' * (possible_spaces * lpeg.P'(' *  (lpeg.V'define_params' / captures.define_params) * lpeg.P')')^-1 * spaces * lpeg.V'replacement' * c_patterns.comment^-1 * spaces
+      lpeg.P'#define' * space^1 * c_patterns.identifier * (lparen *  (lpeg.V'define_params' / captures.define_params) * rparen)^-1 * space^1 * lpeg.V'replacement' * c_patterns.comment^-1
    ) / captures.define,
 
-   define_identifier = c_patterns.identifier,
-   replacement = (word + space - newline - c_patterns.comment)^0 / captures.define_replacement,
-   define_params = c_patterns.identifier * (comma * possible_spaces * lpeg.V'define_params')^-1
+   replacement = (
+      c_patterns.identifier + c_patterns.values_on_braces + c_patterns.expression +
+      (space - newline - c_patterns.comment)
+   )^1 / captures.define_replacement,
+
+   define_params = c_patterns.identifier * (comma * space^0 * lpeg.V'define_params')^-1
 }
 
 local raylib_pattern = (
