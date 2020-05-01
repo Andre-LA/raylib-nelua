@@ -512,9 +512,9 @@ c_patterns.var_decl = lpeg.P{
 c_patterns.func_decl = lpeg.P{
    'func_decl';
    func_decl = (
-      c_patterns.specifiers_and_qualifiers * possible_spaces * c_patterns.declarator_and_initializer * possible_spaces *
-      lparan * possible_spaces * (lpeg.V'func_arg'^-1 / captures.func_arg) * possible_spaces * rparan *
-      possible_spaces * semicolon * possible_spaces * c_patterns.comment^1
+      c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator * space^0 *
+      lparen * space^0 * (lpeg.V'func_arg'^-1 / captures.func_arg) * space^0 * rparen *
+      space^0 * semicolon * space^0 * c_patterns.comment^-1
    ) / captures.func_decl,
 
    func_arg = (
