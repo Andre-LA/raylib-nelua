@@ -40,7 +40,7 @@ local alphabet = lpeg.R('az', 'AZ')
 
 local digit = lpeg.R'09' + lpeg.P'.'
 local xdigit = lpeg.R('09', 'af', 'AF')
-local number = digit * lpeg.S'uUlL'^0
+local number = digit^1 * lpeg.S'uUlLfF'^-1
 
 local alphanumeric = alphabet + digit
 
