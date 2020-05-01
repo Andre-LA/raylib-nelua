@@ -390,6 +390,11 @@ c_patterns.comment_multiline = lpeg.P{
 }
 
 c_patterns.identifier = identifier / captures.identifier
+
+c_patterns.literal = (
+   (lpeg.S'\'"' * ((word - lpeg.S'\'"') + space)^0 * lpeg.S'\'"') + number
+) / captures.literal
+
 c_patterns.comment = c_patterns.comment_line + c_patterns.comment_multiline
 c_patterns.void = kw'void' / captures.void
 c_patterns.pointer = lpeg.P'*'^1 / captures.pointer
@@ -482,6 +487,11 @@ c_patterns.specifiers_and_qualifiers = lpeg.P{
          c_patterns.qualifier
       ) / captures.specifiers_and_qualifiers
    ) * (space^1 * lpeg.V'specifiers_and_qualifiers')^-1,
+}
+
+c_patterns.declarator = lpeg.P{
+   'declarator';
+   declarator = c_patterns.pointer^-1 * space^0 * c_patterns.identifier * space^0 * c_patterns.array^0 / captures.declarator
 }
 
 c_patterns.declarator_and_initializer = lpeg.P{
