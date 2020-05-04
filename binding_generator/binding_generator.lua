@@ -308,7 +308,11 @@ function converters.define_replacement(value)
 end
 
 function converters.define(value)
-   return new_result('global', traverse(value):concat(), '\n')
+   local result = new_result('global')
+   local define_result = traverse(value)
+   define_result:insert('<cimport, nodecl>', 2)
+   result:insert(define_result:concat())
+   return result
 end
 
 function converters.convert(subject)
