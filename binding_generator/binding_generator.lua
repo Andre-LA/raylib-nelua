@@ -84,13 +84,22 @@ end
 
 local converters = {}
 
-local function traverse(values)
+local function traverse(values, separator)
    local result = new_result()
+
    for i = 1, #values do
+      local value = values[i].value
       print('traversing ' .. i .. ' ~> ' .. values[i].name)
-      local value_result = converters.convert(values[i].value):concat()
-      result:insert(value_result)
+
+      local converter = converters[values[i].name]
+      if not converter then
+         print('converter not found: ' .. values[i].name)
+      else
+         local value_result = converter(values[i].value):concat(separator)
+         result:insert(value_result)
+      end
    end
+
    return result
 end
 
