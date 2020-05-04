@@ -157,9 +157,20 @@ function converters.custom_type(value)
    return new_result('@', value)
 end
 
+function converters.specifiers_and_qualifiers(value)
+   return new_result(traverse(value):concat())
+end
 
 function converters.pointer(value)
    return new_result(string.rep('*', value))
+end
+
+function converters.initializer(value)
+   return new_result('=', value)
+end
+
+function converters.declarator(value)
+   return new_result(traverse(value):concat())
 end
 
 function converters.empty_space(value)
