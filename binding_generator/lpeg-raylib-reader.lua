@@ -311,6 +311,14 @@ local captures = {
    arithmetic_expr = function(...)
       return gen_capture('arithmetic_expr', {...}, {'table'})
    end,
+
+   expression = function(...)
+      return gen_capture('expression', {...}, {'table'})
+   end,
+
+   cast = function(...)
+      print('cast: ', ins({...}))
+      return gen_capture('cast', {...}, {'table'})
    end,
 
    parentheses = function(paren)
