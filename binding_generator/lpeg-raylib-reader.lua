@@ -643,7 +643,7 @@ local raylib_pattern = (
    end
 )
 
---[=[
+-- [=[
 local teste1 = "float x = 3, y;"
 local teste1_25 = "float x;"
 local teste1_30 = "float *x;"
@@ -723,7 +723,7 @@ local teste11 = [[/*******
 
 local teste12 = "#define MAX_TOUCH_POINTS 10 // Maximum number of touch points supported"
 local teste13 = "#define FormatText  TextFormat\n"
-local teste14 = "#define MAGENTA    { 255, 0, 255, 255 }     // Magenta\n"
+local teste14 = "#define MAGENTA    (Color){ 255, 0, 255, 255 }     // Magenta\n"
 
 local teste15 = [[typedef struct Shader {
     unsigned int id;        // Shader program id
@@ -741,6 +741,7 @@ local teste21 = '(3.14f + 10)'
 local teste22 = '#define PI (3.14f)'
 
 local teste23 = '{ 255, 0, 255, 255 }'
+local teste24 = '(Color){ 255, 0, 255, 255 }'
 
 local function test(patt, str)
    print('\nstring to parse:{' .. str .. '}')
@@ -791,6 +792,10 @@ print(ins(test(c_patterns.expression, teste21)))
 print(ins(test(c_patterns.define, teste22)))
 
 print(ins(test(c_patterns.values_on_braces, teste23)))
+
+print(ins(c_patterns.custom_types_table))
+
+print(ins(test(c_patterns.expression, teste24)))
 
 
 print((
