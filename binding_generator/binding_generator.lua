@@ -8,6 +8,11 @@ local subindent = indent:sub(1, #indent-1)
 local ins = require 'inspect'
 local lpeg_raylib_reader = require 'binding_generator/lpeg-raylib-reader'
 
+-- configure your generation here:
+local config = {
+   identation = '  ',
+}
+
 local function typecheck_assert(value, _types)
    local valuetype = type(value)
    local result = false
