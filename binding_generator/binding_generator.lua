@@ -40,8 +40,12 @@ local function new_result(...)
    local result = {}
 
    local result_mt = {
-      insert = function(self, str)
-         self[#self+1] = typecheck_assert(str, {'string'})
+      insert = function(self, str, pos)
+         if typecheck_assert(pos, {'number', 'nil'}) then
+            table.insert(self, pos, typecheck_assert(str, {'string'}))
+         else
+            table.insert(self, typecheck_assert(str, {'string'}))
+         end
       end,
       concat = function(self)
          typecheck_assert(self, {'table'})
