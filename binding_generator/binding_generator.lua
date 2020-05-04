@@ -47,9 +47,10 @@ local function new_result(...)
             table.insert(self, typecheck_assert(str, {'string'}))
          end
       end,
-      concat = function(self)
+      concat = function(self, separator)
          typecheck_assert(self, {'table'})
-         return table.concat(self, ' ')
+         return table.concat(self, separator or ' ')
+      end,
       end,
    }
 
