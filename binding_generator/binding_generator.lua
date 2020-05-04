@@ -51,6 +51,17 @@ local function new_result(...)
          typecheck_assert(self, {'table'})
          return table.concat(self, separator or ' ')
       end,
+      iter = function(self, _start, _end, filter --[[TODO]])
+         local idx = (_start or 1) - 1
+
+         local iterator = function()
+            if idx < (_end or #self) then
+               idx = idx + 1
+               return idx, self[idx]
+            end
+         end
+
+         return iterator
       end,
    }
 
