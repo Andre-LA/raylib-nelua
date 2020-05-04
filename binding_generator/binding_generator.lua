@@ -107,6 +107,61 @@ function converters.void(value)
    return new_result('void')
 end
 
+function converters.basic_type(value)
+   local translated_value = value
+
+   if value == 'float' then
+      translated_value = 'float32'
+   elseif value == 'double' then
+      translated_value = 'float64'
+   elseif value == 'short' then
+      translated_value = 'cshort'
+   elseif value == 'int' then
+      translated_value = 'cint'
+   elseif value == 'long' then
+      translated_value = 'clong'
+   elseif value == 'long long' then
+      translated_value = 'clonglong'
+   elseif value == 'ptrdiff_t' then
+      translated_value = 'cptrdiff'
+   elseif value == 'char' then
+      translated_value = 'cchar'
+   elseif value == 'signed char' then
+      translated_value = 'cschar'
+   elseif value == 'unsigned char' then
+      translated_value = 'cuchar'
+   elseif value == 'unsigned short' then
+      translated_value = 'cushort'
+   elseif value == 'unsigned int' then
+      translated_value = 'cuint'
+   elseif value == 'unsigned long' then
+      translated_value = 'culong'
+   elseif value == 'unsigned long long' then
+      translated_value = 'culonglong'
+   elseif value == 'size_t' then
+      translated_value = 'csize'
+   elseif value == 'long double' then
+      translated_value = 'clongdouble'
+   end
+
+   return new_result(translated_value)
+end
+
+function converters.literal(value)
+   local _value = string.gsub(value, '([fF])$', '_f32')
+   local _value = string.gsub(value, '([lL])$', '_f64')
+   return new_result(_value)
+end
+
+function converters.custom_type(value)
+   return new_result('@', value)
+end
+
+
+function converters.pointer(value)
+   return new_result(string.rep('*', value))
+end
+
 function converters.empty_space(value)
    return new_result(value)
 end
