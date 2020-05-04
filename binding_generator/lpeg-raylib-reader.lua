@@ -574,7 +574,8 @@ c_patterns.arithmetic_expr = lpeg.P{
    value = c_patterns.literal + c_patterns.identifier
 }
 
-c_patterns.expression = c_patterns.arithmetic_expr
+c_patterns.cast = lparen * space^0 * c_patterns.specifiers_and_qualifiers * space^0 * rparen / captures.cast
+
 c_patterns.values_on_braces = lpeg.P{
    'values_on_braces';
    values_on_braces = (
@@ -585,6 +586,10 @@ c_patterns.values_on_braces = lpeg.P{
 
    value = c_patterns.literal + c_patterns.identifier + c_patterns.arithmetic_expr
 }
+
+c_patterns.expression = (
+   c_patterns.cast^-1 * space^0 * (c_patterns.arithmetic_expr + c_patterns.values_on_braces)
+) / captures.expression
 
 c_patterns.struct_decl = lpeg.P{
    'struct_declaration';
