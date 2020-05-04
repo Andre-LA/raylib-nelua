@@ -291,6 +291,18 @@ function converters.struct_decl(value)
    return result
 end
 
+function converters.typedef_alias(value)
+   return new_result() --does nothing
+end
+
+function converters.typedef_type_definition(value)
+   return new_result(traverse(value):concat())
+end
+
+function converters.typedef(value)
+   return new_result(traverse(value):concat())
+end
+
 function converters.define_replacement(value)
    return new_result(traverse(value):concat())
 end
