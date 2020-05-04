@@ -304,7 +304,7 @@ function converters.typedef(value)
 end
 
 function converters.define_replacement(value)
-   return new_result(traverse(value):concat())
+   return new_result('=', traverse(value):concat())
 end
 
 function converters.define(value)
