@@ -309,7 +309,8 @@ local captures = {
    end,
 
    arithmetic_expr = function(...)
-      return gen_capture('arithmetic_expr:', {...}, {'table'})
+      return gen_capture('arithmetic_expr', {...}, {'table'})
+   end,
    end,
 
    parentheses = function(paren)
