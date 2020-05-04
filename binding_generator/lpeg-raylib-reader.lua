@@ -81,7 +81,7 @@ local function typecheck_assert(value, _types)
    end
 
    if not result then
-      local msg = "'" .. table.concat(_types, "' or '") .. "' expected, got '" .. valuetype .. "' (value: '" .. tostring(value) .. "')"
+      local msg = "'" .. table.concat(_types, "' or '") .. "' expected, got '" .. valuetype .. "' (value: '" .. ins(value) .. "')"
       error(msg, 2)
    end
 
