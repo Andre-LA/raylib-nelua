@@ -231,6 +231,66 @@ function converters.identifier(value)
    return new_result(value)
 end
 
+function converters.var_decl(value)
+   local list = traverse(value)
+   local list_type = list[1]
+   local adjusted_list = new_result()
+
+   for i, s in list:iter(2) do
+      local stars_s, stars_e = string.find(s, '(%*+)')
+      local stars = nil
+
+      if stars_s then
+         stars = string.sub(s, stars_s, stars_e)
+         s = string.sub(s, stars_e + 1)
+         s = string.gsub(s, '^(%s+)', '')
+      end
+
+      local ptr = stars or ''
+
+      if list_type == 'void' and stars then
+         ptr = 'pointer'
+         list_type = ''
+         for x = 2, stars:len() do
+            ptr = 'pointer(' .. ptr .. ')'
+         end
+      end
+
+      adjusted_list:insert(s .. ': ' .. list_type .. ptr)
+   end
+
+   return new_result(adjusted_list:concat(', '))
+end
+
+function converters.struct_declaration_list(value)
+   local result = new_result('=', '@record{')
+   local list = traverse(value)
+
+   for i, s in list:iter() do
+      local is_comment = s:sub(1, 2) == '--'
+      if is_comment then
+         list[i] = s
+      else
+         list[i] = '\n' .. config.identation .. s .. ','
+      end
+   end
+
+   result:insert(list:concat())
+
+   result:insert('\n}')
+   return result
+end
+
+function converters.struct_name(value)
+   return new_result(value, '<cimport, nodecl>')
+end
+
+function converters.struct_decl(value)
+   local result = new_result('global')
+   result:insert(traverse(value):concat())
+   return result
+end
+
 function converters.define_replacement(value)
    return new_result(traverse(value):concat())
 end
