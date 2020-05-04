@@ -103,6 +103,10 @@ local function traverse(values, separator)
    return result
 end
 
+function converters.void(value)
+   return new_result('void')
+end
+
 function converters.empty_space(value)
    return new_result(value)
 end
