@@ -203,8 +203,12 @@ local captures = {
       return gen_capture('typedef_alias', alias, {'string'})
    end,
 
-   typedef_type_definition = function(type_definition)
-      return gen_capture('typedef_type_definition', type_definition, {'table', 'string'})
+   typedef_type_definition = function(type_definition, ...)
+      if type(type_definition) == 'string' then
+         return gen_capture('typedef_type_definition', type_definition, {'string'})
+      else
+         return gen_capture('typedef_type_definition', {type_definition, ...}, {'table'})
+      end
    end,
 
    typedef = function(...)
