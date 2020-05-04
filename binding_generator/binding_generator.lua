@@ -205,6 +205,24 @@ function converters.arithmetic_expr(value)
    return new_result(traverse(value):concat())
 end
 
+function converters.values_on_braces(value)
+   local result = new_result('{')
+   result:insert(traverse(value):concat(', '))
+   result:insert('}')
+   return result
+end
+
+function converters.cast(value)
+   local result = new_result('(')
+   result:insert(traverse(value, ''):concat())
+   result:insert(')')
+   return result
+end
+
+function converters.expression(value)
+   return new_result(traverse(value, ''):concat(''))
+end
+
 function converters.comment(value)
    return new_result('--', value)
 end
