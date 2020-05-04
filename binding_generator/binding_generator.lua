@@ -320,8 +320,8 @@ function converters.convert(subject)
    local result = new_result()
 
    if type(subject) == 'string' then
-      print('subject is string: ' .. subject)
-      result:insert(subject)
+      error('subject is string: ' .. subject)
+      --result:insert(subject)
    elseif type(subject) == 'table' then
       for i = 1, #subject do
          print('trying to convert subject: ' .. subject[i].name)
@@ -359,9 +359,10 @@ local cincludes = {
 }
 
 local raylib_table = lpeg_raylib_reader.read'binding_generator/modified-raylib.h'
+print ("#raylib_table " .. #raylib_table, ins({raylib_table}))
+
 local raylib_result = converters.convert(raylib_table)
 
-print ("#raylib_table " .. #raylib_table)
 
 local final_result = {}
 
