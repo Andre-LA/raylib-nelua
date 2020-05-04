@@ -173,6 +173,14 @@ function converters.declarator(value)
    return new_result(traverse(value):concat())
 end
 
+function converters.declarator_and_initializer(value)
+   return new_result(traverse(value):concat())
+end
+
+function converters.custom_type(value)
+   return new_result(value)
+end
+
 function converters.empty_space(value)
    return new_result(value)
 end
@@ -181,7 +189,15 @@ function converters.parentheses(value)
    return new_result(value)
 end
 
-function converters.literal(value)
+function converters.unary_operator(value)
+   return new_result(value)
+end
+
+function converters.binary_operator(value)
+   return new_result(value)
+end
+
+function converters.ternary_operator(value)
    return new_result(value)
 end
 
