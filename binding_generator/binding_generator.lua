@@ -186,7 +186,7 @@ function converters.literal(value)
 end
 
 function converters.custom_type(value)
-   return new_result('@', value)
+   return new_result(value)
 end
 
 function converters.specifiers_and_qualifiers(value)
@@ -207,10 +207,6 @@ end
 
 function converters.declarator_and_initializer(value)
    return new_result(traverse(value):concat())
-end
-
-function converters.custom_type(value)
-   return new_result(value)
 end
 
 function converters.empty_space(value)
