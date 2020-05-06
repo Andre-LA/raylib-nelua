@@ -181,7 +181,7 @@ end
 
 function converters.literal(value)
    local _value = string.gsub(value, '([fF])$', '_f32')
-   local _value = string.gsub(value, '([lL])$', '_f64')
+   _value = string.gsub(_value, '([lL])$', '_f64')
    return new_result(_value)
 end
 
