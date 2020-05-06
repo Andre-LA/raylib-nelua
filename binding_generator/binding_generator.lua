@@ -291,7 +291,7 @@ function converters.var_decl(value)
 end
 
 function converters.struct_declaration_list(value)
-   local result = new_result('=', '@record{')
+   local result = new_result()
    local list = traverse(value)
 
    for i, s in list:iter() do
@@ -303,9 +303,8 @@ function converters.struct_declaration_list(value)
       end
    end
 
-   result:insert(list:concat())
+   result:insert(list:concat() .. '\n')
 
-   result:insert('\n}')
    return result
 end
 
@@ -314,8 +313,13 @@ function converters.struct_name(value)
 end
 
 function converters.struct_decl(value)
+   local list = traverse(value)
+
    local result = new_result('global')
-   result:insert(traverse(value):concat())
+   list:insert('= @record{', 2)
+   list:insert('}')
+   result:insert(list:concat())
+
    return result
 end
 
