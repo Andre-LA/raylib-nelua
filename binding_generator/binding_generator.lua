@@ -31,8 +31,13 @@ end
 
 -- returns {...} (like table.pack) with the following metatable:
 -- __index: set result_mt as __index, result_mt contains useful methods:
---          -> insert(self, str): works like table.insert, it also verifies if str is a string
---          -> concat(self): returns table.concat(self, ' '), for example: {'x', 'y'} -> "x y"
+--          -> insert(self, str [, pos]): works like table.insert, it also verifies if str is a string
+--          -> concat(self [, separator]): returns table.concat(self, ' '), for example: {'x', 'y'} -> "x y"
+--          -> remove(self [, pos]): removes the `pos` element on result (the last by default), just like table.remove
+--          -> iter(self [, _start [, _end [, filter]]]) returns a iterator
+--          -> swap(self, v1, v2) swaps v1 and v2; v1 and v2 should be indexes
+--          -> append(self, str [, pos]) same as self[pos] = self[pos] .. str; pos by default is #self
+--          -> prepend(self, str [, pos]) same as self[pos] = str .. self[pos]; pos by default is #self
 -- __newindex: does typechecking when inserting a new index on result table,
 --             so trying to insert a non-number field or non-string value will trigger an error.
 
@@ -46,6 +51,9 @@ local function new_result(...)
          else
             table.insert(self, typecheck_assert(str, {'string'}))
          end
+      end,
+      remove = function(self, pos)
+         table.remove(self, pos or #self)
       end,
       concat = function(self, separator)
          typecheck_assert(self, {'table'})
@@ -67,6 +75,26 @@ local function new_result(...)
 
          return iterator
       end,
+      swap = function(self, v1, v2)
+         v1 = typecheck_assert(v1, {'number'})
+         v2 = typecheck_assert(v2, {'number'})
+
+         local _v = self[v1]
+         self[v1] = self[v2]
+         self[v2] = _v
+      end,
+      append = function(self, str, pos)
+         str = typecheck_assert(str, {'string'})
+         pos = typecheck_assert(pos, {'number', 'nil'})
+         pos = pos or #self
+         self[pos] = self[pos] .. str
+      end,
+      prepend = function(self, str, pos)
+         str = typecheck_assert(str, {'string'})
+         pos = typecheck_assert(pos, {'number', 'nil'})
+         pos = pos or #self
+         self[pos] = str .. self[pos]
+      end
    }
 
    setmetatable(result, {
