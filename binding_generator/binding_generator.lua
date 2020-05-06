@@ -241,7 +241,7 @@ function converters.values_on_braces(value)
 end
 
 function converters.cast(value)
-   local result = new_result('(')
+   local result = new_result('(@')
    result:insert(traverse(value, ''):concat())
    result:insert(')')
    return result
