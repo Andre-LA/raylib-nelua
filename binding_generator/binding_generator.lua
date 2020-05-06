@@ -51,7 +51,11 @@ local function new_result(...)
          typecheck_assert(self, {'table'})
          return table.concat(self, separator or ' ')
       end,
-      iter = function(self, _start, _end, filter --[[TODO]])
+      iter = function(self, _start, _end, filter --[[TODO]]) -- TODO: use typecheck
+         _start = typecheck_assert(_start, {'number', 'nil'})
+         _end = typecheck_assert(_end, {'number', 'nil'})
+         _filter = typecheck_assert(_filter, {'function', 'nil'})
+
          local idx = (_start or 1) - 1
 
          local iterator = function()
