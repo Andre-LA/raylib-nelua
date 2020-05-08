@@ -562,11 +562,11 @@ c_patterns.arithmetic_expr = lpeg.P{
    arithmetic_expr = (
       (
          (
-            (c_patterns.unary_ops * lpeg.V'value') +
-            (lpeg.V'value' * space^0 * c_patterns.binary_ops * space^0 * lpeg.V'value') +
-            (lpeg.V'value' * space^0 * c_patterns.ternary_ops * space^0 * lpeg.V'value' * space^0 * c_patterns.ternary_ops * space^0 * lpeg.V'value') +
-            lpeg.V'value'
-         ) * space^0
+            (space^0 * c_patterns.unary_ops * lpeg.V'value') +
+            (space^0 * lpeg.V'value' * space^0 * c_patterns.binary_ops * space^0 * lpeg.V'value') +
+            (space^0 * lpeg.V'value' * space^0 * c_patterns.ternary_ops * space^0 * lpeg.V'value' * space^0 * c_patterns.ternary_ops * space^0 * lpeg.V'value') +
+            (space^0 * lpeg.V'value')
+         )
       )^1 + (
          (lparen / captures.parentheses) *
          lpeg.V'arithmetic_expr'^1 *
@@ -646,8 +646,7 @@ c_patterns.define = lpeg.P{
    ) / captures.define,
 
    replacement = (
-      c_patterns.identifier + c_patterns.values_on_braces + c_patterns.expression +
-      (space - newline - c_patterns.comment)
+      c_patterns.identifier + c_patterns.values_on_braces + c_patterns.expression
    )^1 / captures.define_replacement,
 
    define_params = c_patterns.identifier * (comma * space^0 * lpeg.V'define_params')^-1
