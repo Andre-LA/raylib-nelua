@@ -325,7 +325,6 @@ local captures = {
    end,
 
    cast = function(...)
-      print('cast: ', ins({...}))
       return gen_capture('cast', {...}, {'table'})
    end,
 
