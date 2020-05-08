@@ -169,6 +169,10 @@ end
 local c_patterns;
 
 local captures = {
+   empty_space = function(spaces_str)
+      return gen_capture('empty_space', spaces_str, {'string'})
+   end,
+
    var_decl = function(...)
       return gen_capture('var_decl', {...}, {'table'})
    end,
@@ -655,9 +659,7 @@ local raylib_pattern = (
    c_patterns.define +
    c_patterns.typedef +
    c_patterns.func_decl +
-   space^1 / function(spaces_str)
-      return gen_capture('empty_space', spaces_str, {'string'})
-   end
+   space^1 / captures.empty_space
 )
 
 -- [=[
