@@ -605,8 +605,8 @@ c_patterns.struct_decl = lpeg.P{
    struct_declaration_list = lpeg.V'struct_member_decl'^1 / captures.struct_declaration_list,
 
    struct_member_decl = (
-      (space^0 * c_patterns.var_decl * space^0 * semicolon * space^0 * c_patterns.comment^-1) +
-      (space^0 * c_patterns.comment^1)
+      (space^0 * c_patterns.var_decl * space^0 * semicolon * (space^0 / captures.empty_space) * c_patterns.comment^-1) +
+      ((space^0 / captures.empty_space) * c_patterns.comment^1)
    ),
 
    struct_name = identifier / captures.struct_name
@@ -623,8 +623,8 @@ c_patterns.enum_decl = lpeg.P{
    enum_member_list = lpeg.V'enum_member_decl'^1 / captures.enum_member_list,
 
    enum_member_decl = (
-      (space^0 * c_patterns.declarator_and_initializer * space^0 * comma^-1 * space^0 * c_patterns.comment^-1) +
-      (space^0 * c_patterns.comment^1)
+      (space^0 * c_patterns.declarator_and_initializer * space^0 * comma^-1 * (space^0 / captures.empty_space) * c_patterns.comment^-1) +
+      ((space^0 / captures.empty_space) * c_patterns.comment^1)
    ),
 
    enum_name = identifier / captures.enum_name,
