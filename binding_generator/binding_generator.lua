@@ -2,9 +2,6 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
-local indent = '   '
-local subindent = indent:sub(1, #indent-1)
-
 local ins = require 'inspect'
 local lpeg_raylib_reader = require 'binding_generator/lpeg-raylib-reader'
 
@@ -35,6 +32,7 @@ end
 --          -> concat(self [, separator]): returns table.concat(self, ' '), for example: {'x', 'y'} -> "x y"
 --          -> remove(self [, pos]): removes the `pos` element on result (the last by default), just like table.remove
 --          -> iter(self [, _start [, _end [, filter]]]) returns a iterator
+--          -> move(self, from, to) moves self[from] to self[to]
 --          -> swap(self, v1, v2) swaps v1 and v2; v1 and v2 should be indexes
 --          -> append(self, str [, pos]) same as self[pos] = self[pos] .. str; pos by default is #self
 --          -> prepend(self, str [, pos]) same as self[pos] = str .. self[pos]; pos by default is #self
@@ -74,6 +72,13 @@ local function new_result(...)
          end
 
          return iterator
+      end,
+      move = function(self, from, to)
+         from = typecheck_assert(from, {'number'})
+         to = typecheck_assert(to, {'number'})
+
+         self:insert(to, self[from])
+         self:remove(from + (from > to and 1 or 0))
       end,
       swap = function(self, v1, v2)
          v1 = typecheck_assert(v1, {'number'})
