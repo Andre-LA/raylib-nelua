@@ -147,7 +147,9 @@ end
 function converters.basic_type(value)
    local translated_value = value
 
-   if value == 'float' then
+   if value == 'bool' then
+      translated_value = 'boolean'
+   elseif value == 'float' then
       translated_value = 'float32'
    elseif value == 'double' then
       translated_value = 'float64'
