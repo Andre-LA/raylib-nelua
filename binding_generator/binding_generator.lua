@@ -337,6 +337,36 @@ function converters.struct_decl(value)
 
    return result
 end
+
+function converters.enum_member_list(value)
+   local list = traverse(value)
+
+   for i, s in list:iter() do
+      if s ~= '' then
+         s = s:gsub('^\n%s+', '\n')
+
+         local is_comment = s:sub(1, 2) == '--'
+         local space_only = s:find('^%s')
+
+         if is_comment then
+            list[i] = config.identation .. s .. '\n'
+         elseif not space_only then
+            list[i] = config.identation .. s .. ','
+         else
+            list[i] = s
+         end
+      end
+   end
+
+   return new_result(list:concat())
+end
+
+function converters.enum_decl(value)
+   local list = traverse(value)
+
+   local result = new_result()
+   list:insert('= @enum {\n', 1)
+   list:insert('\n}')
    result:insert(list:concat())
 
    return result
