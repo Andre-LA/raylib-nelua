@@ -343,7 +343,7 @@ end
 end
 
 function converters.typedef_alias(value)
-   return new_result(value, ': type')
+   return new_result(value)
 end
 
 function converters.typedef_type_definition(value)
@@ -355,18 +355,14 @@ function converters.typedef(value)
    local is_not_type_alias = string.find(list[1], "%p")
 
    if is_not_type_alias then
-      list:remove()
+      list:swap(#list, 1)
    else
-      list:swap(1, 2) -- C is "to" "from", nelua is "from" "to"
-      list:prepend('= @', 2)
+      list:prepend('@', 1)
+      list:append(': type =', 2)
+      list:swap(1, 2)
    end
 
-   local result = new_result(list:concat())
-
-   if not is_not_type_alias then
-      result:insert('global', 1)
-   end
-
+   local result = new_result('global', list:concat())
    return result
 end
 
