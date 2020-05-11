@@ -1,7 +1,7 @@
 /* raylib-nelua note:
  * DO NOT USE/INCLUDE THIS HEADER!
- * this is a MODIFIED raylib.h, with some regions commented to
- * simplify parsing and binding generation from lpeg-raylib-reader.lua
+ * this is a MODIFIED raylib.h, with some regions commented and adapted
+ * to simplify parsing and binding generation
  */
 
 /**********************************************************************************************
@@ -690,8 +690,9 @@ typedef enum {
     LOC_MAP_BRDF
 } ShaderLocationIndex;
 
-#define LOC_MAP_DIFFUSE      LOC_MAP_ALBEDO
-#define LOC_MAP_SPECULAR     LOC_MAP_METALNESS
+// ignored, because I don't know how this should be handled:
+// #define LOC_MAP_DIFFUSE      LOC_MAP_ALBEDO
+// #define LOC_MAP_SPECULAR     LOC_MAP_METALNESS
 
 // Shader uniform data types
 typedef enum {
@@ -721,8 +722,9 @@ typedef enum {
     MAP_BRDF
 } MaterialMapType;
 
-#define MAP_DIFFUSE      MAP_ALBEDO
-#define MAP_SPECULAR     MAP_METALNESS
+// ignored, because I don't know how this should be handled:
+// #define MAP_DIFFUSE      MAP_ALBEDO
+// #define MAP_SPECULAR     MAP_METALNESS
 
 // Pixel formats
 // NOTE: Support depends on OpenGL version and platform
