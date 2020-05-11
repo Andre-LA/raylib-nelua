@@ -324,15 +324,19 @@ function converters.struct_declaration_list(value)
 end
 
 function converters.struct_name(value)
-   return new_result(value, '<cimport, nodecl>')
+   return new_result() -- ignored
 end
 
 function converters.struct_decl(value)
    local list = traverse(value)
 
-   local result = new_result('global')
-   list:insert('= @record{', 2)
+   local result = new_result()
+   list:insert('= @record{\n', 2)
    list:insert('}')
+   result:insert(list:concat(''))
+
+   return result
+end
    result:insert(list:concat())
 
    return result
