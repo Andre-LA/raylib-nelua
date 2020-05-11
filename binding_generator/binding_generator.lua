@@ -302,15 +302,23 @@ function converters.struct_declaration_list(value)
    local list = traverse(value)
 
    for i, s in list:iter() do
-      local is_comment = s:sub(1, 2) == '--'
-      if is_comment then
-         list[i] = s
-      else
-         list[i] = '\n' .. config.identation .. s .. ','
+      if s ~= '' then
+         s = s:gsub('^\n%s+', '\n')
+
+         local is_comment = s:sub(1, 2) == '--'
+         local space_only = s:find('^%s')
+
+         if is_comment then
+            list[i] = config.identation .. s .. '\n'
+         elseif not space_only then
+            list[i] = config.identation .. s .. ','
+         else
+            list[i] = s
+         end
       end
    end
 
-   result:insert(list:concat() .. '\n')
+   result:insert(list:concat(''))
 
    return result
 end
