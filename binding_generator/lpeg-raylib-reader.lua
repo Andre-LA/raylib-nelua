@@ -265,6 +265,7 @@ local captures = {
    end,
 
    qualifier = function(qualifier_name)
+      print('capturando qualifier' .. ins(qualifier_name))
       return gen_capture('qualifier_name', qualifier_name, {'string'})
    end,
 
@@ -488,7 +489,7 @@ c_patterns.specifier = (
    c_patterns.alignment_specifier + c_patterns.storage_class_specifier + c_patterns.function_specifier
 ) / captures.specifier
 
-c_patterns.qualifier = kw'const' + kw'volatile' + kw'restrict' / captures.qualifier
+c_patterns.qualifier = (kw'const' + kw'volatile' + kw'restrict') / captures.qualifier
 
 c_patterns.atomic = kw'_Atomic'
 
@@ -497,10 +498,10 @@ c_patterns.specifiers_and_qualifiers = lpeg.P{
    specifiers_and_qualifiers = (
       (
          c_patterns.void +
-         c_patterns.custom_type +
-         c_patterns.basic_type +
          c_patterns.specifier +
-         c_patterns.qualifier
+         c_patterns.qualifier +
+         c_patterns.custom_type +
+         c_patterns.basic_type
       ) / captures.specifiers_and_qualifiers
    ) * (space^1 * lpeg.V'specifiers_and_qualifiers')^-1,
 }
@@ -663,6 +664,8 @@ local raylib_pattern = (
 -- [=[
 local teste1 = "float x = 3, y;"
 local teste1_25 = "float x;"
+local teste1_26 = "const"
+local teste1_27 = "const float x;"
 local teste1_30 = "float *x;"
 local teste1_5 = "float x0, y1, z, w2;"
 
@@ -767,6 +770,8 @@ end
 
 print(ins(test(c_patterns.var_decl, teste1)))
 print(ins(test(c_patterns.var_decl, teste1_25)))
+print(ins(test(c_patterns.qualifier, teste1_26)))
+print(ins(test(c_patterns.var_decl, teste1_27)))
 print(ins(test(c_patterns.var_decl, teste1_30)))
 print(ins(test(c_patterns.var_decl, teste1_5)))
 print(ins(test(c_patterns.var_decl * space^0 * semicolon * space^0 * c_patterns.var_decl, teste1_75)))
