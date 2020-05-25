@@ -116,7 +116,7 @@ local function new_result(...)
          from = typecheck_assert(from, {'number'})
          to = typecheck_assert(to, {'number'})
 
-         self:insert(to, self[from])
+         self:insert(self[from], to)
          self:remove(from + (from > to and 1 or 0))
       end,
       swap = function(self, v1, v2)
