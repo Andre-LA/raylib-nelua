@@ -10,6 +10,45 @@ local config = {
    identation = '  ',
 }
 
+-- TODO: rename "value" to "node" in the whole code
+local function find(value, name, depth_limit, depth)
+   depth = depth and depth + 1 or 1
+   depth_limit = depth_limit or math.huge
+
+   if depth > depth_limit or type(value) ~= 'table' then
+      return nil, 'value is not a table'
+   end
+
+   for i = 1, #value do
+      local v = value[i]
+
+      if v.name == name then
+         return v
+      else
+         if type(v.value) == 'table' then
+            local v_result = find(v.value, name, depth_limit, depth)
+            if v_result then
+               return v_result
+            end
+         end
+      end
+   end
+
+   return nil, "'" .. name .. "' not found"
+end
+
+local function guess_expression_value_type(vl)
+   -- contains a cast?
+   local possible_cast = find(vl, 'cast')
+
+   if possible_cast then
+      local custom_type = find(possible_cast.value, 'custom_type') -- TODO: standard types should be supported, however, for raylib, is sufficient :)
+      if custom_type then
+         return custom_type.value
+      end
+   end
+end
+
 local function typecheck_assert(value, _types)
    local valuetype = type(value)
    local result = false
@@ -397,14 +436,41 @@ function converters.typedef(value)
 end
 
 function converters.define_replacement(value)
-   return new_result('=', traverse(value):concat())
+   local list = traverse(value)
+   local result = new_result()
+
+   local contains_expression = find(value, 'expression', 1)
+
+   if not contains_expression then
+      result:insert('=')
+      result:insert(list:concat())
+   end
+
+   return result
 end
 
 function converters.define(value)
+   local list = traverse(value)
+
+   if list[#list] == '' then
+      list:remove()
+   end
+
+   --local result = new_result('global', list:concat(), '<cimport, nodecl>')
    local result = new_result('global')
-   local define_result = traverse(value)
-   define_result:insert('<cimport, nodecl>', 2)
-   result:insert(define_result:concat())
+
+   local expr_value = find(value, 'expression')
+
+   if expr_value then
+      local expr_type = guess_expression_value_type(expr_value.value)
+      if expr_type then
+         list:append(': ' .. expr_type, 1)
+      end
+   end
+
+   list:insert('<cimport, nodecl>', 2)
+   result:insert(list:concat())
+
    return result
 end
 
