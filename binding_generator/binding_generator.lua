@@ -336,6 +336,26 @@ function converters.var_decl(value)
    return new_result(adjusted_list:concat(', '))
 end
 
+function converters.func_arg(value)
+   local list = traverse(value)
+   local result = new_result(list:concat())
+   return result
+end
+
+function converters.func_decl(value)
+   local list = traverse(value)
+
+   list:prepend('): ', 1)
+   list:move(1, #list);
+
+   list:insert("function Raylib.", 1)
+   list:insert("(", 3)
+   list:insert(' end ', #list)
+
+   local result = new_result()
+   result:insert(list:concat(''))
+   return result
+end
 function converters.struct_declaration_list(value)
    local result = new_result()
    local list = traverse(value)
