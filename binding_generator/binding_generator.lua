@@ -10,6 +10,22 @@ local config = {
    identation = '  ',
 }
 
+local function typecheck_assert(value, _types)
+   local valuetype = type(value)
+   local result = false
+
+   for i = 1, #_types do
+      result = result or valuetype == _types[i]
+   end
+
+   if not result then
+      local msg = "typechecking assert: '" .. table.concat(_types, "' or '") .. "' expected, got '" .. valuetype .. "' (value: '" .. ins(value) .. "')"
+      error(msg, 2)
+   end
+
+   return value
+end
+
 -- TODO: rename "value" to "node" in the whole code
 local function find(value, name, depth_limit, depth)
    depth = depth and depth + 1 or 1
@@ -49,20 +65,18 @@ local function guess_expression_value_type(vl)
    end
 end
 
-local function typecheck_assert(value, _types)
-   local valuetype = type(value)
-   local result = false
+local function extract_pointer(decl_str)
+   local decl_result = typecheck_assert(decl_str, {'string'})
 
-   for i = 1, #_types do
-      result = result or valuetype == _types[i]
+   local stars_s, stars_e = string.find(decl_str, '(%*+)')
+   local stars = nil
+
+   if stars_s then
+      stars = string.sub(decl_str, stars_s, stars_e)
+      decl_result = decl_str:sub(stars_e + 1):gsub('^(%s+)', '')
    end
 
-   if not result then
-      local msg = "typechecking assert: '" .. table.concat(_types, "' or '") .. "' expected, got '" .. valuetype .. "' (value: '" .. ins(value) .. "')"
-      error(msg, 2)
-   end
-
-   return value
+   return stars, decl_result
 end
 
 -- returns {...} (like table.pack) with the following metatable:
@@ -311,26 +325,16 @@ function converters.var_decl(value)
    local adjusted_list = new_result()
 
    for i, s in list:iter(2) do
-      local stars_s, stars_e = string.find(s, '(%*+)')
-      local stars = nil
-
-      if stars_s then
-         stars = string.sub(s, stars_s, stars_e)
-         s = string.sub(s, stars_e + 1)
-         s = string.gsub(s, '^(%s+)', '')
+      local ptr, _s = extract_pointer(s)
+      if ptr then
+         s = _s
       end
-
-      local ptr = stars or ''
 
       if list_type == 'void' and stars then
          ptr = 'pointer'
-         list_type = ''
-         for x = 2, stars:len() do
-            ptr = 'pointer(' .. ptr .. ')'
-         end
       end
 
-      adjusted_list:insert(s .. ': ' .. list_type .. ptr)
+      adjusted_list:insert(s .. ': ' .. list_type .. (ptr or ''))
    end
 
    return new_result(adjusted_list:concat(', '))
