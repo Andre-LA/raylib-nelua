@@ -249,6 +249,10 @@ function converters.custom_type(value)
    return new_result(value)
 end
 
+function converters.qualifier_name(value)
+   return new_result('<' .. value .. '>')
+end
+
 function converters.specifiers_and_qualifiers(value)
    return new_result(traverse(value):concat())
 end
@@ -298,6 +302,10 @@ function converters.values_on_braces(value)
    result:insert(traverse(value):concat(', '))
    result:insert('}')
    return result
+end
+
+function converters.variadic_arg(value)
+   return new_result('...')
 end
 
 function converters.cast(value)
