@@ -265,7 +265,6 @@ local captures = {
    end,
 
    qualifier = function(qualifier_name)
-      print('capturando qualifier' .. ins(qualifier_name))
       return gen_capture('qualifier_name', qualifier_name, {'string'})
    end,
 
@@ -287,6 +286,10 @@ local captures = {
 
    func_decl = function(...)
       return gen_capture('func_decl', {...}, {'table'})
+   end,
+
+   func_args = function(...)
+      return gen_capture('func_args', {...}, {'table'})
    end,
 
    func_arg = function(...)
@@ -530,17 +533,18 @@ c_patterns.func_decl = lpeg.P{
    'func_decl';
    func_decl = (
       c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator * space^0 *
-      lparen * space^0 * (lpeg.V'func_arg'^-1 / captures.func_arg) * space^0 * rparen *
+      lparen * space^0 * (lpeg.V'func_arg'^1 / captures.func_args) * space^0 * rparen *
       space^0 * semicolon * space^0 * c_patterns.comment^-1
    ) / captures.func_decl,
 
-   func_arg = (
-      c_patterns.variadic_arg + (
-         c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator * (
-            space^0 * comma * space^0 * lpeg.V'func_arg'^-1
-         )^0
-      ) +
-      c_patterns.void
+   func_arg = space^0 * (
+      lpeg.V'parameter' +
+      c_patterns.void +
+      c_patterns.variadic_arg
+   ) * space^0 * comma^-1 / captures.func_arg,
+
+   parameter = (
+      c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator
    )
 }
 
@@ -752,7 +756,7 @@ local teste15 = [[typedef struct Shader {
 
 local teste16 = "float myarray[16]"
 
-local teste17 = "int addsubroutine(int a, int b);"
+local teste17 = "int addsubroutine(int a, int b, ...);"
 local teste18 = "void *other(Color **a, int b);"
 
 local teste19 = '3.14f'
