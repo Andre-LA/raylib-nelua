@@ -348,8 +348,53 @@ function converters.var_decl(value)
    return new_result(adjusted_list:concat(', '))
 end
 
+function converters.func_args(value)
+   return new_result(traverse(value):concat(', '))
+end
+
 function converters.func_arg(value)
+   print('func_arg value: ', ins(value))
+
+   local func_arg_transformations = {
+      function(l) --> ... or void
+         if l[1] == 'void' then
+            l:remove()
+         end
+      end, --< ... or `empty`
+      function(l) --> type declarator
+         l:swap(1, 2)
+      end, --< declarator type
+      function(l) --> qualifier type declarator
+         l:swap(1, 3)
+      end --< declarator type qualifier
+   }
+
    local list = traverse(value)
+
+   print('func_arg pre list: ', #list, ins(list))
+
+   -- #list is 1 when "void" or "....";
+   -- #list is 2 when "type" "declarator";
+   -- #list is 3 when "qualifier" "type" "declarator"
+   local transformation_fn = func_arg_transformations[#list]
+   transformation_fn(list)
+
+   if list[2] then
+      list:append(':', 1)
+   end
+
+   print('func_arg pos list: ', ins(list))
+
+   if #list > 1 then
+      local ptr, decl = extract_pointer(list[1])
+      if ptr then
+         list:append(ptr, 2)
+         list[1] = decl
+      end
+   end
+
+   print('func_arg final list: ', ins(list))
+
    local result = new_result(list:concat())
    return result
 end
