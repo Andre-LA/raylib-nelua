@@ -499,14 +499,18 @@ c_patterns.atomic = kw'_Atomic'
 c_patterns.specifiers_and_qualifiers = lpeg.P{
    'specifiers_and_qualifiers';
    specifiers_and_qualifiers = (
+      lpeg.V'specifiers_or_qualifiers' / captures.specifiers_and_qualifiers
+   ) * #space,
+
+   specifiers_or_qualifiers = (
       (
          c_patterns.void +
          c_patterns.specifier +
          c_patterns.qualifier +
          c_patterns.custom_type +
          c_patterns.basic_type
-      ) / captures.specifiers_and_qualifiers
-   ) * (space^1 * lpeg.V'specifiers_and_qualifiers')^-1,
+      ) * #space * (space^1 * lpeg.V'specifiers_or_qualifiers')^-1
+   ),
 }
 
 c_patterns.declarator = lpeg.P{
@@ -523,7 +527,7 @@ c_patterns.declarator_and_initializer = lpeg.P{
 c_patterns.var_decl = lpeg.P{
    'var_decl';
    var_decl = (
-      c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator_and_initializer * (
+      c_patterns.specifiers_and_qualifiers * space^1 * c_patterns.declarator_and_initializer * (
          space^0 * comma * space^0 * c_patterns.declarator_and_initializer
       )^0
    ) / captures.var_decl
@@ -545,7 +549,7 @@ c_patterns.func_decl = lpeg.P{
 
    parameter = (
       c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator
-   )
+   ),
 }
 
 c_patterns.callback = lpeg.P{
@@ -670,6 +674,8 @@ local teste1 = "float x = 3, y;"
 local teste1_25 = "float x;"
 local teste1_26 = "const"
 local teste1_27 = "const float x;"
+local teste1_28 = "int charsCount;"
+local teste1_29 = "const int charsCount;"
 local teste1_30 = "float *x;"
 local teste1_5 = "float x0, y1, z, w2;"
 
@@ -700,6 +706,15 @@ local teste6 = [[typedef struct Color {
     unsigned char b;
     unsigned char a;
 } Color;]]
+
+local teste6_5 = [[struct Font {
+    int baseSize;           // Base size (default chars height)
+    int charsCount;         // Number of characters
+}]]
+--     Texture2D texture;      // Characters texture atlas
+--     Rectangle *recs;        // Characters rectangles in texture
+--     CharInfo *chars;        // Characters info data
+-- }]]
 
 local teste7 = [[enum {
     MAP_ALBEDO    = 0,       // MAP_DIFFUSE
@@ -776,6 +791,8 @@ print(ins(test(c_patterns.var_decl, teste1)))
 print(ins(test(c_patterns.var_decl, teste1_25)))
 print(ins(test(c_patterns.qualifier, teste1_26)))
 print(ins(test(c_patterns.var_decl, teste1_27)))
+print(ins(test(c_patterns.var_decl, teste1_28)))
+print(ins(test(c_patterns.var_decl, teste1_29)))
 print(ins(test(c_patterns.var_decl, teste1_30)))
 print(ins(test(c_patterns.var_decl, teste1_5)))
 print(ins(test(c_patterns.var_decl * space^0 * semicolon * space^0 * c_patterns.var_decl, teste1_75)))
@@ -787,6 +804,7 @@ print(ins(test(c_patterns.typedef, teste3)))
 print(ins(test(c_patterns.typedef, teste4)))
 print(ins(test(c_patterns.typedef, teste5)))
 print(ins(test(c_patterns.typedef, teste6)))
+print(ins(test(c_patterns.struct_decl, teste6_5)))
 
 print(ins(test(c_patterns.enum_decl, teste7)))
 print(ins(test(c_patterns.typedef, teste8)))
