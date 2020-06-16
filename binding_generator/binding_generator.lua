@@ -380,12 +380,12 @@ function converters.func_arg(value)
             l:remove()
          end
       end, --< ... or `empty`
-      function(l) --> type declarator
+      function(l) --> type, declarator
          l:swap(1, 2)
-      end, --< declarator type
-      function(l) --> qualifier type declarator
+      end, --< declarator, type
+      function(l) --> qualifier, type, declarator
          l:swap(1, 3)
-      end --< declarator type qualifier
+      end --< declarator, type, qualifier
    }
 
    local list = traverse(value)
