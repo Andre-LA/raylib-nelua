@@ -353,9 +353,7 @@ function converters.var_decl(value)
 
    for i, s in list:iter(2) do
       local ptr, _s = extract_pointer(s)
-      if ptr then
-         s = _s
-      end
+      s = ptr and _s or s
 
       if list_type == 'void' and stars then
          ptr = 'pointer'
