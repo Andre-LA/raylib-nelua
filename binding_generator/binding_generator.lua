@@ -648,6 +648,10 @@ end
 
 table.insert(final_result, '\n-- raylib binding: \n')
 
+table.insert(final_result, 'global Raylib = @record{}')
+-- TODO: Implement callback!
+table.insert(final_result, 'global TraceLogCallback = @record{}')
+
 for i = 1, #raylib_result do
    table.insert(final_result, raylib_result[i])
 end
