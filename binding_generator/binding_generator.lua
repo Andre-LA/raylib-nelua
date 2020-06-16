@@ -341,6 +341,11 @@ function converters.identifier(value)
    return new_result(value)
 end
 
+function converters.array(value)
+   -- TODO: return new_result('[' .. tostring(value) .. ']')
+   return new_result('')
+end
+
 function converters.var_decl(value)
    local list = traverse(value)
    local list_type = list[1]
