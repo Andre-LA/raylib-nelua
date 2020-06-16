@@ -408,6 +408,8 @@ function converters.func_arg(value)
       local ptr, decl = extract_pointer(list[1])
       if ptr then
          list:append(ptr, 2)
+         list[2] = string.gsub(list[2], 'cchar%*', 'cstring')
+         list[2] = string.gsub(list[2], 'void%*', 'pointer')
          list[1] = decl
       end
    end
@@ -422,6 +424,16 @@ function converters.func_decl(value)
    local list = traverse(value)
 
    list:prepend('): ', 1)
+
+   local ptr, func_name = extract_pointer(list[2])
+   if ptr then
+      list:append(ptr, 1)
+      list[1] = string.gsub(list[1], 'cchar%*', 'cstring')
+      list[1] = string.gsub(list[1], 'void%*', 'pointer')
+
+      list[2] = func_name
+   end
+
    list:move(1, #list);
 
    list:insert("function Raylib.", 1)
