@@ -275,7 +275,12 @@ function converters.initializer(value)
 end
 
 function converters.declarator(value)
-   return new_result(traverse(value):concat())
+   local list = traverse(value)
+   -- TODO: avoid other keywords in future version
+   if list[#list] == 'end' then
+      list[#list] = '_end'
+   end
+   return new_result(list:concat())
 end
 
 function converters.declarator_and_initializer(value)
