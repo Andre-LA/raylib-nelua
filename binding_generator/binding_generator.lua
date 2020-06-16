@@ -342,12 +342,12 @@ function converters.identifier(value)
 end
 
 function converters.array(value)
-   -- TODO: return new_result('[' .. tostring(value) .. ']')
-   return new_result('')
+    return new_result('[' .. tostring(value) .. ']')
 end
 
 function converters.var_decl(value)
    local list = traverse(value)
+
    local list_type = list[1]
    local adjusted_list = new_result()
 
@@ -359,6 +359,13 @@ function converters.var_decl(value)
 
       if list_type == 'void' and stars then
          ptr = 'pointer'
+      end
+
+      local arr_s, arr_e = string.find(s, '%[%d+%]')
+      if arr_s then
+         local array_str = string.sub(s, arr_s, arr_e)
+         s = string.sub(s, 1, arr_s - 1)
+         list_type = list_type .. array_str
       end
 
       adjusted_list:insert(s .. ': ' .. list_type .. (ptr or ''))
