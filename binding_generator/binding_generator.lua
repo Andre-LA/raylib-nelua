@@ -487,7 +487,7 @@ function converters.struct_decl(value)
    local list = traverse(value)
 
    local result = new_result()
-   list:insert('= @record{\n', 2)
+   list:insert('<cimport, nodecl> = @record{\n', 2)
    list:insert('}')
    result:insert(list:concat(''))
 
