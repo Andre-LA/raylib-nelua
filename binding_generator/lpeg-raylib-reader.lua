@@ -387,9 +387,9 @@ c_patterns.custom_type = lpeg.P(function(subj, pos)
    return result, match
 end)
 
-c_patterns.parentheses = lparen + rparen / captures.parentheses
-c_patterns.bracket = lbracket + rbracket / captures.bracket
-c_patterns.brace = lbrace + rbrace / captures.brace
+c_patterns.parentheses = (lparen + rparen) / captures.parentheses
+c_patterns.bracket = (lbracket + rbracket) / captures.bracket
+c_patterns.brace = (lbrace + rbrace) / captures.brace
 
 c_patterns.unary_ops = unary_ops / captures.unary_operator
 c_patterns.binary_ops = binary_ops / captures.binary_operator
@@ -582,7 +582,7 @@ c_patterns.arithmetic_expr = lpeg.P{
    value = c_patterns.literal + c_patterns.identifier
 }
 
-c_patterns.cast = lparen * space^0 * c_patterns.specifiers_and_qualifiers * space^0 * rparen / captures.cast
+c_patterns.cast = (lparen * space^0 * c_patterns.specifiers_and_qualifiers * space^0 * rparen) / captures.cast
 
 c_patterns.values_on_braces = lpeg.P{
    'values_on_braces';
@@ -820,7 +820,7 @@ print(ins(test(c_patterns.define, teste22)))
 print(ins(test(c_patterns.values_on_braces, teste23)))
 
 print(ins(c_patterns.custom_types_table))
-
+print('extra> ', ins(test(c_patterns.cast, "(Color)")))
 print(ins(test(c_patterns.expression, teste24)))
 
 
