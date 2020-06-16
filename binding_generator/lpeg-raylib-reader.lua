@@ -560,9 +560,13 @@ c_patterns.callback = lpeg.P{
    ) / captures.callback,
 
    func_arg = (
-      c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator_and_initializer * (
-         space^0 * comma * space^0 * lpeg.V'func_arg'^-1
+      lpeg.V'parameter' * (
+         space^0 * comma * comma * space^0 * lpeg.V'func_arg'^-1
       )^0
+   ),
+
+   parameter = (
+      c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator_and_initializer
    )
 }
 
