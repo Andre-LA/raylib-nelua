@@ -254,7 +254,16 @@ function converters.qualifier_name(value)
 end
 
 function converters.specifiers_and_qualifiers(value)
-   return new_result(traverse(value):concat())
+   local list = traverse(value)
+
+   -- for C bindings, <const>s should be not used
+   for i = #list, 1, -1 do
+      if list[i] == '<const>' then
+         list:remove(i)
+      end
+   end
+
+   return new_result(list:concat())
 end
 
 function converters.pointer(value)
