@@ -438,6 +438,7 @@ function converters.func_decl(value)
 
    list:insert("function Raylib.", 1)
    list:insert("(", 3)
+   list:insert(" <cimport'" .. list[2] .. "', nodecl>", #list)
    list:insert(' end ', #list)
 
    local result = new_result()
@@ -529,6 +530,7 @@ end
 
 function converters.typedef(value)
    local list = traverse(value)
+
    local is_not_type_alias = string.find(list[1], "%p")
 
    if is_not_type_alias then
@@ -564,7 +566,6 @@ function converters.define(value)
       list:remove()
    end
 
-   --local result = new_result('global', list:concat(), '<cimport, nodecl>')
    local result = new_result('global')
 
    local expr_value = find(value, 'expression')
