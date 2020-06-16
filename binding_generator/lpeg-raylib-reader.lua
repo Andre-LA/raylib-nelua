@@ -500,7 +500,7 @@ c_patterns.specifiers_and_qualifiers = lpeg.P{
    'specifiers_and_qualifiers';
    specifiers_and_qualifiers = (
       lpeg.V'specifiers_or_qualifiers' / captures.specifiers_and_qualifiers
-   ) * #space,
+   ),
 
    specifiers_or_qualifiers = (
       (
@@ -509,7 +509,7 @@ c_patterns.specifiers_and_qualifiers = lpeg.P{
          c_patterns.qualifier +
          c_patterns.custom_type +
          c_patterns.basic_type
-      ) * #space * (space^1 * lpeg.V'specifiers_or_qualifiers')^-1
+      ) * #(space + -alphanumeric) * (space^1 * lpeg.V'specifiers_or_qualifiers')^-1
    ),
 }
 
@@ -842,9 +842,8 @@ print(ins(test(c_patterns.define, teste22)))
 print(ins(test(c_patterns.values_on_braces, teste23)))
 
 print(ins(c_patterns.custom_types_table))
-print('extra> ', ins(test(c_patterns.cast, "(Color)")))
+print('extra:', ins(test(c_patterns.cast, "(Color)")))
 print(ins(test(c_patterns.expression, teste24)))
-
 
 print((
    ("/*this should not*/exist"):gsub("/%*(.-)%*/", "")
