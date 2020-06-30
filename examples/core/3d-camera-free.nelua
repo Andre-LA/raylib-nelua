@@ -7,67 +7,65 @@
 require 'raylib'
 
 -- [ Initialization [
-local screenWidth <comptime> = 800
-local screenHeight <comptime> = 450
+local screen_width: integer <comptime> = 800
+local screen_height: integer <comptime> = 450
 
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - 3d camera free")
 
-Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - 3d camera free")
-
--- define the camera to look into our 3d world
+-- Define the camera to look into uor 3d world
 local camera: Camera3D = {
-   position = (@Vector3){ 0, 10, 10 }, -- camera position
-   target   = (@Vector3){ 0,  0,  0 }, -- camera looking at point
-   up       = (@Vector3){ 0,  1,  0 }, -- camera up vector (rotation towards target)
-   fovy = 45,                          -- camera field-of-view Y
-   type = CameraType.PERSPECTIVE       -- camera mode type
+   position = {10, 10, 10}, -- Camera position
+   target   = { 0,  0,  0}, -- Camera looking at point
+   up       = { 0,  1,  0}, -- Camera up vector (rotation towards target)
+   fovy     = 45,           -- Camera field-of-view
+   type = CameraType.CAMERA_PERSPECTIVE -- Camera mode type
 }
 
-local cubePosition: Vector3 = { 0, 0, 0 }
+local cube_position: Vector3 = {0, 0, 0}
 
-Raylib.SetCameraMode(camera, CameraMode.FREE) -- set a free camera mode
+Raylib.SetCameraMode(camera, CameraMode.CAMERA_FREE) -- Set a free camera mode
 
-Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
-
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- ] Initialization ]
 
--- main game loop
-while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
-   -- [ update [
-   Raylib.UpdateCamera(camera) -- update camera
+-- Main game loop
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+   -- [ Update [
+   Raylib.UpdateCamera(&camera) -- Update camera
 
-   if Raylib.IsKeyDown(KeyboardKey.Z) then
-      camera.target = (@Vector3){ 0, 0, 0 }
+   if Raylib.IsKeyDown(KeyboardKey.KEY_Z) then
+      camera.target = {0, 0, 0}
    end
-   -- ] update ]
+   -- ] Update ]
 
-   -- [ draw [
-
+   -- [ Draw [
    Raylib.BeginDrawing()
-      Raylib.ClearBackground(RaylibColors.Raywhite)
+
+      Raylib.ClearBackground(RAYWHITE)
 
       Raylib.BeginMode3D(camera)
 
-         Raylib.DrawCube(cubePosition, 2, 2, 2, RaylibColors.Red)
-         Raylib.DrawCubeWires(cubePosition, 2, 2, 2, RaylibColors.Maroon)
+         Raylib.DrawCube(cube_position, 2, 2, 2, RED)
+         Raylib.DrawCubeWires(cube_position, 2, 2, 2, MAROON)
 
          Raylib.DrawGrid(10, 1)
 
       Raylib.EndMode3D()
 
-      Raylib.DrawRectangle(10, 10, 320, 133, Raylib.Fade(RaylibColors.Skyblue, 0.5))
-      Raylib.DrawRectangleLines(10, 10, 320, 133, RaylibColors.Blue)
+      Raylib.DrawRectangle(10, 10, 320, 133, Raylib.Fade(SKYBLUE, 0.5))
+      Raylib.DrawRectangleLines(10, 10, 320, 133, BLUE)
 
-      Raylib.DrawText("Free camera default controls:", 20, 20, 10, RaylibColors.Black)
-      Raylib.DrawText("- Mouse Wheel to Zoom in-out", 40, 40, 10, RaylibColors.Darkgray)
-      Raylib.DrawText("- Mouse Wheel Pressed to Pan", 40, 60, 10, RaylibColors.Darkgray)
-      Raylib.DrawText("- Alt + Mouse Wheel Pressed to Rotate", 40, 80, 10, RaylibColors.Darkgray)
-      Raylib.DrawText("- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom", 40, 100, 10, RaylibColors.Darkgray)
-      Raylib.DrawText("- Z to zoom to (0, 0, 0)", 40, 120, 10, RaylibColors.Darkgray)
+      Raylib.DrawText("Free camera default controls:", 20, 20, 10, BLACK)
+      Raylib.DrawText("- Mouse Wheel to Zoom in-out", 40, 40, 10, DARKGRAY)
+      Raylib.DrawText("- Mouse Wheel Pressed to Pan", 40, 60, 10, DARKGRAY)
+      Raylib.DrawText("- Alt + Mouse Wheel Pressed to Rotate", 40, 80, 10, DARKGRAY)
+      Raylib.DrawText("- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom", 40, 100, 10, DARKGRAY)
+      Raylib.DrawText("- Z to zoom to (0, 0, 0)", 40, 120, 10, DARKGRAY)
 
    Raylib.EndDrawing()
-
-   -- ] draw ]
+   -- ] Draw ]
 end
 
--- de-initialization
-Raylib.CloseWindow() -- close window and OpenGL context
+-- [ De-Initialization [
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ] De-Initialization ]

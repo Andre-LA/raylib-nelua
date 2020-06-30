@@ -1,40 +1,55 @@
 # raylib-nelua
 
-This is a [Raylib](https://www.raylib.com/) wrapper for [Nelua language](https://nelua.io/)
+This is a [Raylib](https://www.raylib.com/) binding for [Nelua language](https://nelua.io/).
 
 ## Example
 
 ```Lua
-    -- moves raylib.nelua file to your project
-    require 'raylib'
+-- move raylib.nelua file to your project
+require 'raylib'
 
-    local screenWidth: integer <comptime> = 800
-    local screenHeight: integer <comptime> = 450
-    local ballPosition: Vector2 = {x = screenWidth/2, y = screenHeight/2}
+-- [ Initialization [
+local screen_width: integer <comptime> = 800
+local screen_height: integer <comptime> = 450
 
-    Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - keyboard input")
-    Raylib.SetTargetFPS(60)
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - keyboard input")
 
-    while (not Raylib.WindowShouldClose()) do
-        if Raylib.IsKeyDown(KeyboardKey.RIGHT) then
-            ballPosition.x = ballPosition.x + 2.0
-        end
-        if Raylib.IsKeyDown(KeyboardKey.LEFT) then
-            ballPosition.x = ballPosition.x - 2.0
-        end
-        if Raylib.IsKeyDown(KeyboardKey.UP) then
-            ballPosition.y = ballPosition.y - 2.0
-        end
-        if Raylib.IsKeyDown(KeyboardKey.DOWN) then
-            ballPosition.y = ballPosition.y + 2.0
-        end
+local ball_position: Vector2 = { screen_width / 2, screen_height / 2}
 
-        Raylib.BeginDrawing()
-            Raylib.ClearBackground(RaylibColors.Raywhite)
-            Raylib.DrawText("move the ball with arrow keys", 10, 10, 20, RaylibColors.Darkgray)
-            Raylib.DrawCircleV(ballPosition, 50, RaylibColors.Maroon)
-        Raylib.EndDrawing()
-    end
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+-- ] Initialization ]
 
-    Raylib.CloseWindow()
+-- Main game loop
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+   -- [ Update [
+   if Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) then
+      ball_position.x = ball_position.x + 2
+   end
+   if Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
+      ball_position.x = ball_position.x - 2
+   end
+   if Raylib.IsKeyDown(KeyboardKey.KEY_UP) then
+      ball_position.y = ball_position.y - 2
+   end
+   if Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) then
+      ball_position.y = ball_position.y + 2
+   end
+   -- ] Update ]
+
+   -- [ Draw [
+   Raylib.BeginDrawing() --[
+
+      Raylib.ClearBackground(RAYWHITE)
+
+      Raylib.DrawText("move the ball with arrow keys", 10, 10, 20, DARKGRAY)
+
+      Raylib.DrawCircleV(ball_position, 50, MAROON)
+
+   Raylib.EndDrawing() --]
+   -- ] Draw ]
+end
+
+-- [ De-Initialization [
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ] De-Initialization ]
 ```

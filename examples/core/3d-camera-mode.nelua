@@ -7,51 +7,53 @@
 require 'raylib'
 
 -- [ Initialization [
-local screenWidth <comptime> = 800
-local screenHeight <comptime> = 450
+local screen_width: integer <comptime> = 800
+local screen_height: integer <comptime> = 450
 
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - 3d camera mode")
 
-Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - 3d camera mode")
-
--- define the camera to look into our 3d world
+-- Define a camera to look into our 3d world
 local camera: Camera3D = {
-   position = (@Vector3){ 0, 10, 10 }, -- camera position
-   target   = (@Vector3){ 0,  0,  0 }, -- camera looking at point
-   up       = (@Vector3){ 0,  1,  0 }, -- camera up vector (rotation towards target)
-   fovy = 45,                          -- camera field-of-view Y
-   type = CameraType.PERSPECTIVE       -- camera mode type
+   position = {0, 10, 10},
+   target = {0, 0, 0},
+   up = {0, 1, 0},
+   fovy = 45,
+   type = CameraType.CAMERA_PERSPECTIVE
 }
 
-local cubePosition: Vector3 = { 0, 0, 0 }
+local cube_position: Vector3 = {0, 0, 0}
 
-Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
-
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- ] Initialization ]
 
--- main game loop
-while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
-   -- [ Draw [
+-- Main game loop
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+   -- [ Update [
+   --TODO: Update your variables here
+   -- ] Update ]
 
-   Raylib.BeginDrawing()
-      Raylib.ClearBackground(RaylibColors.Raywhite)
+   -- [ Draw [
+   Raylib.BeginDrawing() --[
+
+      Raylib.ClearBackground(RAYWHITE)
 
       Raylib.BeginMode3D(camera)
 
-         Raylib.DrawCube(cubePosition, 2, 2, 2, RaylibColors.Red)
-         Raylib.DrawCubeWires(cubePosition, 2, 2, 2, RaylibColors.Maroon)
+         Raylib.DrawCube(cube_position, 2.0, 2.0, 2.0, RED)
+         Raylib.DrawCubeWires(cube_position, 2.0, 2.0, 2.0, MAROON)
 
-         Raylib.DrawGrid(10, 1)
+         Raylib.DrawGrid(10, 1.0)
 
       Raylib.EndMode3D()
 
-      Raylib.DrawText("welcome to the third dimension!", 10, 40, 20, RaylibColors.Darkgray)
+      Raylib.DrawText("Welcome to the third dimension!", 10, 40, 20, DARKGRAY)
 
       Raylib.DrawFPS(10, 10)
 
-   Raylib.EndDrawing()
-
+   Raylib.EndDrawing() --]
    -- ] Draw ]
 end
 
--- de-initialization
-Raylib.CloseWindow() -- close window and OpenGL context
+-- [ De-Initialization [
+Raylib.CloseWindow()
+-- ] De-Initialization ]

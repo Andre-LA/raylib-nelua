@@ -6,25 +6,32 @@
 
 require 'raylib'
 
--- [ initialization [
-local screenWidth: integer <comptime> = 800
-local screenHeight: integer <comptime> = 450
+-- [ Initialization [
+local screen_width: integer <comptime> = 800
+local screen_height: integer <comptime> = 450
 
-Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window")
+Raylib.InitWindow(screen_width, screen_height, "raylib [core] example - basic window")
 
-Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+-- ] Initialization ]
 
--- ] initialization ]
+-- Main game loop
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+   -- [ Update [
+   -- TODO: Update your variables here
+   -- ] Update ]
 
--- main game loop
-while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
-   -- [ draw [
-   Raylib.BeginDrawing()
+   -- [ Draw [
+   Raylib.BeginDrawing() --[
+
       Raylib.ClearBackground(RAYWHITE)
+
       Raylib.DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
-   Raylib.EndDrawing()
-   -- ] draw ]
+
+   Raylib.EndDrawing() --]
+   -- ] Draw ]
 end
 
--- de-initialization
-Raylib.CloseWindow() -- close window and OpenGL context
+-- [ De-Initialization [
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ] De-Initialization ]
