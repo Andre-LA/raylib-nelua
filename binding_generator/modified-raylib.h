@@ -3,7 +3,6 @@
  * this is a MODIFIED raylib.h, with some regions commented and adapted
  * to simplify parsing and binding generation
  */
-
 /**********************************************************************************************
 *
 *   raylib - A simple and easy-to-use library to enjoy videogames programming (www.raylib.com)

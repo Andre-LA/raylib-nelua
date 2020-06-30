@@ -8,6 +8,7 @@ local lpeg_raylib_reader = require 'binding_generator/lpeg-raylib-reader'
 -- configure your generation here:
 local config = {
    identation = '  ',
+   record_in_use = '',
 }
 
 local function typecheck_assert(value, _types)
@@ -426,10 +427,10 @@ end
 function converters.func_decl(value)
    local list = traverse(value)
 
-
    list:prepend('): ', 1)
 
    local ptr, func_name = extract_pointer(list[2])
+
    if ptr then
       list:append(ptr, 1)
       list[1] = string.gsub(list[1], 'cchar%*', 'cstring')
@@ -438,13 +439,15 @@ function converters.func_decl(value)
       list[2] = func_name
    end
 
-   list:move(1, #list);
+   local contains_comment = find(value, 'comment')
+   local move_offset = contains_comment and 0 or 1
 
-   list:insert("function Raylib.", 1)
+   list:move(1, #list + move_offset)
+
+   list:insert("function " .. config.record_in_use .. ".", 1)
    list:insert("(", 3)
-   list:insert(" <cimport'" .. list[2] .. "', nodecl>", #list)
-   list:insert(' end ', #list)
-
+   list:insert(" <cimport'" .. list[2] .. "', nodecl>", #list + move_offset)
+   list:insert(' end ', #list + move_offset)
 
    local result = new_result()
    result:insert(list:concat(''))
@@ -632,10 +635,6 @@ local cincludes = {
    '<raylib.h>', '<raymath.h>'
 }
 
-local raylib_table = lpeg_raylib_reader.read'binding_generator/modified-raylib.h'
-
-local raylib_result = converters.convert(raylib_table)
-
 local final_result = {}
 
 table.insert(final_result, '-- links: \n')
@@ -650,17 +649,41 @@ for i = 1, #cincludes do
    table.insert(final_result, "## cinclude '" .. cincludes[i] .. "' \n")
 end
 
-table.insert(final_result, '\n-- raylib binding: \n')
-
-table.insert(final_result, 'global Raylib = @record{}\n')
 -- TODO: Implement callback!
 table.insert(final_result, 'global TraceLogCallback = @record{}\n')
+
+-- [ raylib.h [
+config.record_in_use = 'Raylib'
+
+local raylib_table = lpeg_raylib_reader.read'binding_generator/modified-raylib.h'
+local raylib_result = converters.convert(raylib_table)
+
+table.insert(final_result, '\n-- raylib binding: \n')
+table.insert(final_result, 'global Raylib = @record{}\n')
 
 for i = 1, #raylib_result do
    table.insert(final_result, raylib_result[i])
 end
 
 table.insert(final_result, '')
+
+-- ] raylib.h ]
+
+-- [ raymath.h [
+config.record_in_use = 'Raymath'
+
+local raymath_table = lpeg_raylib_reader.read'binding_generator/modified-raymath.h'
+local raymath_result = converters.convert(raymath_table)
+
+table.insert(final_result, '\n-- raymath binding: \n')
+table.insert(final_result, 'global Raymath = @record{}\n')
+
+for i = 1, #raymath_result do
+   table.insert(final_result, raymath_result[i])
+end
+
+table.insert(final_result, '')
+--] raymath.h ]
 
 local file_to_generate = io.open('raylib.nelua', 'w+')
 file_to_generate:write(table.concat(final_result))

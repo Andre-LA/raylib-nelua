@@ -25,7 +25,7 @@
    - [x] pointer
    - [x] array
    - [x] parse function declaration
-   - [ ] ~~parse callbacks~~ (added manually)
+   - [ ] parse callbacks
    - [x] parse comments
    - [x] parse typedef
    - [x] parse defines
@@ -538,7 +538,7 @@ c_patterns.func_decl = lpeg.P{
    func_decl = (
       c_patterns.specifiers_and_qualifiers * space^0 * c_patterns.declarator * space^0 *
       lparen * space^0 * (lpeg.V'func_arg'^1 / captures.func_args) * space^0 * rparen *
-      space^0 * semicolon * space^0 * c_patterns.comment^-1
+      space^0 * semicolon * (space - newline)^0 * c_patterns.comment^-1
    ) / captures.func_decl,
 
    func_arg = space^0 * (
@@ -673,7 +673,7 @@ local raylib_pattern = (
    space^1 / captures.empty_space
 )
 
--- [=[
+--[=[
 local teste1 = "float x = 3, y;"
 local teste1_25 = "float x;"
 local teste1_26 = "const"
