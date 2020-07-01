@@ -650,7 +650,7 @@ for i = 1, #cincludes do
 end
 
 -- TODO: Implement callback!
-table.insert(final_result, 'global TraceLogCallback = @record{}\n')
+table.insert(final_result, '\nglobal TraceLogCallback = @record{}\n')
 
 -- [ raylib.h [
 config.record_in_use = 'Raylib'
@@ -658,8 +658,8 @@ config.record_in_use = 'Raylib'
 local raylib_table = lpeg_raylib_reader.read'binding_generator/modified-raylib.h'
 local raylib_result = converters.convert(raylib_table)
 
-table.insert(final_result, '\n-- raylib binding: \n')
-table.insert(final_result, 'global Raylib = @record{}\n')
+table.insert(final_result, '\n-- raylib binding:\n')
+table.insert(final_result, 'global Raylib = @record{}')
 
 for i = 1, #raylib_result do
    table.insert(final_result, raylib_result[i])
@@ -675,14 +675,14 @@ config.record_in_use = 'Raymath'
 local raymath_table = lpeg_raylib_reader.read'binding_generator/modified-raymath.h'
 local raymath_result = converters.convert(raymath_table)
 
-table.insert(final_result, '\n-- raymath binding: \n')
+table.insert(final_result, '\n\n-- raymath binding: \n')
 table.insert(final_result, 'global Raymath = @record{}\n')
 
 for i = 1, #raymath_result do
    table.insert(final_result, raymath_result[i])
 end
 
-table.insert(final_result, '')
+table.insert(final_result, '\n')
 --] raymath.h ]
 
 local file_to_generate = io.open('raylib.nelua', 'w+')
