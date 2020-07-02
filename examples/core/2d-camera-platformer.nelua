@@ -26,9 +26,7 @@ local EnvItem = @record{
 }
 
 -- [ functions [
-local yyy: uinteger <comptime> = 5
-
-local function update_player(player: Player*, env_items: EnvItem[yyy], delta: number)
+local function update_player(player: Player*, env_items: EnvItem[ENV_ITEMS_LEN], delta: number)
    if Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
       player.position.x = player.position.x - PLAYER_HOR_SPD * delta
    end
@@ -212,7 +210,7 @@ local camera_updaters: function(Camera2D*, Player*, EnvItem[ENV_ITEMS_LEN], numb
 
 local camera_option: integer = 0
 
-local camera_descriptions: cstring[5] = {
+local camera_descriptions: cstring[CAMERA_UPDATERS_LEN] = {
   "Follow player center",
   "Follow player center, but clamp to map edges",
   "Follow player center; smoothed",
@@ -222,7 +220,6 @@ local camera_descriptions: cstring[5] = {
 
 Raylib.SetTargetFPS(60);
 -- ] Initialization ]
-
 
 -- Main game loop
 while not Raylib.WindowShouldClose() do
