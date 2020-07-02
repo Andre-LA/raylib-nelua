@@ -492,6 +492,10 @@ function converters.struct_decl(value)
    local result = new_result()
    list:insert('<cimport, nodecl> = @record{\n', 2)
    list:insert('}')
+
+   local struct_name = find(value, 'struct_name').value
+   list:insert('\n## ' .. struct_name .. '.value.is_' .. string.lower(struct_name) .. ' = true')
+
    result:insert(list:concat(''))
 
    return result
