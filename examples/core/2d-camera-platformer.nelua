@@ -108,12 +108,12 @@ local function update_camera_center_smooth_follow(camera: Camera2D*, player: Pla
 
    camera.offset = { width / 2, height / 2 }
 
-   local diff: Vector2 = Raymath.Vector2Subtract(player.position, camera.target)
-   local length: number = Raymath.Vector2Length(diff)
+   local diff: Vector2 = player.position - camera.target
+   local length: number = #diff
 
    if length > min_effect_length then
       local speed: number = math.max(fraction_speed * length, min_speed)
-      camera.target = Raymath.Vector2Add(camera.target, Raymath.Vector2Scale(diff, speed * delta / length))
+      camera.target = camera.target + diff * (speed * delta / length)
    end
 end
 
