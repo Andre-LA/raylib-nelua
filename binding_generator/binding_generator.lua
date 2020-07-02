@@ -685,6 +685,6 @@ end
 table.insert(final_result, '\n')
 --] raymath.h ]
 
-local file_to_generate = io.open('raylib.nelua', 'w+')
+local file_to_generate = io.open('generated-raylib.nelua', 'w+')
 file_to_generate:write(table.concat(final_result))
 file_to_generate:close()
