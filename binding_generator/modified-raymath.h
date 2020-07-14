@@ -91,16 +91,16 @@
 #ifndef RAD2DEG
     #define RAD2DEG (180.0f/PI)
 #endif
-*/
+
 // Return float vector for Matrix
-/*#ifndef MatrixToFloat*/
+#ifndef MatrixToFloat
 #define MatrixToFloat(mat) (MatrixToFloatV(mat).v)
-/*#endif*/
+#endif
 
 // Return float vector for Vector3
-/*#ifndef Vector3ToFloat*/
+#ifndef Vector3ToFloat
 #define Vector3ToFloat(vec) (Vector3ToFloatV(vec).v)
-/*#endif
+#endif
 
 //----------------------------------------------------------------------------------
 // Types and Structures Definition

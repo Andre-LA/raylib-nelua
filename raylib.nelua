@@ -1381,15 +1381,6 @@ global Raymath = @record{}
 
 
 
--- Return float vector for Matrix
-
-global MatrixToFloat <cimport, nodecl>
-
-
--- Return float vector for Vector3
-
-global Vector3ToFloat <cimport, nodecl>
-
 -- NOTE: Helper types to be used instead of array return types for *ToFloat functions
 global float3 <cimport, nodecl> = @record{
   v : float32[3], }
