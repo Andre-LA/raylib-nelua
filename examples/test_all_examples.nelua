@@ -7,9 +7,11 @@
 
 require 'examples/core/2d-camera'
 require 'examples/core/2d-camera-platformer'
+require 'examples/core/3d-camera-first-person'
+require 'examples/core/3d-camera-free'
 require 'examples/core/3d-camera-mode'
 require 'examples/core/basic-window'
+require 'examples/core/input-gamepad'
 require 'examples/core/input-keys'
 require 'examples/core/input-mouse'
 require 'examples/core/input-mouse_wheel'
--- require 'examples/core/input-gamepad'
