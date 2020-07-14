@@ -1,6 +1,6 @@
 # raylib-nelua
 
-This is a [Raylib 3.0](raylib-website) binding for [Nelua language](nelua-website).
+This is a [Raylib 3.0][raylib-website] binding for [Nelua language][nelua-website].
 
 ## How to use
 
