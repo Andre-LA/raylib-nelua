@@ -150,8 +150,8 @@ global Font <cimport, nodecl> = @record{
   baseSize: cint,             -- Base size (default chars height)
   charsCount: cint,           -- Number of characters
   texture: Texture2D,        -- Characters texture atlas
-  recs: Rectangle*,          -- Characters rectangles in texture
-  chars: CharInfo*,          -- Characters info data
+  recs: Rectangle[0]*,          -- Characters rectangles in texture
+  chars: CharInfo[0]*,          -- Characters info data
 }
 ## Font.value.is_font = true
 
@@ -185,19 +185,19 @@ global Mesh <cimport, nodecl> = @record{
   triangleCount: cint,        -- Number of triangles stored (indexed or not)
 
   -- Default vertex data
-  vertices: float32*,          -- Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-  texcoords: float32*,         -- Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-  texcoords2: float32*,        -- Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
-  normals: float32*,           -- Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-  tangents: float32*,          -- Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-  colors: cuchar*,    -- Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-  indices: cushort*,  -- Vertex indices (in case vertex data comes indexed)
+  vertices: float32[0]*,          -- Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+  texcoords: float32[0]*,         -- Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+  texcoords2: float32[0]*,        -- Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
+  normals: float32[0]*,           -- Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+  tangents: float32[0]*,          -- Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+  colors: cuchar[0]*,    -- Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+  indices: cushort[0]*,  -- Vertex indices (in case vertex data comes indexed)
 
   -- Animation vertex data
-  animVertices: float32*,      -- Animated vertex positions (after bones transformations)
-  animNormals: float32*,       -- Animated normals (after bones transformations)
-  boneIds: cint*,             -- Vertex bone ids, up to 4 bones influence by vertex (skinning)
-  boneWeights: float32*,       -- Vertex bone weight, up to 4 bones influence by vertex (skinning)
+  animVertices: float32[0]*,      -- Animated vertex positions (after bones transformations)
+  animNormals: float32[0]*,       -- Animated normals (after bones transformations)
+  boneIds: cint[0]*,             -- Vertex bone ids, up to 4 bones influence by vertex (skinning)
+  boneWeights: float32[0]*,       -- Vertex bone weight, up to 4 bones influence by vertex (skinning)
 
   -- OpenGL identifiers
   vaoId: cuint,       -- OpenGL Vertex Array Object id
@@ -208,7 +208,7 @@ global Mesh <cimport, nodecl> = @record{
 -- Shader type (generic)
 global Shader <cimport, nodecl> = @record{
   id: cuint,          -- Shader program id
-  locs: cint*,                -- Shader locations array (MAX_SHADER_LOCATIONS)
+  locs: cint[0]*,                -- Shader locations array (MAX_SHADER_LOCATIONS)
 }
 ## Shader.value.is_shader = true
 
@@ -223,8 +223,8 @@ global MaterialMap <cimport, nodecl> = @record{
 -- Material type (generic)
 global Material <cimport, nodecl> = @record{
   shader: Shader,            -- Material shader
-  maps: MaterialMap*,        -- Material maps array (MAX_MATERIAL_MAPS)
-  params: float32*,            -- Material generic parameters (if required)
+  maps: MaterialMap[0]*,        -- Material maps array (MAX_MATERIAL_MAPS)
+  params: float32[0]*,            -- Material generic parameters (if required)
 }
 ## Material.value.is_material = true
 
@@ -247,24 +247,24 @@ global BoneInfo <cimport, nodecl> = @record{
 global Model <cimport, nodecl> = @record{
   transform: Matrix,         -- Local transform matrix
   meshCount: cint,            -- Number of meshes
-  meshes: Mesh*,             -- Meshes array
+  meshes: Mesh[0]*,             -- Meshes array
   materialCount: cint,        -- Number of materials
-  materials: Material*,      -- Materials array
+  materials: Material[0]*,      -- Materials array
   meshMaterial: cint*,        -- Mesh material number
 
   -- Animation data
   boneCount: cint,            -- Number of bones
-  bones: BoneInfo*,          -- Bones information (skeleton)
-  bindPose: Transform*,      -- Bones base transformation (pose)
+  bones: BoneInfo[0]*,          -- Bones information (skeleton)
+  bindPose: Transform[0]*,      -- Bones base transformation (pose)
 }
 ## Model.value.is_model = true
 
 -- Model animation
 global ModelAnimation <cimport, nodecl> = @record{
   boneCount: cint,            -- Number of bones
-  bones: BoneInfo*,          -- Bones information (skeleton)
+  bones: BoneInfo[0]*,          -- Bones information (skeleton)
   frameCount: cint,           -- Number of animation frames
-  framePoses: Transform**,   -- Poses array by frame
+  framePoses: Transform[0]*[0]*,   -- Poses array by frame
 }
 ## ModelAnimation.value.is_modelanimation = true
 
@@ -842,7 +842,7 @@ function Raylib.TakeScreenshot(fileName: cstring): void <cimport'TakeScreenshot'
 function Raylib.GetRandomValue(min: cint, max: cint): cint <cimport'GetRandomValue', nodecl> end -- Returns a random value between min and max (both included)
 
 -- Files management functions
-function Raylib.LoadFileData(fileName: cstring, bytesRead: cuint*): cuchar* <cimport'LoadFileData', nodecl> end -- Load file data as byte array (read)
+function Raylib.LoadFileData(fileName: cstring, bytesRead: cuint*): cuchar[0]* <cimport'LoadFileData', nodecl> end -- Load file data as byte array (read)
 function Raylib.SaveFileData(fileName: cstring, data: pointer, bytesToWrite: cuint): void <cimport'SaveFileData', nodecl> end -- Save data to file from byte array (write)
 function Raylib.LoadFileText(fileName: cstring): cstring <cimport'LoadFileText', nodecl> end -- Load text data from file (read), returns a '\0' terminated string
 function Raylib.SaveFileText(fileName: cstring, text: cstring): void <cimport'SaveFileText', nodecl> end -- Save text data to file (write), string must be '\0' terminated
@@ -855,16 +855,16 @@ function Raylib.GetFileNameWithoutExt(filePath: cstring): cstring <cimport'GetFi
 function Raylib.GetDirectoryPath(filePath: cstring): cstring <cimport'GetDirectoryPath', nodecl> end -- Get full path for a given fileName with path (uses static string)
 function Raylib.GetPrevDirectoryPath(dirPath: cstring): cstring <cimport'GetPrevDirectoryPath', nodecl> end -- Get previous directory path for a given path (uses static string)
 function Raylib.GetWorkingDirectory(): cstring <cimport'GetWorkingDirectory', nodecl> end -- Get current working directory (uses static string)
-function Raylib.GetDirectoryFiles(dirPath: cstring, count: cint*): cstring* <cimport'GetDirectoryFiles', nodecl> end -- Get filenames in a directory path (memory should be freed)
+function Raylib.GetDirectoryFiles(dirPath: cstring, count: cint*): cstring[0]* <cimport'GetDirectoryFiles', nodecl> end -- Get filenames in a directory path (memory should be freed)
 function Raylib.ClearDirectoryFiles(): void <cimport'ClearDirectoryFiles', nodecl> end -- Clear directory files paths buffers (free memory)
 function Raylib.ChangeDirectory(dir: cstring): boolean <cimport'ChangeDirectory', nodecl> end -- Change working directory, returns true if success
 function Raylib.IsFileDropped(): boolean <cimport'IsFileDropped', nodecl> end -- Check if a file has been dropped into window
-function Raylib.GetDroppedFiles(count: cint*): cstring* <cimport'GetDroppedFiles', nodecl> end -- Get dropped files names (memory should be freed)
+function Raylib.GetDroppedFiles(count: cint*): cstring[0]* <cimport'GetDroppedFiles', nodecl> end -- Get dropped files names (memory should be freed)
 function Raylib.ClearDroppedFiles(): void <cimport'ClearDroppedFiles', nodecl> end -- Clear dropped files paths buffer (free memory)
 function Raylib.GetFileModTime(fileName: cstring): clong <cimport'GetFileModTime', nodecl> end -- Get file modification time (last write time)
 
-function Raylib.CompressData(data: cuchar*, dataLength: cint, compDataLength: cint*): cuchar* <cimport'CompressData', nodecl> end -- Compress data (DEFLATE algorythm)
-function Raylib.DecompressData(compData: cuchar*, compDataLength: cint, dataLength: cint*): cuchar* <cimport'DecompressData', nodecl> end -- Decompress data (DEFLATE algorythm)
+function Raylib.CompressData(data: cuchar[0]*, dataLength: cint, compDataLength: cint*): cuchar[0]* <cimport'CompressData', nodecl> end -- Compress data (DEFLATE algorythm)
+function Raylib.DecompressData(compData: cuchar[0]*, compDataLength: cint, dataLength: cint*): cuchar[0]* <cimport'DecompressData', nodecl> end -- Decompress data (DEFLATE algorythm)
 
 -- Persistent storage management
 function Raylib.SaveStorageValue(position: cuint, value: cint): void <cimport'SaveStorageValue', nodecl> end -- Save integer value to storage file (to defined position)
@@ -949,7 +949,7 @@ function Raylib.DrawLine(startPosX: cint, startPosY: cint, endPosX: cint, endPos
 function Raylib.DrawLineV(startPos: Vector2, endPos: Vector2, color: Color): void <cimport'DrawLineV', nodecl> end -- Draw a line (Vector version)
 function Raylib.DrawLineEx(startPos: Vector2, endPos: Vector2, thick: float32, color: Color): void <cimport'DrawLineEx', nodecl> end -- Draw a line defining thickness
 function Raylib.DrawLineBezier(startPos: Vector2, endPos: Vector2, thick: float32, color: Color): void <cimport'DrawLineBezier', nodecl> end -- Draw a line using cubic-bezier curves in-out
-function Raylib.DrawLineStrip(points: Vector2*, numPoints: cint, color: Color): void <cimport'DrawLineStrip', nodecl> end -- Draw lines sequence
+function Raylib.DrawLineStrip(points: Vector2[0]*, numPoints: cint, color: Color): void <cimport'DrawLineStrip', nodecl> end -- Draw lines sequence
 function Raylib.DrawCircle(centerX: cint, centerY: cint, radius: float32, color: Color): void <cimport'DrawCircle', nodecl> end -- Draw a color-filled circle
 function Raylib.DrawCircleSector(center: Vector2, radius: float32, startAngle: cint, endAngle: cint, segments: cint, color: Color): void <cimport'DrawCircleSector', nodecl> end -- Draw a piece of a circle
 function Raylib.DrawCircleSectorLines(center: Vector2, radius: float32, startAngle: cint, endAngle: cint, segments: cint, color: Color): void <cimport'DrawCircleSectorLines', nodecl> end -- Draw circle sector outline
@@ -973,8 +973,8 @@ function Raylib.DrawRectangleRounded(rec: Rectangle, roundness: float32, segment
 function Raylib.DrawRectangleRoundedLines(rec: Rectangle, roundness: float32, segments: cint, lineThick: cint, color: Color): void <cimport'DrawRectangleRoundedLines', nodecl> end -- Draw rectangle with rounded edges outline
 function Raylib.DrawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color): void <cimport'DrawTriangle', nodecl> end -- Draw a color-filled triangle (vertex in counter-clockwise order!)
 function Raylib.DrawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color): void <cimport'DrawTriangleLines', nodecl> end -- Draw triangle outline (vertex in counter-clockwise order!)
-function Raylib.DrawTriangleFan(points: Vector2*, numPoints: cint, color: Color): void <cimport'DrawTriangleFan', nodecl> end -- Draw a triangle fan defined by points (first vertex is the center)
-function Raylib.DrawTriangleStrip(points: Vector2*, pointsCount: cint, color: Color): void <cimport'DrawTriangleStrip', nodecl> end -- Draw a triangle strip defined by points
+function Raylib.DrawTriangleFan(points: Vector2[0]*, numPoints: cint, color: Color): void <cimport'DrawTriangleFan', nodecl> end -- Draw a triangle fan defined by points (first vertex is the center)
+function Raylib.DrawTriangleStrip(points: Vector2[0]*, pointsCount: cint, color: Color): void <cimport'DrawTriangleStrip', nodecl> end -- Draw a triangle strip defined by points
 function Raylib.DrawPoly(center: Vector2, sides: cint, radius: float32, rotation: float32, color: Color): void <cimport'DrawPoly', nodecl> end -- Draw a regular polygon (Vector version)
 function Raylib.DrawPolyLines(center: Vector2, sides: cint, radius: float32, rotation: float32, color: Color): void <cimport'DrawPolyLines', nodecl> end -- Draw a polygon outline of n sides
 
@@ -994,14 +994,14 @@ function Raylib.CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vec
 -- Image loading functions
 -- NOTE: This functions do not require GPU access
 function Raylib.LoadImage(fileName: cstring): Image <cimport'LoadImage', nodecl> end -- Load image from file into CPU memory (RAM)
-function Raylib.LoadImageEx(pixels: Color*, width: cint, height: cint): Image <cimport'LoadImageEx', nodecl> end -- Load image from Color array data (RGBA - 32bit)
+function Raylib.LoadImageEx(pixels: Color[0]*, width: cint, height: cint): Image <cimport'LoadImageEx', nodecl> end -- Load image from Color array data (RGBA - 32bit)
 function Raylib.LoadImagePro(data: pointer, width: cint, height: cint, format: cint): Image <cimport'LoadImagePro', nodecl> end -- Load image from raw data with parameters
 function Raylib.LoadImageRaw(fileName: cstring, width: cint, height: cint, format: cint, headerSize: cint): Image <cimport'LoadImageRaw', nodecl> end -- Load image from RAW file data
 function Raylib.UnloadImage(image: Image): void <cimport'UnloadImage', nodecl> end -- Unload image from CPU memory (RAM)
 function Raylib.ExportImage(image: Image, fileName: cstring): void <cimport'ExportImage', nodecl> end -- Export image data to file
 function Raylib.ExportImageAsCode(image: Image, fileName: cstring): void <cimport'ExportImageAsCode', nodecl> end -- Export image as code file defining an array of bytes
-function Raylib.GetImageData(image: Image): Color* <cimport'GetImageData', nodecl> end -- Get pixel data from image as a Color struct array
-function Raylib.GetImageDataNormalized(image: Image): Vector4* <cimport'GetImageDataNormalized', nodecl> end -- Get pixel data from image as Vector4 array (float normalized)
+function Raylib.GetImageData(image: Image): Color[0]* <cimport'GetImageData', nodecl> end -- Get pixel data from image as a Color struct array
+function Raylib.GetImageDataNormalized(image: Image): Vector4[0]* <cimport'GetImageDataNormalized', nodecl> end -- Get pixel data from image as Vector4 array (float normalized)
 
 -- Image generation functions
 function Raylib.GenImageColor(width: cint, height: cint, color: Color): Image <cimport'GenImageColor', nodecl> end -- Generate image: plain color
@@ -1040,7 +1040,7 @@ function Raylib.ImageColorGrayscale(image: Image*): void <cimport'ImageColorGray
 function Raylib.ImageColorContrast(image: Image*, contrast: float32): void <cimport'ImageColorContrast', nodecl> end -- Modify image color: contrast (-100 to 100)
 function Raylib.ImageColorBrightness(image: Image*, brightness: cint): void <cimport'ImageColorBrightness', nodecl> end -- Modify image color: brightness (-255 to 255)
 function Raylib.ImageColorReplace(image: Image*, color: Color, replace: Color): void <cimport'ImageColorReplace', nodecl> end -- Modify image color: replace color
-function Raylib.ImageExtractPalette(image: Image, maxPaletteSize: cint, extractCount: cint*): Color* <cimport'ImageExtractPalette', nodecl> end -- Extract color palette from image to maximum size (memory should be freed)
+function Raylib.ImageExtractPalette(image: Image, maxPaletteSize: cint, extractCount: cint*): Color[0]* <cimport'ImageExtractPalette', nodecl> end -- Extract color palette from image to maximum size (memory should be freed)
 function Raylib.GetImageAlphaBorder(image: Image, threshold: float32): Rectangle <cimport'GetImageAlphaBorder', nodecl> end -- Get image alpha border rectangle
 
 -- Image drawing functions
@@ -1096,10 +1096,10 @@ function Raylib.GetPixelDataSize(width: cint, height: cint, format: cint): cint 
 -- Font loading/unloading functions
 function Raylib.GetFontDefault(): Font <cimport'GetFontDefault', nodecl> end -- Get the default Font
 function Raylib.LoadFont(fileName: cstring): Font <cimport'LoadFont', nodecl> end -- Load font from file into GPU memory (VRAM)
-function Raylib.LoadFontEx(fileName: cstring, fontSize: cint, fontChars: cint*, charsCount: cint): Font <cimport'LoadFontEx', nodecl> end -- Load font from file with extended parameters
+function Raylib.LoadFontEx(fileName: cstring, fontSize: cint, fontChars: cint[0]*, charsCount: cint): Font <cimport'LoadFontEx', nodecl> end -- Load font from file with extended parameters
 function Raylib.LoadFontFromImage(image: Image, key: Color, firstChar: cint): Font <cimport'LoadFontFromImage', nodecl> end -- Load font from Image (XNA style)
-function Raylib.LoadFontData(fileName: cstring, fontSize: cint, fontChars: cint*, charsCount: cint, type: cint): CharInfo* <cimport'LoadFontData', nodecl> end -- Load font data for further use
-function Raylib.GenImageFontAtlas(chars: CharInfo*, recs: Rectangle**, charsCount: cint, fontSize: cint, padding: cint, packMethod: cint): Image <cimport'GenImageFontAtlas', nodecl> end -- Generate image font atlas using chars info
+function Raylib.LoadFontData(fileName: cstring, fontSize: cint, fontChars: cint[0]*, charsCount: cint, type: cint): CharInfo[0]* <cimport'LoadFontData', nodecl> end -- Load font data for further use
+function Raylib.GenImageFontAtlas(chars: CharInfo[0]*, recs: Rectangle[0]*[0]*, charsCount: cint, fontSize: cint, padding: cint, packMethod: cint): Image <cimport'GenImageFontAtlas', nodecl> end -- Generate image font atlas using chars info
 function Raylib.UnloadFont(font: Font): void <cimport'UnloadFont', nodecl> end -- Unload Font from GPU memory (VRAM)
 
 -- Text drawing functions
@@ -1124,18 +1124,18 @@ function Raylib.TextFormat(text: cstring, ...): cstring <cimport'TextFormat', no
 function Raylib.TextSubtext(text: cstring, position: cint, length: cint): cstring <cimport'TextSubtext', nodecl> end -- Get a piece of a text string
 function Raylib.TextReplace(text: cstring, replace: cstring, by: cstring): cstring <cimport'TextReplace', nodecl> end -- Replace text string (memory must be freed!)
 function Raylib.TextInsert(text: cstring, insert: cstring, position: cint): cstring <cimport'TextInsert', nodecl> end -- Insert text in a position (memory must be freed!)
-function Raylib.TextJoin(textList: cstring*, count: cint, delimiter: cstring): cstring <cimport'TextJoin', nodecl> end -- Join text strings with delimiter
-function Raylib.TextSplit(text: cstring, delimiter: cchar, count: cint*): cstring* <cimport'TextSplit', nodecl> end -- Split text into multiple strings
+function Raylib.TextJoin(textList: cstring[0]*, count: cint, delimiter: cstring): cstring <cimport'TextJoin', nodecl> end -- Join text strings with delimiter
+function Raylib.TextSplit(text: cstring, delimiter: cchar, count: cint*): cstring[0]* <cimport'TextSplit', nodecl> end -- Split text into multiple strings
 function Raylib.TextAppend(text: cstring, append: cstring, position: cint*): void <cimport'TextAppend', nodecl> end -- Append text at specific position and move cursor!
 function Raylib.TextFindIndex(text: cstring, find: cstring): cint <cimport'TextFindIndex', nodecl> end -- Find first text occurrence within a string
 function Raylib.TextToUpper(text: cstring): cstring <cimport'TextToUpper', nodecl> end -- Get upper case version of provided string
 function Raylib.TextToLower(text: cstring): cstring <cimport'TextToLower', nodecl> end -- Get lower case version of provided string
 function Raylib.TextToPascal(text: cstring): cstring <cimport'TextToPascal', nodecl> end -- Get Pascal case notation version of provided string
 function Raylib.TextToInteger(text: cstring): cint <cimport'TextToInteger', nodecl> end -- Get integer value from text (negative values not supported)
-function Raylib.TextToUtf8(codepoints: cint*, length: cint): cstring <cimport'TextToUtf8', nodecl> end -- Encode text codepoint into utf8 text (memory must be freed!)
+function Raylib.TextToUtf8(codepoints: cint[0]*, length: cint): cstring <cimport'TextToUtf8', nodecl> end -- Encode text codepoint into utf8 text (memory must be freed!)
 
 -- UTF8 text strings management functions
-function Raylib.GetCodepoints(text: cstring, count: cint*): cint* <cimport'GetCodepoints', nodecl> end -- Get all codepoints in a string, codepoints count returned by parameters
+function Raylib.GetCodepoints(text: cstring, count: cint*): cint[0]* <cimport'GetCodepoints', nodecl> end -- Get all codepoints in a string, codepoints count returned by parameters
 function Raylib.GetCodepointsCount(text: cstring): cint <cimport'GetCodepointsCount', nodecl> end -- Get total number of characters (codepoints) in a UTF8 encoded string
 function Raylib.GetNextCodepoint(text: cstring, bytesProcessed: cint*): cint <cimport'GetNextCodepoint', nodecl> end -- Returns next codepoint in a UTF8 encoded string; 0x3f('?') is returned on failure
 function Raylib.CodepointToUtf8(codepoint: cint, byteLength: cint*): cstring <cimport'CodepointToUtf8', nodecl> end -- Encode codepoint into utf8 text (char array length returned as parameter)
@@ -1174,19 +1174,19 @@ function Raylib.LoadModelFromMesh(mesh: Mesh): Model <cimport'LoadModelFromMesh'
 function Raylib.UnloadModel(model: Model): void <cimport'UnloadModel', nodecl> end -- Unload model from memory (RAM and/or VRAM)
 
 -- Mesh loading/unloading functions
-function Raylib.LoadMeshes(fileName: cstring, meshCount: cint*): Mesh* <cimport'LoadMeshes', nodecl> end -- Load meshes from model file
+function Raylib.LoadMeshes(fileName: cstring, meshCount: cint*): Mesh[0]* <cimport'LoadMeshes', nodecl> end -- Load meshes from model file
 function Raylib.ExportMesh(mesh: Mesh, fileName: cstring): void <cimport'ExportMesh', nodecl> end -- Export mesh data to file
 function Raylib.UnloadMesh(mesh: Mesh): void <cimport'UnloadMesh', nodecl> end -- Unload mesh from memory (RAM and/or VRAM)
 
 -- Material loading/unloading functions
-function Raylib.LoadMaterials(fileName: cstring, materialCount: cint*): Material* <cimport'LoadMaterials', nodecl> end -- Load materials from model file
+function Raylib.LoadMaterials(fileName: cstring, materialCount: cint*): Material[0]* <cimport'LoadMaterials', nodecl> end -- Load materials from model file
 function Raylib.LoadMaterialDefault(): Material <cimport'LoadMaterialDefault', nodecl> end -- Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 function Raylib.UnloadMaterial(material: Material): void <cimport'UnloadMaterial', nodecl> end -- Unload material from GPU memory (VRAM)
 function Raylib.SetMaterialTexture(material: Material*, mapType: cint, texture: Texture2D): void <cimport'SetMaterialTexture', nodecl> end -- Set texture for a material map type (MAP_DIFFUSE, MAP_SPECULAR...)
 function Raylib.SetModelMeshMaterial(model: Model*, meshId: cint, materialId: cint): void <cimport'SetModelMeshMaterial', nodecl> end -- Set material for a mesh
 
 -- Model animations loading/unloading functions
-function Raylib.LoadModelAnimations(fileName: cstring, animsCount: cint*): ModelAnimation* <cimport'LoadModelAnimations', nodecl> end -- Load model animations from file
+function Raylib.LoadModelAnimations(fileName: cstring, animsCount: cint*): ModelAnimation[0]* <cimport'LoadModelAnimations', nodecl> end -- Load model animations from file
 function Raylib.UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: cint): void <cimport'UpdateModelAnimation', nodecl> end -- Update model animation pose
 function Raylib.UnloadModelAnimation(anim: ModelAnimation): void <cimport'UnloadModelAnimation', nodecl> end -- Unload animation data
 function Raylib.IsModelAnimationValid(model: Model, anim: ModelAnimation): boolean <cimport'IsModelAnimationValid', nodecl> end -- Check model animation skeleton match
@@ -1312,7 +1312,7 @@ function Raylib.SetSoundPitch(sound: Sound, pitch: float32): void <cimport'SetSo
 function Raylib.WaveFormat(wave: Wave*, sampleRate: cint, sampleSize: cint, channels: cint): void <cimport'WaveFormat', nodecl> end -- Convert wave data to desired format
 function Raylib.WaveCopy(wave: Wave): Wave <cimport'WaveCopy', nodecl> end -- Copy a wave to a new wave
 function Raylib.WaveCrop(wave: Wave*, initSample: cint, finalSample: cint): void <cimport'WaveCrop', nodecl> end -- Crop a wave to defined samples range
-function Raylib.GetWaveData(wave: Wave): float32* <cimport'GetWaveData', nodecl> end -- Get samples data from wave as a floats array
+function Raylib.GetWaveData(wave: Wave): float32[0]* <cimport'GetWaveData', nodecl> end -- Get samples data from wave as a floats array
 
 -- Music management functions
 function Raylib.LoadMusicStream(fileName: cstring): Music <cimport'LoadMusicStream', nodecl> end -- Load music stream from file
