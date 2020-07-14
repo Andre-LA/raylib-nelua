@@ -5,7 +5,7 @@
 local ins = require 'inspect'
 
 local lpeg_raylib_parser = require 'binding_generator/lpeg-raylib-parser'
-local bindgen = require 'binding_generator/binding_generator'
+local bindgen = require 'binding_generator/generic-binding-generator'
 local converters = bindgen.converters
 local config = bindgen.config
 
