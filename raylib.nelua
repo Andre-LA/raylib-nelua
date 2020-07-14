@@ -15,13 +15,13 @@ global Raylib = @record{}
 -- Some basic Defines
 -- ----------------------------------------------------------------------------------
 
-global PI <cimport, nodecl>
+global PI: float32 <cimport, nodecl>
 
 
-global DEG2RAD <cimport, nodecl>
-global RAD2DEG <cimport, nodecl>
+global DEG2RAD: float32 <cimport, nodecl>
+global RAD2DEG: float32 <cimport, nodecl>
 
-global MAX_TOUCH_POINTS <cimport, nodecl>      -- Maximum number of touch points supported
+global MAX_TOUCH_POINTS: cint <cimport, nodecl>      -- Maximum number of touch points supported
 
 
 
