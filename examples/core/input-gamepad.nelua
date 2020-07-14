@@ -8,6 +8,19 @@
 
 require 'raylib'
 
+local function text_format_2(str: cstring, vl: auto)
+   local result: cstring;
+   ## cemit 'result = TextFormat(str, vl);'
+   return result
+end
+
+local function text_format_3(str: cstring, vl1: auto, vl2: auto)
+   local result: cstring;
+   ## cemit 'result = TextFormat(str, vl1, vl2);'
+   return result
+end
+
+
 ##[=[ cemit([[
 // NOTE: Gamepad name ID depends on drivers and OS
 #if defined(PLATFORM_RPI)
@@ -20,159 +33,208 @@ require 'raylib'
 ]])
 ]=]
 
-local XBOX360_NAME_ID: cstring <cimport, nodecl>
-local PS3_NAME_ID: cstring <cimport, nodecl>
+local XBOX360_NAME_ID: cstring <cimport, nodecl>;
+local PS3_NAME_ID: cstring <cimport, nodecl>;
 
--- [ initialization [
+-- [ Initialization [
+local screen_width: integer <comptime> = 800
+local screen_height: integer <comptime> = 450
 
-local screenWidth: integer <comptime> = 800
-local screenHeight: integer <comptime> = 450
+Raylib.SetConfigFlags(ConfigFlag.FLAG_MSAA_4X_HINT) -- Set MSAA 4X hint before windows creation
 
-Raylib.SetConfigFlags(ConfigFlag.MSAA_4X_HINT) -- set MSAA 4x hint before windows creation
+Raylib.InitWindow(screen_width, screen_height, 'raylib-nelua [core] example - gamepad input')
 
-Raylib.InitWindow(screenWidth, screenHeight, "Raylib [core] example - gamepad input")
+local tex_ps3_pad = Raylib.LoadTexture 'resources/ps3.png'
+local tex_xbox_pad = Raylib.LoadTexture 'resources/xbox.png'
 
-local texPs3Pad: Texture2D = Raylib.LoadTexture("examples/resources/ps3.png")
-local texXboxPad: Texture2D = Raylib.LoadTexture("examples/resources/xbox.png")
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+-- ] Initialization ]
 
-Raylib.SetTargetFPS(60) -- set our game to run at 60 frames-per-second
--- ] initialization ]
+-- Main game loop
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+   -- [ Update [
+   -- ...
+   -- ] Update ]
 
--- TODO: temporary hack
-local function TextFormat_i(str: cstring, vl: cint): cstring
-   local finalstring: cstring;
-   ## cemit ('finalstring = TextFormat(str, vl);')
-   return finalstring
-end
-
-local function TextFormat_s(str: cstring, vl: cstring): cstring
-   local finalstring: cstring;
-   ## cemit ('finalstring = TextFormat(str, vl);')
-   return finalstring
-end
-
-local function TextFormat_if(str: cstring, vl1: cint, vl2: float32): cstring
-   local finalstring: cstring;
-   ## cemit ('finalstring = TextFormat(str, vl1, vl2);')
-   return finalstring
-end
-
--- main game loop
-while not Raylib.WindowShouldClose() do -- detect window close button or ESC key
+   -- [ Draw [
    Raylib.BeginDrawing()
-      Raylib.ClearBackground(RaylibColors.Raywhite)
 
-      if Raylib.IsGamepadAvailable(GamepadNumber.PLAYER1) then
-         Raylib.DrawText(TextFormat_s("GP1: %s", Raylib.GetGamepadName(GamepadNumber.PLAYER1)), 10, 10, 10, RaylibColors.Black)
+      Raylib.ClearBackground(RAYWHITE)
 
-         if Raylib.IsGamepadName(GamepadNumber.PLAYER1, XBOX360_NAME_ID) then
-            Raylib.DrawTexture(texXboxPad, 0, 0, RaylibColors.Darkgray)
+      if Raylib.IsGamepadAvailable(GamepadNumber.GAMEPAD_PLAYER1) then
+         Raylib.DrawText(text_format_2("GP1: %s", Raylib.GetGamepadName(GamepadNumber.GAMEPAD_PLAYER1)), 10, 10, 10, BLACK)
 
-            -- Draw buttons: xbox home
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.MIDDLE)           then Raylib.DrawCircle(394,  89,  19, RaylibColors.Red)   end
+         if Raylib.IsGamepadName(GamepadNumber.GAMEPAD_PLAYER1, XBOX360_NAME_ID) then
+            Raylib.DrawTexture(tex_xbox_pad, 0, 0, DARKGRAY)
 
-            -- draw buttons: basic
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.MIDDLE_RIGHT)     then Raylib.DrawCircle(436, 150,  9, RaylibColors.Red)    end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.MIDDLE_LEFT)      then Raylib.DrawCircle(352, 150,  9, RaylibColors.Red)    end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_FACE_LEFT)  then Raylib.DrawCircle(501, 151, 15, RaylibColors.Blue)   end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_FACE_DOWN)  then Raylib.DrawCircle(536, 187, 15, RaylibColors.Lime)   end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_FACE_RIGHT) then Raylib.DrawCircle(572, 151, 15, RaylibColors.Maroon) end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_FACE_UP)    then Raylib.DrawCircle(536, 115, 15, RaylibColors.Gold)   end
-
-            -- Draw buttons: d-pad
-            Raylib.DrawRectangle(317, 202, 19, 71, RaylibColors.Black)
-            Raylib.DrawRectangle(293, 228, 69, 19, RaylibColors.Black)
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_FACE_UP)    then Raylib.DrawRectangle(317     , 202     , 19, 26, RaylibColors.Red) end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_FACE_DOWN)  then Raylib.DrawRectangle(317     , 202 + 45, 19, 26, RaylibColors.Red) end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_FACE_LEFT)  then Raylib.DrawRectangle(292     , 228     , 25, 19, RaylibColors.Red) end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_FACE_RIGHT) then Raylib.DrawRectangle(292 + 44, 228     , 26, 19, RaylibColors.Red) end
-
-            -- Draw buttons: left-right back
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_TRIGGER_1)  then Raylib.DrawCircle(259, 61, 20, RaylibColors.Red) end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_TRIGGER_1) then Raylib.DrawCircle(536, 61, 20, RaylibColors.Red) end
-
-            -- Draw axis: left joystick
-            Raylib.DrawCircle(259, 152, 39, RaylibColors.Black)
-            Raylib.DrawCircle(259, 152, 34, RaylibColors.Lightgray)
-            Raylib.DrawCircle(259 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_X) * 20,
-                              152 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_Y) * 20, 25, RaylibColors.Black)
-
-            -- Draw axis: right joystick
-            Raylib.DrawCircle(461, 237, 38, RaylibColors.Black)
-            Raylib.DrawCircle(461, 237, 33, RaylibColors.Lightgray)
-            Raylib.DrawCircle(259 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_X) * 20,
-                              152 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_Y) * 20, 25, RaylibColors.Black)
-
-            -- Draw axis: left-right triggers
-            Raylib.DrawRectangle(170, 30, 15, 70, RaylibColors.Gray)
-            Raylib.DrawRectangle(604, 30, 15, 70, RaylibColors.Gray)
-            Raylib.DrawRectangle(170, 30, 15, ((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_TRIGGER)) / 2) * 70, RaylibColors.Red)
-            Raylib.DrawRectangle(604, 30, 15, ((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_TRIGGER)) / 2) * 70, RaylibColors.Red)
-         else
-            Raylib.DrawTexture(texPs3Pad, 0, 0, RaylibColors.Darkgray);
-
-            -- Draw buttons: ps
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.MIDDLE) then
-               Raylib.DrawCircle(396, 222, 13, RaylibColors.Red)
+            -- Draw buttons: xbox name
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_MIDDLE) then
+               Raylib.DrawCircle(394, 89, 19, RED)
             end
 
             -- Draw buttons: basic
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.MIDDLE_LEFT)      then Raylib.DrawRectangle(328, 170, 32, 13, RaylibColors.Red)                                                      end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.MIDDLE_RIGHT)     then Raylib.DrawTriangle((@Vector2){ 436, 168 }, (@Vector2){ 436, 185 }, (@Vector2){ 464, 177 }, RaylibColors.Red) end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_FACE_UP)    then Raylib.DrawCircle(557, 144, 13, RaylibColors.Lime)                                                            end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_FACE_RIGHT) then Raylib.DrawCircle(586, 173, 13, RaylibColors.Red)                                                             end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_FACE_DOWN)  then Raylib.DrawCircle(557, 203, 13, RaylibColors.Violet)                                                          end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_FACE_LEFT)  then Raylib.DrawCircle(527, 173, 13, RaylibColors.Pink)                                                            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_MIDDLE_RIGHT) then
+               Raylib.DrawCircle(436, 150, 9, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_MIDDLE_LEFT) then
+               Raylib.DrawCircle(352, 150, 9, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_LEFT) then
+               Raylib.DrawCircle(501, 151, 15, BLUE)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_DOWN) then
+               Raylib.DrawCircle(536, 187, 15, LIME)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) then
+               Raylib.DrawCircle(572, 151, 15, MAROON)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_UP) then
+               Raylib.DrawCircle(536, 115, 15, GOLD)
+            end
 
             -- Draw buttons: d-pad
-            Raylib.DrawRectangle(225, 132, 24, 84, RaylibColors.Black);
-            Raylib.DrawRectangle(195, 161, 84, 25, RaylibColors.Black);
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_FACE_UP)    then Raylib.DrawRectangle(225, 132, 24, 29, RaylibColors.Red)      end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_FACE_DOWN)  then Raylib.DrawRectangle(225, 132 + 54, 24, 30, RaylibColors.Red) end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_FACE_LEFT)  then Raylib.DrawRectangle(195, 161, 30, 25, RaylibColors.Red)      end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_FACE_RIGHT) then Raylib.DrawRectangle(195 + 54, 161, 30, 25, RaylibColors.Red) end
+            Raylib.DrawRectangle(317, 302, 19, 71, BLACK)
+            Raylib.DrawRectangle(293, 228, 69, 19, BLACK)
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_FACE_UP) then
+               Raylib.DrawRectangle(317, 202, 19, 26, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_FACE_DOWN) then
+               Raylib.DrawRectangle(317, 202 + 45, 19, 26, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_FACE_LEFT) then
+               Raylib.DrawRectangle(292, 228, 25, 19, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_FACE_RIGHT) then
+               Raylib.DrawRectangle(292 + 44, 228, 26, 19, RED)
+            end
 
-            -- Draw buttons: left-right back buttons
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.LEFT_TRIGGER_1)  then Raylib.DrawCircle(239, 82, 20, RaylibColors.Red) end
-            if Raylib.IsGamepadButtonDown(GamepadNumber.PLAYER1, GamepadButton.RIGHT_TRIGGER_1) then Raylib.DrawCircle(557, 82, 20, RaylibColors.Red) end
+            -- Draw buttons: left-right back
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_TRIGGER_1) then
+               Raylib.DrawCircle(259, 61, 20, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_TRIGGER_1) then
+               Raylib.DrawCircle(536, 61, 20, RED)
+            end
 
             -- Draw axis: left joystick
-            Raylib.DrawCircle(319, 255, 35, RaylibColors.Black);
-            Raylib.DrawCircle(319, 255, 31, RaylibColors.Lightgray);
-            Raylib.DrawCircle(319 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_X)*20, 255 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_Y) * 20, 25, RaylibColors.Black);
+            Raylib.DrawCircle(259, 152, 39, BLACK)
+            Raylib.DrawCircle(259, 152, 34, LIGHTGRAY)
+            Raylib.DrawCircle(259 + (Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_LEFT_X) * 20),
+                              152 + (Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_LEFT_Y) * 20), 25, BLACK)
 
             -- Draw axis: right joystick
-            Raylib.DrawCircle(475, 255, 35, RaylibColors.Black);
-            Raylib.DrawCircle(475, 255, 31, RaylibColors.Lightgray);
-            Raylib.DrawCircle(475 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_X) * 20, 255 + Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_Y) * 20, 25, RaylibColors.Black);
+            Raylib.DrawCircle(461, 237, 38, BLACK)
+            Raylib.DrawCircle(461, 237, 33, LIGHTGRAY)
+            Raylib.DrawCircle(461 + (Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_RIGHT_X) * 20),
+                              237 + (Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_RIGHT_Y) * 20), 25, BLACK)
 
             -- Draw axis: left-right triggers
-            Raylib.DrawRectangle(169, 48, 15, 70, RaylibColors.Gray);
-            Raylib.DrawRectangle(611, 48, 15, 70, RaylibColors.Gray);
-            Raylib.DrawRectangle(169, 48, 15, ((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.LEFT_TRIGGER)) / 2) * 70, RaylibColors.Red);
-            Raylib.DrawRectangle(611, 48, 15, ((1 - Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, GamepadAxis.RIGHT_TRIGGER)) / 2) * 70, RaylibColors.Red);
+            Raylib.DrawRectangle(170, 30, 15, 70, GRAY)
+            Raylib.DrawRectangle(604, 30, 15, 70, GRAY)
+            Raylib.DrawRectangle(170, 30, 15, (((1.0 + Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_LEFT_TRIGGER)) // 2.0) * 70), RED)
+            Raylib.DrawRectangle(604, 30, 15, (((1.0 + Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_RIGHT_TRIGGER)) // 2.0) * 70), RED)
+
+           -- DrawText(FormatText("Xbox axis LT: %02.02f", GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_LEFT_TRIGGER)), 10, 40, 10, BLACK)
+           -- DrawText(FormatText("Xbox axis RT: %02.02f", GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_RIGHT_TRIGGER)), 10, 60, 10, BLACK)
+         elseif Raylib.IsGamepadName(GamepadNumber.GAMEPAD_PLAYER1, PS3_NAME_ID) then
+            Raylib.DrawTexture(tex_ps3_pad, 0, 0, DARKGRAY);
+
+            -- Draw buttons: ps
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_MIDDLE) then
+               Raylib.DrawCircle(396, 222, 13, RED)
+            end
+
+            -- Draw buttons: basic
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_MIDDLE_LEFT) then
+               Raylib.DrawRectangle(328, 170, 32, 13, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_MIDDLE_RIGHT) then
+               Raylib.DrawTriangle({ 436, 168 }, { 436, 185 }, { 464, 177 }, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_UP) then
+               Raylib.DrawCircle(557, 144, 13, LIME)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) then
+               Raylib.DrawCircle(586, 173, 13, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_DOWN) then
+               Raylib.DrawCircle(557, 203, 13, VIOLET)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_FACE_LEFT) then
+               Raylib.DrawCircle(527, 173, 13, PINK)
+            end
+
+            -- Draw buttons: d-pad
+            Raylib.DrawRectangle(225, 132, 24, 84, BLACK)
+            Raylib.DrawRectangle(195, 161, 84, 25, BLACK)
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_FACE_UP) then
+               Raylib.DrawRectangle(225, 132, 24, 29, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_FACE_DOWN) then
+               Raylib.DrawRectangle(225, 132 + 54, 24, 30, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_FACE_LEFT) then
+               Raylib.DrawRectangle(195, 161, 30, 25, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_FACE_RIGHT) then
+               Raylib.DrawRectangle(195 + 54, 161, 30, 25, RED)
+            end
+
+            -- Draw buttons: left-right back buttons
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_LEFT_TRIGGER_1) then
+               Raylib.DrawCircle(239, 82, 20, RED)
+            end
+            if Raylib.IsGamepadButtonDown(GamepadNumber.GAMEPAD_PLAYER1, GamepadButton.GAMEPAD_BUTTON_RIGHT_TRIGGER_1) then
+               Raylib.DrawCircle(557, 82, 20, RED)
+            end
+
+            -- Draw axis: left joystick
+            Raylib.DrawCircle(319, 255, 35, BLACK)
+            Raylib.DrawCircle(319, 255, 31, LIGHTGRAY)
+            Raylib.DrawCircle(319 + (Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_LEFT_X) * 20),
+                              255 + (Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_LEFT_Y) * 20), 25, BLACK)
+
+            -- Draw axis: right joystick
+            Raylib.DrawCircle(475, 255, 35, BLACK)
+            Raylib.DrawCircle(475, 255, 31, LIGHTGRAY)
+            Raylib.DrawCircle(475 + (Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_RIGHT_X) * 20),
+                              255 + (Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_RIGHT_Y) * 20), 25, BLACK)
+
+            -- Draw axis: left-right triggers
+            Raylib.DrawRectangle(169, 48, 15, 70, GRAY)
+            Raylib.DrawRectangle(611, 48, 15, 70, GRAY)
+            Raylib.DrawRectangle(169, 48, 15, (((1.0 - Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_LEFT_TRIGGER)) // 2.0) * 70), RED)
+            Raylib.DrawRectangle(611, 48, 15, (((1.0 - Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, GamepadAxis.GAMEPAD_AXIS_RIGHT_TRIGGER)) // 2.0) * 70), RED)
+         else
+            Raylib.DrawText("- GENERIC GAMEPAD -", 280, 180, 20, GRAY)
+
+            -- TODO: Draw generic gamepad
          end
 
-         Raylib.DrawText(TextFormat_i("DETECTED AXIS [%i]:", Raylib.GetGamepadAxisCount(GamepadNumber.PLAYER1)), 10, 50, 10, RaylibColors.Maroon)
-         for i=0_i32, < Raylib.GetGamepadAxisCount(GamepadNumber.PLAYER1) do
-            Raylib.DrawText(TextFormat_if("AXIS %i: %.02f", i, Raylib.GetGamepadAxisMovement(GamepadNumber.PLAYER1, i)), 20, 70 + 20*i, 10, RaylibColors.Darkgray)
+         Raylib.DrawText(text_format_2("DETECTED AXIS [%i]:", Raylib.GetGamepadAxisCount(GamepadNumber.GAMEPAD_PLAYER1)), 10, 50, 10, MAROON)
+
+         for i = 0, < Raylib.GetGamepadAxisCount(GamepadNumber.GAMEPAD_PLAYER1) do
+           Raylib.DrawText(text_format_3("AXIS %i: %.02f", i, Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, i)), 20, 70 + 20 * i, 10, DARKGRAY)
          end
 
          if Raylib.GetGamepadButtonPressed() ~= -1 then
-            Raylib.DrawText(TextFormat_i("DETECTED BUTTON: %i", Raylib.GetGamepadButtonPressed()), 10, 430, 10, RaylibColors.Red);
+            Raylib.DrawText(text_format_2("DETECTED BUTTON: %i", Raylib.GetGamepadButtonPressed()), 10, 430, 10, RED)
          else
-            Raylib.DrawText("DETECTED BUTTON: NONE", 10, 430, 10, RaylibColors.Gray)
+            Raylib.DrawText("DETECTED BUTTON: NONE", 10, 430, 10, GRAY)
          end
       else
-         Raylib.DrawText("GP1: NOT DETECTED", 10, 10, 10, RaylibColors.Gray)
-         Raylib.DrawTexture(texXboxPad, 0, 0, RaylibColors.Lightgray)
+         Raylib.DrawText("GP1: NOT DETECTED", 10, 10, 10, GRAY)
+
+         Raylib.DrawTexture(tex_xbox_pad, 0, 0, LIGHTGRAY)
       end
 
    Raylib.EndDrawing()
+   -- ] Draw ]
 end
 
--- de-initialization
-Raylib.UnloadTexture(texPs3Pad)
-Raylib.UnloadTexture(texXboxPad)
+-- [ De-Initialization [
+Raylib.UnloadTexture(tex_ps3_pad)
+Raylib.UnloadTexture(tex_xbox_pad)
 
-Raylib.CloseWindow() -- close window and OpenGL context
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- [ De-Initialization [

@@ -2,37 +2,47 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
--- This code is based on the "input keys" example by raysan5, available at: https://www.raylib.com/examples.html
+-- This code is based on the "input mouse wheel" example by raysan5, available at: https://www.raylib.com/examples.html
 
 require 'raylib'
 
--- [ initialization [
-local screenWidth: integer <comptime> = 800
-local screenHeight: integer <comptime> = 450
-
-Raylib.InitWindow(screenWidth, screenHeight, "raylib [core] example - mouse wheel")
-
-local boxPositionY: int32 = screenHeight/2 - 40
-local scrollSpeed: int32 = 4
-
-Raylib.SetTargetFPS(60)
--- ] initialization ]
-
--- main game loop
-while not Raylib.WindowShouldClose() do
-   -- [ update [
-   boxPositionY = boxPositionY - Raylib.GetMouseWheelMove() * scrollSpeed
-   -- ] update ]
-
-   -- [ draw [
-   Raylib.BeginDrawing()
-      Raylib.ClearBackground(RaylibColors.Raywhite)
-      Raylib.DrawRectangle(screenWidth/2 - 40, boxPositionY, 80, 80, RaylibColors.Maroon)
-      Raylib.DrawText("use mouse wheel to move the cube up and down!", 10, 10, 20, RaylibColors.Gray)
-      Raylib.DrawText(Raylib.TextFormat("Box position Y: %03i", boxPositionY), 10, 40, 20, RaylibColors.Lightgray)
-   Raylib.EndDrawing()
-   -- ] draw ]
+-- little hack
+local function text_format_1(str: cstring, vl: auto)
+   local result: cstring;
+   ## cemit 'result = TextFormat(str, vl);'
+   return result
 end
 
--- de-initialization
-Raylib.CloseWindow() -- close window and OpenGL context
+-- [ Initialization [
+local screen_width: integer <comptime> = 800
+local screen_height: integer <comptime> = 450
+
+Raylib.InitWindow(screen_width, screen_height, 'raylib-nelua [core] example - input mouse wheel')
+
+local box_position_y = screen_height // 2 - 40
+local scroll_speed = 4 -- Scrolling speed in pixels
+
+Raylib.SetTargetFPS(60) -- Set out game to run 60 frames-per-second
+-- ] Initialization ]
+
+while not Raylib.WindowShouldClose() do -- Detect window close button or ECS key
+   -- [ Update [
+   box_position_y = box_position_y - Raylib.GetMouseWheelMove() * scroll_speed
+   -- ] Update ]
+
+   -- [ Draw [
+   Raylib.BeginDrawing() --[
+      Raylib.ClearBackground(RAYWHITE)
+
+      Raylib.DrawRectangle(screen_width / 2 - 40, box_position_y, 80, 80, MAROON)
+
+      Raylib.DrawText('Use mouse wheel to move the cube up and down!', 10, 10, 20, GRAY)
+      Raylib.DrawText(text_format_1('Box position Y: %03i', box_position_y), 10, 40, 20, LIGHTGRAY)
+
+   Raylib.EndDrawing() --]
+   -- ] Draw ]
+end
+
+-- [ De-Initialization [
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ] De-Initialization ]
