@@ -201,7 +201,7 @@ global Mesh <cimport, nodecl> = @record{
 
   -- OpenGL identifiers
   vaoId: cuint,       -- OpenGL Vertex Array Object id
-  vboId: cuint*,      -- OpenGL Vertex Buffer Objects id (default vertex data)
+  vboId: cuint[0]*,      -- OpenGL Vertex Buffer Objects id (default vertex data)
 }
 ## Mesh.value.is_mesh = true
 
@@ -250,7 +250,7 @@ global Model <cimport, nodecl> = @record{
   meshes: Mesh[0]*,             -- Meshes array
   materialCount: cint,        -- Number of materials
   materials: Material[0]*,      -- Materials array
-  meshMaterial: cint*,        -- Mesh material number
+  meshMaterial: cint[0]*,        -- Mesh material number
 
   -- Animation data
   boneCount: cint,            -- Number of bones
