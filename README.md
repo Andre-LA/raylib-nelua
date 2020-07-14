@@ -1,6 +1,6 @@
 # raylib-nelua
 
-This is a [Raylib 3.0][raylib-website] binding for [Nelua language][nelua-website].
+This is a [Raylib][raylib-website] binding for [Nelua language][nelua-website]1.
 
 ## How to use
 
@@ -93,7 +93,7 @@ Raylib.CloseWindow() -- Close window and OpenGL context
 -- ] De-Initialization ]
 ```
 
-[raylib-website]: https://raylib.com/
+[raylib-website]: https://www.raylib.com/
 [raylib-install]: https://github.com/raysan5/raylib#build-and-installation
 [nelua-website]: https://nelua.io/
 [nelua-install]: https://nelua.io/installing/
