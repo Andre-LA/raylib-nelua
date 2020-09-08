@@ -4,10 +4,31 @@
 
 local ins = require 'inspect'
 
--- configure your generation here:
 local config = {
+   -- change this if you want a different indentation level
    identation = '  ',
    record_in_use = '',
+   cinclude_in_use = '',
+}
+
+local nelua_ctypes = {
+   ['bool'] = 'boolean',
+   ['float'] = 'float32',
+   ['double'] = 'float64',
+   ['short'] = 'cshort',
+   ['int'] = 'cint',
+   ['long'] = 'clong',
+   ['long long'] = 'clonglong',
+   ['ptrdiff_t'] = 'cptrdiff',
+   ['char'] = 'cchar',
+   ['signed char'] = 'cschar',
+   ['unsigned char'] = 'cuchar',
+   ['unsigned short'] = 'cushort',
+   ['unsigned int'] = 'cuint',
+   ['unsigned long'] = 'culong',
+   ['unsigned long long'] = 'culonglong',
+   ['size_t'] = 'csize',
+   ['long double'] = 'clongdouble',
 }
 
 local function typecheck_assert(value, _types)
@@ -55,13 +76,20 @@ end
 
 local function guess_expression_value_type(vl)
    -- contains a cast?
-   local possible_cast = find(vl, 'cast')
+   local possible_cast = find(vl, 'cast', 1)
 
    if possible_cast then
-      local custom_type = find(possible_cast.value, 'custom_type') -- TODO: standard types should be supported, however, for raylib, is sufficient :)
+      local custom_type = find(possible_cast.value, 'custom_type')
       if custom_type then
          return custom_type.value
       end
+
+      local basic_type = find(possible_cast.value, 'basic_type')
+      if basic_type then
+         return nelua_ctypes[basic_type.value]
+      end
+   else
+
    end
 end
 
@@ -197,45 +225,7 @@ function converters.void(value)
 end
 
 function converters.basic_type(value)
-   local translated_value = value
-
-   if value == 'bool' then
-      translated_value = 'boolean'
-   elseif value == 'float' then
-      translated_value = 'float32'
-   elseif value == 'double' then
-      translated_value = 'float64'
-   elseif value == 'short' then
-      translated_value = 'cshort'
-   elseif value == 'int' then
-      translated_value = 'cint'
-   elseif value == 'long' then
-      translated_value = 'clong'
-   elseif value == 'long long' then
-      translated_value = 'clonglong'
-   elseif value == 'ptrdiff_t' then
-      translated_value = 'cptrdiff'
-   elseif value == 'char' then
-      translated_value = 'cchar'
-   elseif value == 'signed char' then
-      translated_value = 'cschar'
-   elseif value == 'unsigned char' then
-      translated_value = 'cuchar'
-   elseif value == 'unsigned short' then
-      translated_value = 'cushort'
-   elseif value == 'unsigned int' then
-      translated_value = 'cuint'
-   elseif value == 'unsigned long' then
-      translated_value = 'culong'
-   elseif value == 'unsigned long long' then
-      translated_value = 'culonglong'
-   elseif value == 'size_t' then
-      translated_value = 'csize'
-   elseif value == 'long double' then
-      translated_value = 'clongdouble'
-   end
-
-   return new_result(translated_value)
+   return new_result(nelua_ctypes[value])
 end
 
 function converters.literal(value)
@@ -445,7 +435,7 @@ function converters.func_decl(value)
 
    list:insert("function " .. config.record_in_use .. ".", 1)
    list:insert("(", 3)
-   list:insert(" <cimport'" .. list[2] .. "', nodecl>", #list + move_offset)
+   list:insert(" <cimport'"..list[2].."', cinclude'<"..config.cinclude_in_use..">', nodecl>", #list + move_offset)
    list:insert(' end ', #list + move_offset)
 
    local result = new_result()
@@ -490,7 +480,7 @@ function converters.struct_decl(value)
    local list = traverse(value)
 
    local result = new_result()
-   list:insert('<cimport, nodecl> = @record{\n', 2)
+   list:insert("<cimport, cinclude'<"..config.cinclude_in_use..">', nodecl> = @record{\n", 2)
    list:insert('}')
 
    local struct_name = find(value, 'struct_name').value
@@ -594,7 +584,7 @@ function converters.define(value)
       end
    end
 
-   list:insert('<cimport, nodecl>', 2)
+   list:insert("<cimport, cinclude'<"..config.cinclude_in_use..">', nodecl>", 2)
    result:insert(list:concat())
 
    return result
