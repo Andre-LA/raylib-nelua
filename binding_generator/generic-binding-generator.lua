@@ -401,8 +401,8 @@ function converters.func_arg(value)
       if ptr then
          list:prepend(ptr, 2)
 
-         list[2] = string.gsub(list[2], 'cchar%*', 'cstring')
-         list[2] = string.gsub(list[2], 'void%*', 'pointer')
+         list[2] = string.gsub(list[2], '%*cchar', 'cstring')
+         list[2] = string.gsub(list[2], '%*void', 'pointer')
 
          list[1] = decl
       end
@@ -421,8 +421,8 @@ function converters.func_decl(value)
 
    if ptr then
       list:append(ptr, 1)
-      list[1] = string.gsub(list[1], 'cchar%*', 'cstring')
-      list[1] = string.gsub(list[1], 'void%*', 'pointer')
+      list[1] = string.gsub(list[1], '%*cchar', 'cstring')
+      list[1] = string.gsub(list[1], '%*void', 'pointer')
 
       list[2] = func_name
    end
@@ -457,7 +457,7 @@ function converters.struct_declaration_list(value)
          if is_comment then
             list[i] = config.identation .. s .. '\n'
          elseif not space_only then
-            s = s:gsub('void%*', 'pointer')
+            s = s:gsub('%*void', 'pointer')
             list[i] = config.identation .. s .. ','
          else
             list[i] = s
