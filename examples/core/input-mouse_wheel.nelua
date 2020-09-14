@@ -34,7 +34,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ECS key
    Raylib.BeginDrawing() --[
       Raylib.ClearBackground(RAYWHITE)
 
-      Raylib.DrawRectangle(screen_width / 2 - 40, box_position_y, 80, 80, MAROON)
+      Raylib.DrawRectangle(screen_width // 2 - 40, box_position_y, 80, 80, MAROON)
 
       Raylib.DrawText('Use mouse wheel to move the cube up and down!', 10, 10, 20, GRAY)
       Raylib.DrawText(text_format_1('Box position Y: %03i', box_position_y), 10, 40, 20, LIGHTGRAY)
