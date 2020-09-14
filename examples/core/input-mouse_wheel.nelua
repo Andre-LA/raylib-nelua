@@ -8,9 +8,9 @@ require 'raylib'
 
 -- little hack
 local function text_format_1(str: cstring, vl: auto)
-   local result: cstring;
-   ## cemit 'result = TextFormat(str, vl);'
-   return result
+  local result: cstring;
+  ## cemit 'result = TextFormat(str, vl);'
+  return result
 end
 
 -- [ Initialization [
@@ -26,21 +26,21 @@ Raylib.SetTargetFPS(60) -- Set out game to run 60 frames-per-second
 -- ] Initialization ]
 
 while not Raylib.WindowShouldClose() do -- Detect window close button or ECS key
-   -- [ Update [
-   box_position_y = box_position_y - Raylib.GetMouseWheelMove() * scroll_speed
-   -- ] Update ]
+  -- [ Update [
+  box_position_y = box_position_y - Raylib.GetMouseWheelMove() * scroll_speed
+  -- ] Update ]
 
-   -- [ Draw [
-   Raylib.BeginDrawing() --[
-      Raylib.ClearBackground(RAYWHITE)
+  -- [ Draw [
+  Raylib.BeginDrawing() --[
+    Raylib.ClearBackground(RAYWHITE)
 
-      Raylib.DrawRectangle(screen_width // 2 - 40, box_position_y, 80, 80, MAROON)
+    Raylib.DrawRectangle(screen_width // 2 - 40, box_position_y, 80, 80, MAROON)
 
-      Raylib.DrawText('Use mouse wheel to move the cube up and down!', 10, 10, 20, GRAY)
-      Raylib.DrawText(text_format_1('Box position Y: %03i', box_position_y), 10, 40, 20, LIGHTGRAY)
+    Raylib.DrawText('Use mouse wheel to move the cube up and down!', 10, 10, 20, GRAY)
+    Raylib.DrawText(text_format_1('Box position Y: %03i', box_position_y), 10, 40, 20, LIGHTGRAY)
 
-   Raylib.EndDrawing() --]
-   -- ] Draw ]
+  Raylib.EndDrawing() --]
+  -- ] Draw ]
 end
 
 -- [ De-Initialization [

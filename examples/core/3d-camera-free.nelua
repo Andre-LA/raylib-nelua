@@ -14,11 +14,11 @@ Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - 3d
 
 -- Define the camera to look into uor 3d world
 local camera: Camera3D = {
-   position = {10, 10, 10}, -- Camera position
-   target   = { 0,  0,  0}, -- Camera looking at point
-   up       = { 0,  1,  0}, -- Camera up vector (rotation towards target)
-   fovy     = 45,           -- Camera field-of-view
-   type = CameraType.CAMERA_PERSPECTIVE -- Camera mode type
+  position = {10, 10, 10}, -- Camera position
+  target   = { 0,  0,  0}, -- Camera looking at point
+  up       = { 0,  1,  0}, -- Camera up vector (rotation towards target)
+  fovy     = 45,        -- Camera field-of-view
+  type = CameraType.CAMERA_PERSPECTIVE -- Camera mode type
 }
 
 local cube_position: Vector3 = {0, 0, 0}
@@ -30,40 +30,40 @@ Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 
 -- Main game loop
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
-   -- [ Update [
-   Raylib.UpdateCamera(&camera) -- Update camera
+  -- [ Update [
+  Raylib.UpdateCamera(&camera) -- Update camera
 
-   if Raylib.IsKeyDown(KeyboardKey.KEY_Z) then
-      camera.target = {0, 0, 0}
-   end
-   -- ] Update ]
+  if Raylib.IsKeyDown(KeyboardKey.KEY_Z) then
+    camera.target = {0, 0, 0}
+  end
+  -- ] Update ]
 
-   -- [ Draw [
-   Raylib.BeginDrawing()
+  -- [ Draw [
+  Raylib.BeginDrawing()
 
-      Raylib.ClearBackground(RAYWHITE)
+    Raylib.ClearBackground(RAYWHITE)
 
-      Raylib.BeginMode3D(camera)
+    Raylib.BeginMode3D(camera)
 
-         Raylib.DrawCube(cube_position, 2, 2, 2, RED)
-         Raylib.DrawCubeWires(cube_position, 2, 2, 2, MAROON)
+      Raylib.DrawCube(cube_position, 2, 2, 2, RED)
+      Raylib.DrawCubeWires(cube_position, 2, 2, 2, MAROON)
 
-         Raylib.DrawGrid(10, 1)
+      Raylib.DrawGrid(10, 1)
 
-      Raylib.EndMode3D()
+    Raylib.EndMode3D()
 
-      Raylib.DrawRectangle(10, 10, 320, 133, Raylib.Fade(SKYBLUE, 0.5))
-      Raylib.DrawRectangleLines(10, 10, 320, 133, BLUE)
+    Raylib.DrawRectangle(10, 10, 320, 133, Raylib.Fade(SKYBLUE, 0.5))
+    Raylib.DrawRectangleLines(10, 10, 320, 133, BLUE)
 
-      Raylib.DrawText("Free camera default controls:", 20, 20, 10, BLACK)
-      Raylib.DrawText("- Mouse Wheel to Zoom in-out", 40, 40, 10, DARKGRAY)
-      Raylib.DrawText("- Mouse Wheel Pressed to Pan", 40, 60, 10, DARKGRAY)
-      Raylib.DrawText("- Alt + Mouse Wheel Pressed to Rotate", 40, 80, 10, DARKGRAY)
-      Raylib.DrawText("- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom", 40, 100, 10, DARKGRAY)
-      Raylib.DrawText("- Z to zoom to (0, 0, 0)", 40, 120, 10, DARKGRAY)
+    Raylib.DrawText("Free camera default controls:", 20, 20, 10, BLACK)
+    Raylib.DrawText("- Mouse Wheel to Zoom in-out", 40, 40, 10, DARKGRAY)
+    Raylib.DrawText("- Mouse Wheel Pressed to Pan", 40, 60, 10, DARKGRAY)
+    Raylib.DrawText("- Alt + Mouse Wheel Pressed to Rotate", 40, 80, 10, DARKGRAY)
+    Raylib.DrawText("- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom", 40, 100, 10, DARKGRAY)
+    Raylib.DrawText("- Z to zoom to (0, 0, 0)", 40, 120, 10, DARKGRAY)
 
-   Raylib.EndDrawing()
-   -- ] Draw ]
+  Raylib.EndDrawing()
+  -- ] Draw ]
 end
 
 -- [ De-Initialization [

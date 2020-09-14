@@ -16,7 +16,7 @@ local final_result = {}
 table.insert(final_result, '-- links: \n')
 
 for i = 1, #linklibs do
-   table.insert(final_result, "## linklib '" .. linklibs[i] .. "' \n")
+  table.insert(final_result, "## linklib '" .. linklibs[i] .. "' \n")
 end
 
 -- TODO: Implement callback!
@@ -33,7 +33,7 @@ table.insert(final_result, '\n-- raylib binding:\n')
 table.insert(final_result, 'global Raylib = @record{}')
 
 for i = 1, #raylib_result do
-   table.insert(final_result, raylib_result[i])
+  table.insert(final_result, raylib_result[i])
 end
 
 table.insert(final_result, '')
@@ -51,7 +51,7 @@ table.insert(final_result, '\n\n-- raymath binding: \n')
 table.insert(final_result, 'global Raymath = @record{}\n')
 
 for i = 1, #raymath_result do
-   table.insert(final_result, raymath_result[i])
+  table.insert(final_result, raymath_result[i])
 end
 
 table.insert(final_result, '\n')
@@ -122,31 +122,31 @@ function Quaternion.__mul(q1: Quaternion, q2: Quaternion): Quaternion <cimport'Q
 ]])
 
 do
-   local records_with_functions = {
-      'Vector2',
-      'Vector3',
-      'Matrix',
-      'Quaternion',
-   }
+  local records_with_functions = {
+    'Vector2',
+    'Vector3',
+    'Matrix',
+    'Quaternion',
+  }
 
-   local function add_rec_fn (line, rec_name)
-      local rec_name_len = string.len(rec_name)
-      if string.sub(line, 1, 17 + rec_name_len) == 'function Raymath.' .. rec_name then
-         local lparen_pos = string.find(line, "%(")
-         local record_fn_name = 'function ' .. rec_name .. '.' .. string.sub(line, 18 + rec_name_len)
-         return record_fn_name
-      end
-   end
+  local function add_rec_fn (line, rec_name)
+    local rec_name_len = string.len(rec_name)
+    if string.sub(line, 1, 17 + rec_name_len) == 'function Raymath.' .. rec_name then
+      local lparen_pos = string.find(line, "%(")
+      local record_fn_name = 'function ' .. rec_name .. '.' .. string.sub(line, 18 + rec_name_len)
+      return record_fn_name
+    end
+  end
 
-   for i = #final_result, 1, -1 do
-      for j = 1, #records_with_functions do
-         local ok_extra_line = add_rec_fn(final_result[i], records_with_functions[j])
-         if ok_extra_line then
-            table.insert(final_result, i+1, '\n' .. ok_extra_line)
-            break
-         end
+  for i = #final_result, 1, -1 do
+    for j = 1, #records_with_functions do
+      local ok_extra_line = add_rec_fn(final_result[i], records_with_functions[j])
+      if ok_extra_line then
+        table.insert(final_result, i+1, '\n' .. ok_extra_line)
+        break
       end
-   end
+    end
+  end
 end
 --] raymath.h ]
 

@@ -14,11 +14,11 @@ Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - 3d
 
 -- Define a camera to look into our 3d world
 local camera: Camera3D = {
-   position = {0, 10, 10},
-   target = {0, 0, 0},
-   up = {0, 1, 0},
-   fovy = 45,
-   type = CameraType.CAMERA_PERSPECTIVE
+  position = {0, 10, 10},
+  target   = {0, 0, 0},
+  up       = {0, 1, 0},
+  fovy     = 45,
+  type     = CameraType.CAMERA_PERSPECTIVE
 }
 
 local cube_position: Vector3 = {0, 0, 0}
@@ -28,30 +28,30 @@ Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 
 -- Main game loop
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
-   -- [ Update [
-   --TODO: Update your variables here
-   -- ] Update ]
+  -- [ Update [
+  --TODO: Update your variables here
+  -- ] Update ]
 
-   -- [ Draw [
-   Raylib.BeginDrawing() --[
+  -- [ Draw [
+  Raylib.BeginDrawing() --[
 
-      Raylib.ClearBackground(RAYWHITE)
+    Raylib.ClearBackground(RAYWHITE)
 
-      Raylib.BeginMode3D(camera)
+    Raylib.BeginMode3D(camera)
 
-         Raylib.DrawCube(cube_position, 2.0, 2.0, 2.0, RED)
-         Raylib.DrawCubeWires(cube_position, 2.0, 2.0, 2.0, MAROON)
+      Raylib.DrawCube(cube_position, 2.0, 2.0, 2.0, RED)
+      Raylib.DrawCubeWires(cube_position, 2.0, 2.0, 2.0, MAROON)
 
-         Raylib.DrawGrid(10, 1.0)
+      Raylib.DrawGrid(10, 1.0)
 
-      Raylib.EndMode3D()
+    Raylib.EndMode3D()
 
-      Raylib.DrawText("Welcome to the third dimension!", 10, 40, 20, DARKGRAY)
+    Raylib.DrawText("Welcome to the third dimension!", 10, 40, 20, DARKGRAY)
 
-      Raylib.DrawFPS(10, 10)
+    Raylib.DrawFPS(10, 10)
 
-   Raylib.EndDrawing() --]
-   -- ] Draw ]
+  Raylib.EndDrawing() --]
+  -- ] Draw ]
 end
 
 -- [ De-Initialization [

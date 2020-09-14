@@ -16,11 +16,11 @@ Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - 3d
 
 -- Define the camera to look into our 3d world (position, target, up vector)
 local camera: Camera = {
-   position = {4, 2, 4},
-   target   = {0, 1, 0},
-   up       = {0, 1, 0},
-   fovy     = 60,
-   type = CameraType.CAMERA_PERSPECTIVE
+  position = {4, 2, 4},
+  target  = {0, 1, 0},
+  up     = {0, 1, 0},
+  fovy    = 60,
+  type = CameraType.CAMERA_PERSPECTIVE
 }
 
 -- Generates some random columns
@@ -29,9 +29,9 @@ local positions: Vector3[MAX_COLUMNS];
 local colors: Color[MAX_COLUMNS];
 
 for i: integer = 0, < MAX_COLUMNS do
-   heights[i] = (@number)(Raylib.GetRandomValue(1, 12))
-   positions[i] = { Raylib.GetRandomValue(-15, 15), heights[i] / 2, Raylib.GetRandomValue(-15, 15) }
-   colors[i] = { Raylib.GetRandomValue(20, 255), Raylib.GetRandomValue(10, 55), 30, 255 }
+  heights[i] = (@number)(Raylib.GetRandomValue(1, 12))
+  positions[i] = { Raylib.GetRandomValue(-15, 15), heights[i] / 2, Raylib.GetRandomValue(-15, 15) }
+  colors[i] = { Raylib.GetRandomValue(20, 255), Raylib.GetRandomValue(10, 55), 30, 255 }
 end
 
 Raylib.SetCameraMode(camera, CameraMode.CAMERA_FIRST_PERSON) -- Set a first person camera mode
@@ -41,39 +41,39 @@ Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 
 -- Main game loop
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
-   -- [ Update [
-   Raylib.UpdateCamera(&camera) -- Update camera
-   -- ] Update ]
+  -- [ Update [
+  Raylib.UpdateCamera(&camera) -- Update camera
+  -- ] Update ]
 
-   -- [ Draw [
-   Raylib.BeginDrawing()
+  -- [ Draw [
+  Raylib.BeginDrawing()
 
-      Raylib.ClearBackground(RAYWHITE)
+    Raylib.ClearBackground(RAYWHITE)
 
-      Raylib.BeginMode3D(camera)
+    Raylib.BeginMode3D(camera)
 
-         Raylib.DrawPlane({ 0, 0.0,  0}, {32, 32}, LIGHTGRAY) -- Draw ground
-         Raylib.DrawCube({-16, 2.5,  0},  1, 5, 32, BLUE)     -- Draw a blue wall
-         Raylib.DrawCube({ 16, 2.5,  0},  1, 5, 32, LIME)     -- Draw a green wall
-         Raylib.DrawCube({  0, 2.5, 16}, 32, 5,  1, GOLD)     -- Draw a yellow wall
+      Raylib.DrawPlane({ 0, 0.0,  0}, {32, 32}, LIGHTGRAY) -- Draw ground
+      Raylib.DrawCube({-16, 2.5,  0},  1, 5, 32, BLUE)     -- Draw a blue wall
+      Raylib.DrawCube({ 16, 2.5,  0},  1, 5, 32, LIME)     -- Draw a green wall
+      Raylib.DrawCube({  0, 2.5, 16}, 32, 5,  1, GOLD)     -- Draw a yellow wall
 
-         -- Draw some cubes around
-         for i: integer = 0, < MAX_COLUMNS do
-            Raylib.DrawCube(positions[i], 2, heights[i], 2, colors[i])
-            Raylib.DrawCubeWires(positions[i], 2, heights[i], 2, MAROON)
-         end
+      -- Draw some cubes around
+      for i: integer = 0, < MAX_COLUMNS do
+        Raylib.DrawCube(positions[i], 2, heights[i], 2, colors[i])
+        Raylib.DrawCubeWires(positions[i], 2, heights[i], 2, MAROON)
+      end
 
-      Raylib.EndMode3D()
+    Raylib.EndMode3D()
 
-      Raylib.DrawRectangle( 10, 10, 220, 70, Raylib.Fade(SKYBLUE, 0.5))
-      Raylib.DrawRectangleLines( 10, 10, 220, 70, BLUE)
+    Raylib.DrawRectangle( 10, 10, 220, 70, Raylib.Fade(SKYBLUE, 0.5))
+    Raylib.DrawRectangleLines( 10, 10, 220, 70, BLUE)
 
-      Raylib.DrawText("First person camera default controls:", 20, 20, 10, BLACK)
-      Raylib.DrawText("- Move with keys: W, A, S, D", 40, 40, 10, DARKGRAY)
-      Raylib.DrawText("- Mouse move to look around", 40, 60, 10, DARKGRAY)
+    Raylib.DrawText("First person camera default controls:", 20, 20, 10, BLACK)
+    Raylib.DrawText("- Move with keys: W, A, S, D", 40, 40, 10, DARKGRAY)
+    Raylib.DrawText("- Mouse move to look around", 40, 60, 10, DARKGRAY)
 
-   Raylib.EndDrawing()
-   -- ] Draw ]
+  Raylib.EndDrawing()
+  -- ] Draw ]
 end
 
 -- [ De-Initialization [

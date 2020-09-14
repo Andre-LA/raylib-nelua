@@ -7,85 +7,85 @@
 require 'raylib'
 
 -- [ Initialization [
-   local screen_width: integer <comptime> = 800
-   local screen_height: integer <comptime> = 450
+  local screen_width: integer <comptime> = 800
+  local screen_height: integer <comptime> = 450
 
-   Raylib.InitWindow(screen_width, screen_height, "raylib [core] example - 3d picking")
+  Raylib.InitWindow(screen_width, screen_height, "raylib [core] example - 3d picking")
 
-   -- Define the camera to look into our 3d world
-   local camera: Camera = {
-      position = { 10.0, 10.0, 10.0 }, -- Camera position
-      target   = { 0.0, 0.0, 0.0 },    -- Camera looking at point
-      up       = { 0.0, 1.0, 0.0 },    -- Camera up vector (rotation towards target)
-      fovy     = 45.0,                 -- Camera field-of-view Y
-      type = CameraType.CAMERA_PERSPECTIVE, -- Camera mode type
-   }
+  -- Define the camera to look into our 3d world
+  local camera: Camera = {
+    position = { 10.0, 10.0, 10.0 }, -- Camera position
+    target   = { 0.0, 0.0, 0.0 },    -- Camera looking at point
+    up       = { 0.0, 1.0, 0.0 },    -- Camera up vector (rotation towards target)
+    fovy     = 45.0,                 -- Camera field-of-view Y
+    type = CameraType.CAMERA_PERSPECTIVE, -- Camera mode type
+  }
 
-   local cube_position: Vector3 = { 0.0, 1.0, 0.0 }
-   local cube_size: Vector3 = { 2.0, 2.0, 2.0 }
+  local cube_position: Vector3 = { 0.0, 1.0, 0.0 }
+  local cube_size: Vector3 = { 2.0, 2.0, 2.0 }
 
-   local ray: Ray = {} -- Picking line ray
+  local ray: Ray = {} -- Picking line ray
 
-   local collision = false;
+  local collision = false;
 
-   Raylib.SetCameraMode(camera, CameraMode.CAMERA_FREE) -- Set a free camera mode
+  Raylib.SetCameraMode(camera, CameraMode.CAMERA_FREE) -- Set a free camera mode
 
-   Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+  Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- ] Initialization ]
 
 -- Main game loop
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
-   -- [ Update [
-   Raylib.UpdateCamera(camera) -- Update camera
+  -- [ Update [
+  Raylib.UpdateCamera(camera) -- Update camera
 
-   if Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) then
-      if not collision then
-         ray = Raylib.GetMouseRay(Raylib.GetMousePosition(), camera)
-
-
-          -- Check collision between ray and box
-         collision = Raylib.CheckCollisionRayBox(
-            ray,
-            {
-               { cube_position.x - cube_size.x/2, cube_position.y - cube_size.y/2, cube_position.z - cube_size.z/2 },
-               { cube_position.x + cube_size.x/2, cube_position.y + cube_size.y/2, cube_position.z + cube_size.z/2 }
-            }
-         )
-      else
-         collision = false
-      end
-   end
-   -- ] Update ]
+  if Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) then
+    if not collision then
+      ray = Raylib.GetMouseRay(Raylib.GetMousePosition(), camera)
 
 
-   -- [ Draw [
-   Raylib.BeginDrawing()
-      Raylib.ClearBackground(RAYWHITE)
-      Raylib.BeginMode3D(camera)
-         if collision then
-            Raylib.DrawCube(cube_position, cube_size.x, cube_size.y, cube_size.z, RED)
-            Raylib.DrawCubeWires(cube_position, cube_size.x, cube_size.y, cube_size.z, MAROON)
+       -- Check collision between ray and box
+      collision = Raylib.CheckCollisionRayBox(
+        ray,
+        {
+          { cube_position.x - cube_size.x/2, cube_position.y - cube_size.y/2, cube_position.z - cube_size.z/2 },
+          { cube_position.x + cube_size.x/2, cube_position.y + cube_size.y/2, cube_position.z + cube_size.z/2 }
+        }
+      )
+    else
+      collision = false
+    end
+  end
+  -- ] Update ]
 
-            Raylib.DrawCubeWires(cube_position, cube_size.x + 0.2, cube_size.y + 0.2, cube_size.z + 0.2, GREEN)
-         else
-            Raylib.DrawCube(cube_position, cube_size.x, cube_size.y, cube_size.z, GRAY)
-            Raylib.DrawCubeWires(cube_position, cube_size.x, cube_size.y, cube_size.z, DARKGRAY)
-         end
 
-         Raylib.DrawRay(ray, MAROON)
-         Raylib.DrawGrid(10, 1.0)
-
-      Raylib.EndMode3D()
-
-      Raylib.DrawText("Try selecting the box with mouse!", 240, 10, 20, DARKGRAY)
-
+  -- [ Draw [
+  Raylib.BeginDrawing()
+    Raylib.ClearBackground(RAYWHITE)
+    Raylib.BeginMode3D(camera)
       if collision then
-         Raylib.DrawText("BOX SELECTED", (screen_width - Raylib.MeasureText("BOX SELECTED", 30)) // 2, (@cint)(screen_height * 0.1 // 1), 30, GREEN)
+        Raylib.DrawCube(cube_position, cube_size.x, cube_size.y, cube_size.z, RED)
+        Raylib.DrawCubeWires(cube_position, cube_size.x, cube_size.y, cube_size.z, MAROON)
+
+        Raylib.DrawCubeWires(cube_position, cube_size.x + 0.2, cube_size.y + 0.2, cube_size.z + 0.2, GREEN)
+      else
+        Raylib.DrawCube(cube_position, cube_size.x, cube_size.y, cube_size.z, GRAY)
+        Raylib.DrawCubeWires(cube_position, cube_size.x, cube_size.y, cube_size.z, DARKGRAY)
       end
 
-      Raylib.DrawFPS(10, 10)
-   Raylib.EndDrawing()
-   -- ] Draw ]
+      Raylib.DrawRay(ray, MAROON)
+      Raylib.DrawGrid(10, 1.0)
+
+    Raylib.EndMode3D()
+
+    Raylib.DrawText("Try selecting the box with mouse!", 240, 10, 20, DARKGRAY)
+
+    if collision then
+      Raylib.DrawText("BOX SELECTED", (screen_width - Raylib.MeasureText("BOX SELECTED", 30)) // 2, (@cint)(screen_height * 0.1 // 1), 30, GREEN)
+    end
+
+    Raylib.DrawFPS(10, 10)
+  Raylib.EndDrawing()
+  -- ] Draw ]
 end
 
 -- [ De-Initialization [
