@@ -353,10 +353,10 @@ function converters.var_decl(value)
       if arr_s then
          local array_str = string.sub(s, arr_s, arr_e)
          s = string.sub(s, 1, arr_s - 1)
-         list_type = list_type .. array_str
+         list_type = array_str .. list_type
       end
 
-      adjusted_list:insert(s .. ': ' .. list_type .. (ptr or ''))
+      adjusted_list:insert(s .. ': ' .. (ptr or '') .. list_type)
    end
 
    return new_result(adjusted_list:concat(', '))
@@ -399,15 +399,14 @@ function converters.func_arg(value)
    if #list > 1 then
       local ptr, decl = extract_pointer(list[1])
       if ptr then
-         list:append(ptr, 2)
+         list:prepend(ptr, 2)
+
          list[2] = string.gsub(list[2], 'cchar%*', 'cstring')
          list[2] = string.gsub(list[2], 'void%*', 'pointer')
 
          list[1] = decl
       end
    end
-
-
 
    local result = new_result(list:concat())
    return result
