@@ -309,7 +309,7 @@ function converters.values_on_braces(value)
 end
 
 function converters.variadic_arg(value)
-   return new_result('...')
+   return new_result('...: cvarargs')
 end
 
 function converters.cast(value)
