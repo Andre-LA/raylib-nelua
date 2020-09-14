@@ -97,13 +97,13 @@
 // Some basic Defines
 //----------------------------------------------------------------------------------
 /*#ifndef PI*/
-#define PI 3.14159265358979323846f
+#define PI (float)3.14159265358979323846f
 /*#endif*/
 
-#define DEG2RAD (PI/180.0f)
-#define RAD2DEG (180.0f/PI)
+#define DEG2RAD (float)(PI/180.0f)
+#define RAD2DEG (float)(180.0f/PI)
 
-#define MAX_TOUCH_POINTS        10      // Maximum number of touch points supported
+#define MAX_TOUCH_POINTS        (int)10      // Maximum number of touch points supported
 
 /*
 // Allow custom memory allocators
