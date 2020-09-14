@@ -4,10 +4,11 @@
 
 local ins = require 'inspect'
 
--- configure your generation here:
 local config = {
+   -- change this if you want a different indentation level
    identation = '  ',
    record_in_use = '',
+   cinclude_in_use = '',
 }
 
 local function typecheck_assert(value, _types)
@@ -445,7 +446,7 @@ function converters.func_decl(value)
 
    list:insert("function " .. config.record_in_use .. ".", 1)
    list:insert("(", 3)
-   list:insert(" <cimport'" .. list[2] .. "', nodecl>", #list + move_offset)
+   list:insert(" <cimport'"..list[2].."', cinclude'<"..config.cinclude_in_use..">', nodecl>", #list + move_offset)
    list:insert(' end ', #list + move_offset)
 
    local result = new_result()
@@ -490,7 +491,7 @@ function converters.struct_decl(value)
    local list = traverse(value)
 
    local result = new_result()
-   list:insert('<cimport, nodecl> = @record{\n', 2)
+   list:insert("<cimport, cinclude'<"..config.cinclude_in_use..">', nodecl> = @record{\n", 2)
    list:insert('}')
 
    local struct_name = find(value, 'struct_name').value
@@ -594,7 +595,7 @@ function converters.define(value)
       end
    end
 
-   list:insert('<cimport, nodecl>', 2)
+   list:insert("<cimport, cinclude'<"..config.cinclude_in_use..">', nodecl>", 2)
    result:insert(list:concat())
 
    return result

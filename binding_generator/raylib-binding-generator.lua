@@ -11,10 +11,6 @@ local config = bindgen.config
 
 local linklibs = {'raylib'}
 
-local cincludes = {
-   '<raylib.h>', '<raymath.h>'
-}
-
 local final_result = {}
 
 table.insert(final_result, '-- links: \n')
@@ -23,17 +19,12 @@ for i = 1, #linklibs do
    table.insert(final_result, "## linklib '" .. linklibs[i] .. "' \n")
 end
 
-table.insert(final_result, '\n-- includes: \n')
-
-for i = 1, #cincludes do
-   table.insert(final_result, "## cinclude '" .. cincludes[i] .. "' \n")
-end
-
 -- TODO: Implement callback!
 table.insert(final_result, '\nglobal TraceLogCallback = @record{}\n')
 
 -- [ raylib.h [
 config.record_in_use = 'Raylib'
+config.cinclude_in_use = 'raylib.h'
 
 local raylib_table = lpeg_raylib_parser.read'binding_generator/modified-raylib.h'
 local raylib_result = converters.convert(raylib_table)
@@ -51,6 +42,7 @@ table.insert(final_result, '')
 
 -- [ raymath.h [
 config.record_in_use = 'Raymath'
+config.cinclude_in_use = 'raymath.h'
 
 local raymath_table = lpeg_raylib_parser.read'binding_generator/modified-raymath.h'
 local raymath_result = converters.convert(raymath_table)
