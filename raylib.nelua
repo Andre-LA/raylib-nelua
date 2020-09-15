@@ -146,8 +146,8 @@ global Font <cimport, cinclude'<raylib.h>', nodecl> = @record{
   baseSize: cint,             -- Base size (default chars height)
   charsCount: cint,           -- Number of characters
   texture: Texture2D,        -- Characters texture atlas
-  recs: *Rectangle,          -- Characters rectangles in texture
-  chars: *CharInfo,          -- Characters info data
+  recs: *[0]Rectangle,          -- Characters rectangles in texture
+  recs: *[0]CharInfo,          -- Characters info data
 }
 ## Font.value.is_font = true
 
@@ -181,30 +181,30 @@ global Mesh <cimport, cinclude'<raylib.h>', nodecl> = @record{
   triangleCount: cint,        -- Number of triangles stored (indexed or not)
 
   -- Default vertex data
-  vertices: *float32,          -- Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
-  texcoords: *float32,         -- Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
-  texcoords2: *float32,        -- Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
-  normals: *float32,           -- Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
-  tangents: *float32,          -- Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
-  colors: *cuchar,    -- Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
-  indices: *cushort,  -- Vertex indices (in case vertex data comes indexed)
+  vertices: *[0]float32,          -- Vertex position (XYZ - 3 components per vertex) (shader-location = 0)
+  texcoords: *[0]float32,         -- Vertex texture coordinates (UV - 2 components per vertex) (shader-location = 1)
+  texcoords2: *[0]float32,        -- Vertex second texture coordinates (useful for lightmaps) (shader-location = 5)
+  normals: *[0]float32,           -- Vertex normals (XYZ - 3 components per vertex) (shader-location = 2)
+  tangents: *[0]float32,          -- Vertex tangents (XYZW - 4 components per vertex) (shader-location = 4)
+  colors: *[0]cuchar,    -- Vertex colors (RGBA - 4 components per vertex) (shader-location = 3)
+  indices: *[0]cushort,  -- Vertex indices (in case vertex data comes indexed)
 
   -- Animation vertex data
-  animVertices: *float32,      -- Animated vertex positions (after bones transformations)
-  animNormals: *float32,       -- Animated normals (after bones transformations)
-  boneIds: *cint,             -- Vertex bone ids, up to 4 bones influence by vertex (skinning)
-  boneWeights: *float32,       -- Vertex bone weight, up to 4 bones influence by vertex (skinning)
+  animVertices: *[0]float32,      -- Animated vertex positions (after bones transformations)
+  animNormals: *[0]float32,       -- Animated normals (after bones transformations)
+  boneIds: *[0]cint,             -- Vertex bone ids, up to 4 bones influence by vertex (skinning)
+  boneWeights: *[0]float32,       -- Vertex bone weight, up to 4 bones influence by vertex (skinning)
 
   -- OpenGL identifiers
   vaoId: cuint,       -- OpenGL Vertex Array Object id
-  vboId: *cuint,      -- OpenGL Vertex Buffer Objects id (default vertex data)
+  vboId: *[0]cuint,      -- OpenGL Vertex Buffer Objects id (default vertex data)
 }
 ## Mesh.value.is_mesh = true
 
 -- Shader type (generic)
 global Shader <cimport, cinclude'<raylib.h>', nodecl> = @record{
   id: cuint,          -- Shader program id
-  locs: *cint,                -- Shader locations array (MAX_SHADER_LOCATIONS)
+  locs: *[0]cint,                -- Shader locations array (MAX_SHADER_LOCATIONS)
 }
 ## Shader.value.is_shader = true
 
@@ -219,8 +219,8 @@ global MaterialMap <cimport, cinclude'<raylib.h>', nodecl> = @record{
 -- Material type (generic)
 global Material <cimport, cinclude'<raylib.h>', nodecl> = @record{
   shader: Shader,            -- Material shader
-  maps: *MaterialMap,        -- Material maps array (MAX_MATERIAL_MAPS)
-  params: *float32,            -- Material generic parameters (if required)
+  maps: *[0]MaterialMap,        -- Material maps array (MAX_MATERIAL_MAPS)
+  params: *[0]float32,            -- Material generic parameters (if required)
 }
 ## Material.value.is_material = true
 
@@ -243,24 +243,24 @@ global BoneInfo <cimport, cinclude'<raylib.h>', nodecl> = @record{
 global Model <cimport, cinclude'<raylib.h>', nodecl> = @record{
   transform: Matrix,         -- Local transform matrix
   meshCount: cint,            -- Number of meshes
-  meshes: *Mesh,             -- Meshes array
+  meshes: *[0]Mesh,             -- Meshes array
   materialCount: cint,        -- Number of materials
-  materials: *Material,      -- Materials array
-  meshMaterial: *cint,        -- Mesh material number
+  materials: *[0]Material,      -- Materials array
+  meshMaterial: *[0]cint,        -- Mesh material number
 
   -- Animation data
   boneCount: cint,            -- Number of bones
-  bones: *BoneInfo,          -- Bones information (skeleton)
-  bindPose: *Transform,      -- Bones base transformation (pose)
+  bones: *[0]BoneInfo,          -- Bones information (skeleton)
+  bindPose: *[0]Transform,      -- Bones base transformation (pose)
 }
 ## Model.value.is_model = true
 
 -- Model animation
 global ModelAnimation <cimport, cinclude'<raylib.h>', nodecl> = @record{
   boneCount: cint,            -- Number of bones
-  bones: *BoneInfo,          -- Bones information (skeleton)
+  bones: *[0]BoneInfo,          -- Bones information (skeleton)
   frameCount: cint,           -- Number of animation frames
-  framePoses: **Transform,   -- Poses array by frame
+  framePoses: *[0]*[0]Transform,   -- Poses array by frame
 }
 ## ModelAnimation.value.is_modelanimation = true
 

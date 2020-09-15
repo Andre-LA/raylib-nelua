@@ -56,6 +56,50 @@ end
 
 table.insert(final_result, '\n')
 
+for i = 1, #final_result do
+  if string.find(final_result[i], 'global Font ') then
+    final_result[i] = string.gsub(final_result[i], 'recs: %*Rectangle', 'recs: *[0]Rectangle')
+    final_result[i] = string.gsub(final_result[i], 'chars: %*CharInfo', 'recs: *[0]CharInfo')
+  end
+
+  if string.find(final_result[i], 'global Mesh ') then
+    final_result[i] = string.gsub(final_result[i], 'vertices: %*float32', 'vertices: *[0]float32')
+    final_result[i] = string.gsub(final_result[i], 'texcoords: %*float32', 'texcoords: *[0]float32')
+    final_result[i] = string.gsub(final_result[i], 'texcoords2: %*float32', 'texcoords2: *[0]float32')
+    final_result[i] = string.gsub(final_result[i], 'normals: %*float32', 'normals: *[0]float32')
+    final_result[i] = string.gsub(final_result[i], 'tangents: %*float32', 'tangents: *[0]float32')
+    final_result[i] = string.gsub(final_result[i], 'colors: %*cuchar', 'colors: *[0]cuchar')
+    final_result[i] = string.gsub(final_result[i], 'indices: %*cushort', 'indices: *[0]cushort')
+    final_result[i] = string.gsub(final_result[i], 'animVertices: %*float32', 'animVertices: *[0]float32')
+    final_result[i] = string.gsub(final_result[i], 'animNormals: %*float32', 'animNormals: *[0]float32')
+    final_result[i] = string.gsub(final_result[i], 'boneIds: %*cint', 'boneIds: *[0]cint')
+    final_result[i] = string.gsub(final_result[i], 'boneWeights: %*float32', 'boneWeights: *[0]float32')
+    final_result[i] = string.gsub(final_result[i], 'vboId: %*cuint', 'vboId: *[0]cuint')
+  end
+
+  if string.find(final_result[i], 'global Shader ') then
+    final_result[i] = string.gsub(final_result[i], 'locs: %*cint', 'locs: *[0]cint')
+  end
+
+  if string.find(final_result[i], 'global Material ') then
+    final_result[i] = string.gsub(final_result[i], 'maps: %*MaterialMap', 'maps: *[0]MaterialMap')
+    final_result[i] = string.gsub(final_result[i], 'params: %*float32', 'params: *[0]float32')
+  end
+
+  if string.find(final_result[i], 'global Model ') then
+    final_result[i] = string.gsub(final_result[i], 'meshes: %*Mesh', 'meshes: *[0]Mesh')
+    final_result[i] = string.gsub(final_result[i], 'materials: %*Material', 'materials: *[0]Material')
+    final_result[i] = string.gsub(final_result[i], 'meshMaterial: %*cint', 'meshMaterial: *[0]cint')
+    final_result[i] = string.gsub(final_result[i], 'bones: %*BoneInfo', 'bones: *[0]BoneInfo')
+    final_result[i] = string.gsub(final_result[i], 'bindPose: %*Transform', 'bindPose: *[0]Transform')
+  end
+
+  if string.find(final_result[i], 'global ModelAnimation ') then
+    final_result[i] = string.gsub(final_result[i], 'bones: %*BoneInfo', 'bones: *[0]BoneInfo')
+    final_result[i] = string.gsub(final_result[i], 'framePoses: %*%*Transform', 'framePoses: *[0]*[0]Transform')
+  end
+end
+
 table.insert(final_result, [[
 -- [ operator overloading [
 
