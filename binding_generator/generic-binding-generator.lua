@@ -245,7 +245,6 @@ end
 function converters.specifiers_and_qualifiers(value)
   local list = traverse(value)
 
-
   -- for C bindings, <const>s should be not used
   for i = #list, 1, -1 do
     if list[i] == '<const>' then
@@ -383,7 +382,6 @@ function converters.func_arg(value)
 
   local list = traverse(value)
 
-
   -- #list is 1 when "void" or "....";
   -- #list is 2 when "type" "declarator";
   -- #list is 3 when "qualifier" "type" "declarator"
@@ -393,7 +391,6 @@ function converters.func_arg(value)
   if list[2] then
     list:append(':', 1)
   end
-
 
   if #list > 1 then
     local ptr, decl = extract_pointer(list[1])
@@ -414,17 +411,17 @@ end
 function converters.func_decl(value)
   local list = traverse(value)
 
-  list:prepend('): ', 1)
-
   local ptr, func_name = extract_pointer(list[2])
 
   if ptr then
-    list:append(ptr, 1)
+    list:prepend(ptr, 1)
     list[1] = string.gsub(list[1], '%*cchar', 'cstring')
     list[1] = string.gsub(list[1], '%*void', 'pointer')
 
     list[2] = func_name
   end
+
+  list:prepend('): ', 1)
 
   local contains_comment = find(value, 'comment')
   local move_offset = contains_comment and 0 or 1
