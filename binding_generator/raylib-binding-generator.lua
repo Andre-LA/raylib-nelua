@@ -184,9 +184,43 @@ for i = 1, #final_result do
   end
 end
 
-  end
+-- apply methods to respective records
+-- this modifies final_result!
+local function apply_methods(func2find, methodfmt)
+  local fmt = string.format
+  local ignore_next = false
 
+  for i, line in ipairs(final_result) do
+    if not ignore_next then
+      local _, _, method_postfix = string.find(line, func2find)
+
+      if method_postfix then
+        table.insert(final_result, i+1, fmt('\nfunction %s\n', fmt(methodfmt, method_postfix)))
+        ignore_next = true
+      end
+    else
+      ignore_next = false
+    end
+  end
 end
+
+apply_methods('Raylib.UpdateCamera(.+)', 'Camera.UpdateCamera%s')
+apply_methods('Raylib.UpdateVrTracking(.+)', 'Camera.UpdateVrTracking%s')
+
+apply_methods('Raylib.Image(.+)', 'Image.%s')
+
+apply_methods('Raylib.GenTextureMipmaps(.+)', 'Texture2D.GenTextureMipmaps%s')
+apply_methods('Raylib.SetMaterialTexture(.+)', 'Texture2D.SetMaterialTexture%s')
+apply_methods('Raylib.SetModelMeshMaterial(.+)', 'Texture2D.SetModelMeshMaterial%s')
+
+apply_methods('Raylib.Mesh(.+)', 'Mesh.%s')
+
+apply_methods('Raymath.Vector2(.+)', 'Vector2.%s')
+apply_methods('Raymath.Vector3(.+)', 'Vector3.%s')
+apply_methods('Raymath.Matrix(.+)', 'Matrix.%s')
+apply_methods('Raymath.Quaternion(.+)', 'Quaternion.%s')
+
+apply_methods('Raylib.Wave(.+)', 'Wave.%s')
 
 table.insert(final_result, [[
 -- [ operator overloading [
@@ -265,33 +299,6 @@ function Quaternion.__mul(q1: Quaternion, q2: Quaternion): Quaternion <cimport'Q
 -- ] operator overloading ]
 ]])
 
-do
-  local records_with_functions = {
-    'Vector2',
-    'Vector3',
-    'Matrix',
-    'Quaternion',
-  }
-
-  local function add_rec_fn (line, rec_name)
-    local rec_name_len = string.len(rec_name)
-    if string.sub(line, 1, 17 + rec_name_len) == 'function Raymath.' .. rec_name then
-      local lparen_pos = string.find(line, "%(")
-      local record_fn_name = 'function ' .. rec_name .. '.' .. string.sub(line, 18 + rec_name_len)
-      return record_fn_name
-    end
-  end
-
-  for i = #final_result, 1, -1 do
-    for j = 1, #records_with_functions do
-      local ok_extra_line = add_rec_fn(final_result[i], records_with_functions[j])
-      if ok_extra_line then
-        table.insert(final_result, i+1, '\n' .. ok_extra_line)
-        break
-      end
-    end
-  end
-end
 --] raymath.h ]
 
 local file_to_generate = io.open('raylib.nelua', 'w+')
