@@ -8,22 +8,22 @@ First, [install Nelua language][nelua-install] and [Raylib library][raylib-insta
 
 Then, you can use `raylib.nelua`, you can use it as a project file or as a external library:
 
-## Project file
+### As project file
 Just move `raylib.nelua` file to your project.
 
-## External library
+### As external library
 Clone or download this repository somewhere and then either:
 * use the `-L` option, for example: `nelua -L ~/path/to/nelua-raylib my-game.nelua`
-* use a `neluacfg.lua` script on the project or on your `$HOME/config/`with the content`return { add_path = {'/path/to/nelua-raylib'} }`
+* use a `neluacfg.lua` script on the project's root directory or on your `$HOME/config/` with the content `return { add_path = {'/path/to/nelua-raylib'} }`
 [(See about this here)][nelua-L-option]
 
 ## Quick Raylib-nelua specific changes:
 This binding contains some extra features to better integrate with `nelua` language:
 
-* arrays are specified; for example, `Raylib.LoadMeshes` returns `Mesh[0]*` 
+* unbounded arrays are specified on arguments and return types; for example, `Raylib.GetWaveData` returns a `*[0]float32` instead of just `*float32`
 * for every record an `is_*` field is defined on the type information; for example, `## rAudioBuffer.value.is_raudiobuffer` is `true`;
-* record functions defined to `Vector2`, `Vector3`, `Matrix` and `Quaternion` records from correspondent `raymath.h`'s functions; for example, `Vector3.Add` calls `Vector3Add`;
-* operator overloading functions defined:
+* several functions are also applied to records, for example, `function Camera.UpdateCamera(camera: *Camera)` is defined, which can be used as a method `camera:UpdateCamera()`;
+* operator overloading functions for `raymath.h`functions defined:
     * `Vector2`: 
         * `__add`: calls `Vector2Add`
         * `__sub`: calls `Vector2Subtract`
