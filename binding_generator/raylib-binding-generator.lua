@@ -236,7 +236,7 @@ function Vector2.__len(v: Vector2): float32 <cimport'Vector2Length', nodecl> end
 function Vector2.__unm(v: Vector2): Vector2 <cimport'Vector2Negate', nodecl> end
 -- Divide vector by a float value or vector
 function Vector2.__div(v: Vector2, divisor: overload(Vector2, number)): Vector2
-  ## if divisor.is_vector2 then
+  ## if divisor.type.is_vector2 then
     return Vector2.DivideV(v, divisor)
   ## else
     return Vector2.Divide(v, divisor)
@@ -244,7 +244,7 @@ function Vector2.__div(v: Vector2, divisor: overload(Vector2, number)): Vector2
 end
 -- Scale vector (multiply by value) or Multiply vector by vector
 function Vector2.__mul(v: Vector2, multiplier: overload(Vector2, number)): Vector2
-  ## if multiplier.is_vector2 then
+  ## if multiplier.type.is_vector2 then
     return Vector2.MultiplyV(v, multiplier)
   ## else
     return Vector2.Scale(v, multiplier)
@@ -263,7 +263,7 @@ function Vector3.__len(v: Vector3): float32 <cimport'Vector3Length', nodecl> end
 function Vector3.__unm(v: Vector3): Vector3 <cimport'Vector3Negate', nodecl> end
 -- Multiply vector by scalar or by vector
 function Vector3.__mul(v: Vector3, multiplier: overload(Vector3, number)): Vector3
-  ## if multiplier.is_vector3 then
+  ## if multiplier.type.is_vector3 then
     return Vector3.MultiplyV(v, multiplier)
   ## else
     return Vector3.Scale(v, multiplier)
@@ -271,7 +271,7 @@ function Vector3.__mul(v: Vector3, multiplier: overload(Vector3, number)): Vecto
 end
 -- Divide vector by a float value or by vector
 function Vector3.__div(v: Vector3, divisor: overload(Vector3, number)): Vector3
-   ## if divisor.is_vector3 then
+   ## if divisor.type.is_vector3 then
     return Vector3.DivideV(v, divisor)
   ## else
     return Vector3.Divide(v, divisor)
