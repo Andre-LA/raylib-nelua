@@ -1,0 +1,67 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the  "World Screen" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_world_screen.c
+
+require 'raylib'
+require 'math'
+
+-- [[ Initialization [[
+local screen_width <comptime> = 800
+local screen_height <comptime> = 450
+
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - 3d camera free")
+
+-- Define the camera to look into our 3d world
+local camera: Camera = {
+  position = { 10, 10, 10 },
+  target = { 0, 0, 0 },
+  up = { 0, 1, 0 },
+  fovy = 45,
+  type = CameraType.CAMERA_PERSPECTIVE
+}
+
+local cube_position: Vector3 = { 0, 0, 0 }
+local cube_screen_position: Vector2 = { 0, 0 }
+
+Raylib.SetCameraMode(camera, CameraMode.CAMERA_FREE) -- Set a free camera mode
+
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+-- ]] Initialization ]]
+
+-- [[ Main game loop [[
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+  -- [[ Update [[
+  Raylib.UpdateCamera(camera) -- Update camera
+
+  -- Calculate cube screen space position (with a little offset to be in top)
+  cube_screen_position = Raylib.GetWorldToScreen( {cube_position.x, cube_position.y + 2.5, cube_position.z}, camera)
+  -- ]] Update ]]
+
+  -- [[ Draw [[
+  Raylib.BeginDrawing()
+
+    Raylib.ClearBackground(RAYWHITE)
+
+    Raylib.BeginMode3D(camera)
+
+      Raylib.DrawCube(cube_position, 2, 2, 2, RED)
+      Raylib.DrawCubeWires(cube_position, 2, 2, 2, MAROON)
+
+      Raylib.DrawGrid(10, 1)
+
+    Raylib.EndMode3D()
+
+    Raylib.DrawText("Enemy: 100 / 100", math.ifloor(cube_screen_position.x - Raylib.MeasureText("Enemy: 100/100", 20) / 2), math.ifloor(cube_screen_position.y), 20, BLACK)
+    Raylib.DrawText("Text is always on top of the cube", math.ifloor((screen_width - Raylib.MeasureText("Text is always on top of the cube", 20)) / 2), 25, 20, GRAY)
+
+  Raylib.EndDrawing()
+  -- ]] Draw ]]
+end
+-- ]] Main game loop ]]
+
+-- [[ De-Initialization [[
+Raylib.CloseWindow()        -- Close window and OpenGL context
+-- ]] De-Initialization ]]
