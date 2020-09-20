@@ -1,0 +1,108 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "Window Letterbox" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_window_letterbox.c
+
+require 'raylib'
+require 'math'
+
+-- Clamp Vector2 value with min and max and return a new vector2
+-- NOTE: Required for virtual mouse, to clamp inside virtual game size
+local function clamp_value(value: Vector2, min: Vector2, max: Vector2): Vector2
+  local result: Vector2 = {
+    x = math.max(math.min(value.x, max.x), min.x),
+    y = math.max(math.min(value.y, max.y), min.y)
+  }
+  return result
+end
+
+-- [[ Initialization [[
+local window_width <comptime> = 800
+local window_height <comptime> = 450
+
+-- Enable config flags for resizable window and vertical synchro
+Raylib.SetConfigFlags(ConfigFlag.FLAG_WINDOW_RESIZABLE | ConfigFlag.FLAG_VSYNC_HINT)
+Raylib.InitWindow(window_width, window_height, "raylib-nelua [core] example - window scale letterbox")
+Raylib.SetWindowMinSize(320, 240)
+
+local game_screen_width <comptime> = 640
+local game_screen_height <comptime> = 480
+
+-- Render texture initialization, used to hold the rendering result so we can easily resize it
+local target: RenderTexture2D = Raylib.LoadRenderTexture(game_screen_width, game_screen_height)
+Raylib.SetTextureFilter(target.texture, TextureFilterMode.FILTER_BILINEAR)  -- Texture scale filter to use
+
+local colors: [10]Color;
+for i = 0, < 10 do
+  colors[i] = { Raylib.GetRandomValue(100, 250), Raylib.GetRandomValue(50, 150), Raylib.GetRandomValue(10, 100), 255 }
+end
+
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+-- ]] Initialization ]]
+
+-- [[ Main game loop [[
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+    -- [[ Update [[
+    -- Compute required framebuffer scaling
+    local scale = math.min(Raylib.GetScreenWidth() / game_screen_width, Raylib.GetScreenHeight() / game_screen_height)
+
+    if Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) then
+      -- Recalculate random colors for the bars
+      for i = 0, < 10 do
+        colors[i] = { Raylib.GetRandomValue(100, 250), Raylib.GetRandomValue(50, 150), Raylib.GetRandomValue(10, 100), 255 }
+      end
+    end
+
+    -- Update virtual mouse (clamped mouse value behind game screen)
+    local mouse: Vector2 = Raylib.GetMousePosition()
+    local virtual_mouse: Vector2 = {
+      x = (mouse.x - (Raylib.GetScreenWidth() - (game_screen_width * scale)) * 0.5) / scale,
+      y = (mouse.y - (Raylib.GetScreenHeight() - (game_screen_height * scale)) * 0.5) / scale
+    }
+    virtual_mouse = clamp_value(virtual_mouse, { 0, 0 }, { game_screen_width, game_screen_height })
+    -- ]] Update ]]
+
+    -- [[ Draw [[
+    Raylib.BeginDrawing()
+      Raylib.ClearBackground(BLACK)
+
+      -- Draw everything in the render texture, note this will not be rendered on screen, yet
+      Raylib.BeginTextureMode(target)
+
+        Raylib.ClearBackground(RAYWHITE)         -- Clear render texture background color
+
+        for i = 0, < 10 do
+          Raylib.DrawRectangle(0, (game_screen_height / 10) * i, game_screen_width, game_screen_height // 10, colors[i])
+        end
+
+        Raylib.DrawText("If executed inside a window,\nyou can resize the window,\nand see the screen scaling!", 10, 25, 20, WHITE)
+
+        Raylib.DrawText(Raylib.TextFormat("Default Mouse: [%i , %i]", (@cint)(mouse.x), (@cint)(mouse.y)), 350, 25, 20, GREEN)
+        Raylib.DrawText(Raylib.TextFormat("Virtual Mouse: [%i , %i]", (@cint)(virtual_mouse.x), (@cint)(virtual_mouse.y)), 350, 55, 20, YELLOW)
+
+      Raylib.EndTextureMode()
+
+      -- Draw RenderTexture2D to window, properly scaled
+      Raylib.DrawTexturePro(
+        target.texture, { 0, 0, target.texture.width, -target.texture.height },
+        {
+          (Raylib.GetScreenWidth() - (game_screen_width * scale)) * 0.5,
+          (Raylib.GetScreenHeight() - (game_screen_height * scale)) * 0.5,
+          game_screen_width * scale,
+          game_screen_height * scale
+        },
+        { 0, 0 }, 0, WHITE
+      )
+
+    Raylib.EndDrawing()
+    -- ]] Draw ]]
+end
+-- ]] Main game loop ]]
+
+-- [[ De-Initialization [[
+Raylib.UnloadRenderTexture(target)    -- Unload render texture
+
+Raylib.CloseWindow()                  -- Close window and OpenGL context
+-- ]] De-Initialization ]]
