@@ -2,7 +2,8 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
--- This code is based on the "2d camera" example by raysan5, available at: https://www.raylib.com/examples.html
+-- This code is based on the "2d camera" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_2d_camera.c
 
 -- Note: unfortunately my controller doens't worked on my SO, so, I can't really test this
 
@@ -10,7 +11,7 @@ require 'raylib'
 
 local MAX_BUILDINGS: integer <comptime> = 100
 
--- [ Initialization [
+-- [[ Initialization [[
 local screen_width: integer <const> = 800
 local screen_height: integer <const> = 450
 
@@ -23,108 +24,109 @@ local build_colors: Color[MAX_BUILDINGS];
 local spacing: integer = 0
 
 for i: integer = 0, < MAX_BUILDINGS do
-   buildings[i].width = Raylib.GetRandomValue(50, 200)
-   buildings[i].height = Raylib.GetRandomValue(100, 800)
-   buildings[i].y = screen_height - 130 - buildings[i].height
-   buildings[i].x = -6000 + spacing
+  buildings[i].width = Raylib.GetRandomValue(50, 200)
+  buildings[i].height = Raylib.GetRandomValue(100, 800)
+  buildings[i].y = screen_height - 130 - buildings[i].height
+  buildings[i].x = -6000 + spacing
 
-   spacing = spacing + buildings[i].width
+  spacing = spacing + buildings[i].width
 
-   build_colors[i] = { Raylib.GetRandomValue(200, 240), Raylib.GetRandomValue(200, 240), Raylib.GetRandomValue(200, 250), 255 }
+  build_colors[i] = { Raylib.GetRandomValue(200, 240), Raylib.GetRandomValue(200, 240), Raylib.GetRandomValue(200, 250), 255 }
 end
 
 local camera: Camera2D = {
-   target = { player.x + 20, player.y + 20 },
-   offset = { screen_width / 2, screen_height / 2 },
-   rotation = 0,
-   zoom = 1
+  target = { player.x + 20, player.y + 20 },
+  offset = { screen_width / 2, screen_height / 2 },
+  rotation = 0,
+  zoom = 1
 }
 
 Raylib.SetTargetFPS(60); -- Set our game to run at 60 frames-per-second
--- ] Initialization ]
+-- ]] Initialization ]]
 
--- Main game loop
+-- [[ Main game loop [[
 while  not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
-   -- [ Update [
-   -- Player movement
-   if Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) then
-      player.x = player.x + 2
-   elseif Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
-      player.x = player.x - 2
-   end
+  -- [[ Update [[
+  -- Player movement
+  if Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) then
+    player.x = player.x + 2
+  elseif Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
+    player.x = player.x - 2
+  end
 
-   -- Camera target follows player
-   camera.target = { player.x + 20, player.y + 20 }
+  -- Camera target follows player
+  camera.target = { player.x + 20, player.y + 20 }
 
-   -- Camera rotation controls
-   if Raylib.IsKeyDown(KeyboardKey.KEY_A) then
-      camera.rotation = camera.rotation - 1
-   elseif Raylib.IsKeyDown(KeyboardKey.KEY_S) then
-      camera.rotation = camera.rotation + 1
-   end
+  -- Camera rotation controls
+  if Raylib.IsKeyDown(KeyboardKey.KEY_A) then
+    camera.rotation = camera.rotation - 1
+  elseif Raylib.IsKeyDown(KeyboardKey.KEY_S) then
+    camera.rotation = camera.rotation + 1
+  end
 
-   -- Limit camera rotation to 80 degrees (-40 to 40)
-   if camera.rotation > 40 then
-      camera.rotation = 40
-   elseif camera.rotation < -40  then
-      camera.rotation = -40
-   end
+  -- Limit camera rotation to 80 degrees (-40 to 40)
+  if camera.rotation > 40 then
+    camera.rotation = 40
+  elseif camera.rotation < -40  then
+    camera.rotation = -40
+  end
 
-   -- Camera zoom controls
-   camera.zoom = camera.zoom + (@number)(Raylib.GetMouseWheelMove() * 0.05)
+  -- Camera zoom controls
+  camera.zoom = camera.zoom + (@number)(Raylib.GetMouseWheelMove() * 0.05)
 
-   if camera.zoom > 3 then
-      camera.zoom = 3
-   elseif camera.zoom < 0.1 then
-      camera.zoom = 0.1
-   end
+  if camera.zoom > 3 then
+    camera.zoom = 3
+  elseif camera.zoom < 0.1 then
+    camera.zoom = 0.1
+  end
 
-   -- Camera reset (zoom and rotation)
-   if Raylib.IsKeyPressed(KeyboardKey.KEY_R) then
-      camera.zoom = 1
-      camera.rotation = 0
-   end
-   -- ] Update ]
+  -- Camera reset (zoom and rotation)
+  if Raylib.IsKeyPressed(KeyboardKey.KEY_R) then
+    camera.zoom = 1
+    camera.rotation = 0
+  end
+  -- ]] Update ]]
 
-   -- [ Draw [
-   Raylib.BeginDrawing()
+  -- [[ Draw [[
+  Raylib.BeginDrawing()
 
-      Raylib.ClearBackground(RAYWHITE)
+    Raylib.ClearBackground(RAYWHITE)
 
-      Raylib.BeginMode2D(camera)
+    Raylib.BeginMode2D(camera)
 
-         Raylib.DrawRectangle(-6000, 320, 13000, 8000, DARKGRAY)
+      Raylib.DrawRectangle(-6000, 320, 13000, 8000, DARKGRAY)
 
-         for i: integer = 0, < MAX_BUILDINGS do
-            Raylib.DrawRectangleRec(buildings[i], build_colors[i])
-         end
+      for i: integer = 0, < MAX_BUILDINGS do
+        Raylib.DrawRectangleRec(buildings[i], build_colors[i])
+      end
 
-         Raylib.DrawRectangleRec(player, RED)
+      Raylib.DrawRectangleRec(player, RED)
 
-         Raylib.DrawLine(camera.target.x, -screen_height * 10, camera.target.x, screen_height * 10, GREEN)
-         Raylib.DrawLine(-screen_width * 10, camera.target.y, screen_width * 10, camera.target.y, GREEN)
+      Raylib.DrawLine(camera.target.x, -screen_height * 10, camera.target.x, screen_height * 10, GREEN)
+      Raylib.DrawLine(-screen_width * 10, camera.target.y, screen_width * 10, camera.target.y, GREEN)
 
-      Raylib.EndMode2D()
+    Raylib.EndMode2D()
 
-      Raylib.DrawText("SCREEN AREA", 640, 10, 20, RED)
+    Raylib.DrawText("SCREEN AREA", 640, 10, 20, RED)
 
-      Raylib.DrawRectangle(0, 0, screen_width, 5, RED)
-      Raylib.DrawRectangle(0, 5, 5, screen_height - 10, RED)
-      Raylib.DrawRectangle(screen_width - 5, 5, 5, screen_height - 10, RED)
-      Raylib.DrawRectangle(0, screen_height - 5, screen_width, 5, RED)
+    Raylib.DrawRectangle(0, 0, screen_width, 5, RED)
+    Raylib.DrawRectangle(0, 5, 5, screen_height - 10, RED)
+    Raylib.DrawRectangle(screen_width - 5, 5, 5, screen_height - 10, RED)
+    Raylib.DrawRectangle(0, screen_height - 5, screen_width, 5, RED)
 
-      Raylib.DrawRectangle( 10, 10, 250, 113, Raylib.Fade(SKYBLUE, 0.5))
-      Raylib.DrawRectangleLines( 10, 10, 250, 113, BLUE)
+    Raylib.DrawRectangle( 10, 10, 250, 113, Raylib.Fade(SKYBLUE, 0.5))
+    Raylib.DrawRectangleLines( 10, 10, 250, 113, BLUE)
 
-      Raylib.DrawText("Free 2d camera controls:", 20, 20, 10, BLACK)
-      Raylib.DrawText("- Right/Left to move Offset", 40, 40, 10, DARKGRAY)
-      Raylib.DrawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, DARKGRAY)
-      Raylib.DrawText("- A / S to Rotate", 40, 80, 10, DARKGRAY)
-      Raylib.DrawText("- R to reset Zoom and Rotation", 40, 100, 10, DARKGRAY)
+    Raylib.DrawText("Free 2d camera controls:", 20, 20, 10, BLACK)
+    Raylib.DrawText("- Right/Left to move Offset", 40, 40, 10, DARKGRAY)
+    Raylib.DrawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, DARKGRAY)
+    Raylib.DrawText("- A / S to Rotate", 40, 80, 10, DARKGRAY)
+    Raylib.DrawText("- R to reset Zoom and Rotation", 40, 100, 10, DARKGRAY)
 
-   Raylib.EndDrawing()
-   -- ] Draw ]
+  Raylib.EndDrawing()
+   -- ]] Draw ]]
 end
+-- ]] Main game loop ]]
 
 -- [ De-Initialization [
 Raylib.CloseWindow() -- Close window and OpenGL context

@@ -2,11 +2,12 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
--- This code is based on the "input keys" example by raysan5, available at: https://www.raylib.com/examples.html
+-- This code is based on the "input keys" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_input_keys.c
 
 require 'raylib'
 
--- [ Initialization [
+-- [[ Initialization [[
 local screen_width: integer <comptime> = 800
 local screen_height: integer <comptime> = 450
 
@@ -15,11 +16,11 @@ Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - ke
 local ball_position: Vector2 = { screen_width / 2, screen_height / 2}
 
 Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
--- ] Initialization ]
+-- ]] Initialization ]]
 
--- Main game loop
+-- [[ Main game loop [[
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
-   -- [ Update [
+   -- [[ Update [[
    if Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) then
       ball_position.x = ball_position.x + 2
    end
@@ -32,10 +33,10 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
    if Raylib.IsKeyDown(KeyboardKey.KEY_DOWN) then
       ball_position.y = ball_position.y + 2
    end
-   -- ] Update ]
+   -- ]] Update ]]
 
-   -- [ Draw [
-   Raylib.BeginDrawing() --[
+   -- [[ Draw [[
+   Raylib.BeginDrawing()
 
       Raylib.ClearBackground(RAYWHITE)
 
@@ -43,10 +44,10 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
       Raylib.DrawCircleV(ball_position, 50, MAROON)
 
-   Raylib.EndDrawing() --]
-   -- ] Draw ]
+   Raylib.EndDrawing()
+   -- ]] Draw ]]
 end
 
--- [ De-Initialization [
+-- [[ De-Initialization [[
 Raylib.CloseWindow() -- Close window and OpenGL context
--- ] De-Initialization ]
+-- ]] De-Initialization ]]

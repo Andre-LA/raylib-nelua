@@ -2,11 +2,12 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
--- This code is based on the "input mouse" example by raysan5, available at: https://www.raylib.com/examples.html
+-- This code is based on the "input mouse" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_input_mouse.c
 
 require 'raylib'
 
--- [ Initialization [
+-- [[ Initialization [[
 local screen_width: integer <comptime> = 800
 local screen_height: integer <comptime> = 450
 
@@ -16,36 +17,36 @@ local ball_position: Vector2 = { -100, -100 }
 local ball_color = DARKBLUE
 
 Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
--- ] Initialization ]
+-- ]] Initialization ]]
 
--- Main game loop
+-- [[ Main game loop [[
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
-   -- [ Update [
-   ball_position = Raylib.GetMousePosition()
+  -- [[ Update [[
+  ball_position = Raylib.GetMousePosition()
 
-   if Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) then
-      ball_color = MAROON
-   elseif Raylib.IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE_BUTTON) then
-      ball_color = LIME
-   elseif Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON) then
-      ball_color = DARKBLUE
-   end
-   -- ] Update ]
+  if Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) then
+    ball_color = MAROON
+  elseif Raylib.IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE_BUTTON) then
+    ball_color = LIME
+  elseif Raylib.IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON) then
+    ball_color = DARKBLUE
+  end
+  -- ]] Update ]]
 
-   -- [ Draw [
-   Raylib.BeginDrawing() --[
+  -- [[ Draw [[
+  Raylib.BeginDrawing()
 
-      Raylib.ClearBackground(RAYWHITE)
+    Raylib.ClearBackground(RAYWHITE)
 
-      Raylib.DrawCircleV(ball_position, 40, ball_color)
+    Raylib.DrawCircleV(ball_position, 40, ball_color)
 
-      Raylib.DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, DARKGRAY)
+    Raylib.DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, DARKGRAY)
 
-   Raylib.EndDrawing() --]
-   -- ] Draw ]
+  Raylib.EndDrawing()
+  -- ]] Draw ]]
 end
 
--- [ De-Initialization [
+-- [[ De-Initialization [[
 Raylib.CloseWindow() -- Close window and OpenGL context
--- ] De-Initialization ]
+-- ]] De-Initialization ]]
 

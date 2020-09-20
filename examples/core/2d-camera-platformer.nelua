@@ -2,7 +2,8 @@
      License, v. 2.0. If a copy of the MPL was not distributed with this
      file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
 
--- This code is based on the "2D camera platformer" example by raysan5, available at: https://www.raylib.com/examples.html
+-- This code is based on the "2D camera platformer" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_2d_camera_platformer.c
 
 require 'raylib'
 require 'math'
@@ -25,7 +26,7 @@ local EnvItem = @record{
   color: Color,
 }
 
--- [ functions [
+-- [[ functions [[
 local function update_player(player: Player*, env_items: EnvItem[ENV_ITEMS_LEN], delta: number)
   if Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
     player.position.x = player.position.x - PLAYER_HOR_SPD * delta
@@ -170,9 +171,9 @@ local function update_camera_player_bounds_push(camera: Camera2D*, player: Playe
     camera.target.y = bboxWorldMin.y + (player.position.y - bboxWorldMax.y)
   end
 end
--- ] functions ]
+-- ]] functions ]]
 
--- [ Initialization [
+-- [[ Initialization [[
 local screen_width: integer <comptime> = 800
 local screen_height: integer <comptime> = 450
 
@@ -219,11 +220,11 @@ local camera_descriptions: cstring[CAMERA_UPDATERS_LEN] = {
 }
 
 Raylib.SetTargetFPS(60);
--- ] Initialization ]
+-- ]] Initialization ]]
 
--- Main game loop
+-- [[ Main game loop [[
 while not Raylib.WindowShouldClose() do
-  -- [ Update [
+  -- [[ Update [[
   local delta_time: number = Raylib.GetFrameTime()
 
   update_player(player, env_items, delta_time)
@@ -247,9 +248,9 @@ while not Raylib.WindowShouldClose() do
 
   -- Call update camera function by its pointer
   camera_updaters[camera_option](camera, player, env_items, delta_time, screen_width, screen_height)
-  -- ] Update ]
+  -- ]] Update ]]
 
-  -- [ Draw [
+  -- [[ Draw [[
   Raylib.BeginDrawing();
 
     Raylib.ClearBackground(LIGHTGRAY);
@@ -274,8 +275,9 @@ while not Raylib.WindowShouldClose() do
     Raylib.DrawText(camera_descriptions[camera_option], 40, 140, 10, DARKGRAY)
 
   Raylib.EndDrawing()
-  -- ] Draw ]
+  -- ]] Draw ]]
 end
+-- ]] Main game loop ]]
 
 -- [ De-Initialization [
 Raylib.CloseWindow() -- Close window and OpenGL context
