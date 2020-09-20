@@ -19,9 +19,6 @@ for i = 1, #linklibs do
   table.insert(final_result, "## linklib '" .. linklibs[i] .. "' \n")
 end
 
--- TODO: Implement callback!
-table.insert(final_result, '\nglobal TraceLogCallback = @record{}\n')
-
 -- [ raylib.h [
 config.record_in_use = 'Raylib'
 config.cinclude_in_use = 'raylib.h'
@@ -37,6 +34,13 @@ for i = 1, #raylib_result do
 end
 
 table.insert(final_result, '')
+
+for i = 1, #final_result do
+  if string.find(final_result[i], 'function Raylib.SetTraceLogCallback') then
+    final_result[i] = '-- ' .. final_result[i]
+    break
+  end
+end
 
 -- ] raylib.h ]
 

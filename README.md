@@ -46,6 +46,8 @@ This binding contains some extra features to better integrate with `nelua` langu
         * `__len`: calls `QuaternionLength`
         * `__mul`: calls `QuaternionMultiply`
 
+**NOTE: TraceLogCallback and SetTraceLogCallback aren't imported**
+
 ## Example
 
 ```Lua
