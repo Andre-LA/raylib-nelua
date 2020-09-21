@@ -1,0 +1,129 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https:--mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "Loading Thread" example by raysan5,
+-- available at: https:--github.com/raysan5/raylib/blob/master/examples/core/core_loading_thread.c
+
+## local neluatypes = require 'nelua.types'
+
+-- [[ cimport pthread.h [[ -- POSIX style threads management
+## linklib'pthread'
+
+local pthread_t <cimport'pthread_t', cinclude'<pthread.h>', nodecl> = #[neluatypes.IntegralType('pthread_t', primtypes.culong.size)]#
+local pthread_attr_t <cimport'pthread_attr_t', cinclude'<pthread.h>', nodecl> = @record{}
+local function pthread_create(thread: *pthread_t, attr: *pthread_attr_t, start_routine: function(arg: pointer): pointer, arg: pointer): cint <cimport'pthread_create', cinclude'<pthread.h>', nodecl> end
+-- ]] cimport pthread.h ]]
+
+-- [[ cimport stdatomic.h [[ -- C11 atomic data types
+local atomic_bool <cimport'atomic_bool', cinclude'<stdatomic.h>', nodecl> = @boolean
+
+local function atomic_load(obj: *atomic_bool): boolean <cimport'atomic_load', cinclude'<stdatomic.h>', nodecl> end
+local function atomic_store(obj: *atomic_bool, desired: boolean): void <cimport'atomic_store', cinclude'<stdatomic.h>', nodecl> end
+
+local function ATOMIC_VAR_INIT(value: boolean): atomic_bool <cimport'ATOMIC_VAR_INIT', cinclude'<stdatomic.h>', nodecl> end
+-- ]] cimport stdatomic.h ]]
+
+require 'C.time' -- Required for: clock()
+require 'raylib'
+
+-- Using C11 atomics for synchronization
+-- NOTE: A plain bool (or any plain data type for that matter) can't be used for inter-thread synchronization
+local data_loaded: atomic_bool = ATOMIC_VAR_INIT(false) -- Data Loaded completion indicator
+local data_progress = 0 -- Data progress accumulator
+
+-- [[ Initialization [[
+local screen_width <comptime> = 800
+local screen_height <comptime> = 450
+
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - loading thread")
+
+local thread_id: pthread_t; -- Loading data thread id
+
+local State = @enum{ Waiting = 0, Loading, Finished }
+local state: State = State.Waiting
+local frames_counter = 0
+
+Raylib.SetTargetFPS(60)               -- Set our game to run at 60 frames-per-second
+-- ]] Initialization ]]
+
+-- Loading data thread function definition
+local function load_data_thread(arg: pointer): pointer
+  local time_counter = 0 -- Time counted in ms
+  local prev_time = C.clock() -- Previous time
+
+  -- We simulate data loading with a time counter for 5 seconds
+  while time_counter < 5000 do
+    local current_time = C.clock() - prev_time
+    time_counter = current_time * 1000 // C.CLOCKS_PER_SEC
+
+    -- We accumulate time over a global variable to be used in
+    -- main thread as a progress bar
+    data_progress = time_counter // 10
+  end
+
+  -- When data has finished loading, we set global variable
+  atomic_store(&data_loaded, true)
+
+  return nilptr
+end
+
+-- [[ Main game loop [[
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+  -- [[ Update [[
+  switch state do
+  case State.Waiting then
+    if Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) then
+      local error = pthread_create(&thread_id, nilptr, load_data_thread, nilptr)
+      if error ~= 0 then
+        Raylib.TraceLog(TraceLogType.LOG_ERROR, "Error creating loading thread")
+      else
+        Raylib.TraceLog(TraceLogType.LOG_INFO, "Loading thread initialized successfully")
+      end
+
+      state = State.Loading
+    end
+  case State.Loading then
+    frames_counter = frames_counter + 1
+    if atomic_load(&data_loaded) then
+      frames_counter = 0
+      state = State.Finished
+    end
+  case State.Finished then
+    if Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) then
+      -- Reset everything to launch again
+      atomic_store(&data_loaded, false)
+      data_progress = 0
+      state = State.Waiting
+    end
+  end
+  -- ]] Update ]]
+
+  -- [[ Draw [[
+  Raylib.BeginDrawing()
+
+    Raylib.ClearBackground(RAYWHITE)
+
+    switch state do
+    case State.Waiting then
+      Raylib.DrawText("PRESS ENTER to START LOADING DATA", 150, 170, 20, DARKGRAY)
+    case State.Loading then
+      Raylib.DrawRectangle(150, 200, data_progress, 60, SKYBLUE)
+      if (frames_counter / 15) % 2 then
+        Raylib.DrawText("LOADING DATA...", 240, 210, 40, DARKBLUE)
+      end
+    case State.Finished then
+      Raylib.DrawRectangle(150, 200, 500, 60, LIME)
+      Raylib.DrawText("DATA LOADED!", 250, 210, 40, GREEN)
+    end
+
+    Raylib.DrawRectangleLines(150, 200, 500, 60, DARKGRAY)
+
+  Raylib.EndDrawing()
+  -- ]] Draw ]]
+end
+-- ]] Main game loop ]]
+
+-- [[ De-Initialization [[
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ]] De-Initialization ]]
