@@ -14,7 +14,7 @@ Just move `raylib.nelua` file to your project.
 ### As external library
 Clone or download this repository somewhere and then either:
 * use the `-L` option, for example: `nelua -L ~/path/to/nelua-raylib my-game.nelua`
-* use a `neluacfg.lua` script on the project's root directory or on your `$HOME/config/` with the content `return { add_path = {'/path/to/nelua-raylib'} }`
+* use a `neluacfg.lua` script on the project's root directory or on your `$HOME/.config/nelua` with the content `return { add_path = {'/path/to/nelua-raylib'} }`
 [(See about this here)][nelua-L-option]
 
 ## Quick Raylib-nelua specific changes:
