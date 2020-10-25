@@ -1324,8 +1324,8 @@ function Raylib.GetCollisionRayGround(ray: Ray, groundHeight: float32): RayHitIn
 -- ------------------------------------------------------------------------------------
 
 -- Shader loading/unloading functions
-function Raylib.LoadShader(vsFileName: cstring, fsFileName: cstring): Shader <cimport'LoadShader', cinclude'<raylib.h>', nodecl> end -- Load shader from files and bind default locations
-function Raylib.LoadShaderCode(vsCode: cstring, fsCode: cstring): Shader <cimport'LoadShaderCode', cinclude'<raylib.h>', nodecl> end -- Load shader from code strings and bind default locations
+function Raylib.LoadShader(vsFileName: facultative(cstring), fsFileName: facultative(cstring)): Shader <cimport'LoadShader', cinclude'<raylib.h>', nodecl> end -- Load shader from files and bind default locations
+function Raylib.LoadShaderCode(vsCode: facultative(cstring), fsCode: facultative(cstring)): Shader <cimport'LoadShaderCode', cinclude'<raylib.h>', nodecl> end -- Load shader from code strings and bind default locations
 function Raylib.UnloadShader(shader: Shader): void <cimport'UnloadShader', cinclude'<raylib.h>', nodecl> end -- Unload shader from GPU memory (VRAM)
 
 function Raylib.GetShaderDefault(): Shader <cimport'GetShaderDefault', cinclude'<raylib.h>', nodecl> end -- Get default shader

@@ -226,6 +226,21 @@ apply_methods('Raymath.Quaternion(.+)', 'Quaternion.%s')
 
 apply_methods('Raylib.Wave(.+)', 'Wave.%s')
 
+-- specific replacements:
+
+for i, line in ipairs(final_result) do
+  print('line0', i, line)
+
+  local s1, e1 = string.find(line, "function Raylib.LoadShader(vsFileName: cstring, fsFileName: cstring)", 1, true)
+  local s2, e2 = string.find(line, "function Raylib.LoadShaderCode(vsCode: cstring, fsCode: cstring)", 1, true)
+
+  if s1 and e1 then
+    final_result[i] = "function Raylib.LoadShader(vsFileName: facultative(cstring), fsFileName: facultative(cstring)): Shader <cimport'LoadShader', cinclude'<raylib.h>', nodecl> end -- Load shader from files and bind default locations"
+  elseif s2 and e2 then
+    final_result[i] = "function Raylib.LoadShaderCode(vsCode: facultative(cstring), fsCode: facultative(cstring)): Shader <cimport'LoadShaderCode', cinclude'<raylib.h>', nodecl> end -- Load shader from code strings and bind default locations"
+  end
+end
+
 table.insert(final_result, [[
 -- [ operator overloading [
 
