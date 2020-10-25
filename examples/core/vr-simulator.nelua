@@ -1,0 +1,121 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "VR Simulator (Oculus Rift CV1 parameters)" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_vr_simulator.c
+
+require 'raylib'
+
+##[=[ cemitdef[[
+#if defined(PLATFORM_DESKTOP)
+    #define GLSL_VERSION            330
+#else   // PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
+    #define GLSL_VERSION            100
+#endif
+]] ]=]
+
+local GLSL_VERSION: integer <cimport, nodecl>
+
+-- [[ Initialization [[
+local screen_width <comptime> = 800
+local screen_height <comptime> = 450
+
+-- NOTE: screen_width / screen_height should match VR device aspect ratio
+
+Raylib.SetConfigFlags(ConfigFlag.FLAG_MSAA_4X_HINT)
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - vr simulator")
+
+-- Init VR simulator (Oculus Rift CV1 parameters)
+Raylib.InitVrSimulator()
+
+local hmd: VrDeviceInfo = { -- VR device parameters (head-mounted-device)
+  -- Oculus Rift CV1 parameters for simulator
+  hResolution = 2160,            -- HMD horizontal resolution in pixels
+  vResolution = 1200,            -- HMD vertical resolution in pixels
+  hScreenSize = 0.133793,        -- HMD horizontal size in meters
+  vScreenSize = 0.0669,          -- HMD vertical size in meters
+  vScreenCenter = 0.04678,       -- HMD screen center in meters
+  eyeToScreenDistance = 0.041,   -- HMD distance between eye and display in meters
+  lensSeparationDistance = 0.07, -- HMD lens separation distance in meters
+  interpupillaryDistance = 0.07, -- HMD IPD (distance between pupils) in meters
+
+  -- NOTE: CV1 uses a Fresnel-hybrid-asymmetric lenses with specific distortion compute shaders.
+  -- Following parameters are an approximation to distortion stereo rendering but results differ from actual device.
+  lensDistortionValues = {
+    1.0,  -- HMD lens distortion constant parameter 0
+    0.22, -- HMD lens distortion constant parameter 1
+    0.24, -- HMD lens distortion constant parameter 2
+    0.0   -- HMD lens distortion constant parameter 3
+  },
+  chromaAbCorrection = {
+    0.996,  -- HMD chromatic aberration correction parameter 0
+    -0.004, -- HMD chromatic aberration correction parameter 1
+    1.014,  -- HMD chromatic aberration correction parameter 2
+    0.0     -- HMD chromatic aberration correction parameter 3
+  }
+}
+
+-- Distortion shader (uses device lens distortion and chroma)
+local distortion: Shader = Raylib.LoadShader(nilptr, Raylib.TextFormat("resources/distortion%i.fs", GLSL_VERSION))
+
+Raylib.SetVrConfiguration(hmd, distortion) -- Set Vr device parameters for stereo rendering
+
+-- Define the camera to look into our 3d world
+local camera: Camera = {
+  position = { 5.0, 2.0, 5.0 }, -- Camera position
+  target   = { 0.0, 2.0, 0.0 }, -- Camera looking at point
+  up       = { 0.0, 1.0, 0.0 }, -- Camera up vector (rotation towards target)
+  fovy     = 60.0,              -- Camera field-of-view Y
+  type     = CameraType.CAMERA_PERSPECTIVE, -- Camera type
+}
+
+local cube_position: Vector3 = { 0, 0, 0 }
+
+Raylib.SetCameraMode(camera, CameraMode.CAMERA_FIRST_PERSON) -- Set first person camera mode
+
+Raylib.SetTargetFPS(90) -- Set our game to run at 90 frames-per-second
+-- ]] Initialization ]]
+
+-- [[ Main game loop [[
+while not Raylib.WindowShouldClose() do --Detect window close button or ESC key
+  -- [[ Update [[
+  Raylib.UpdateCamera(camera) -- Update camera (simulator mode)
+
+  if Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) then
+    Raylib.ToggleVrMode() -- Toggle VR mode
+  end
+  -- ]] Update ]]
+
+  -- [[ Draw [[
+  Raylib.BeginDrawing()
+
+    Raylib.ClearBackground(RAYWHITE)
+
+    Raylib.BeginVrDrawing()
+
+      Raylib.BeginMode3D(camera)
+
+        Raylib.DrawCube(cube_position, 2.0, 2.0, 2.0, RED)
+        Raylib.DrawCubeWires(cube_position, 2.0, 2.0, 2.0, MAROON)
+
+        Raylib.DrawGrid(40, 1.0)
+
+      Raylib.EndMode3D()
+
+    Raylib.EndVrDrawing()
+
+    Raylib.DrawFPS(10, 10)
+
+  Raylib.EndDrawing()
+  -- ]] Draw ]]
+end
+-- ]] Main game loop ]]
+
+-- [[ De-Initialization [[
+Raylib.UnloadShader(distortion) -- Unload distortion shader
+
+Raylib.CloseVrSimulator() -- Close VR simulator
+
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ]] De-Initialization ]]

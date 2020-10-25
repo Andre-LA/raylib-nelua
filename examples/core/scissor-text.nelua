@@ -1,0 +1,63 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "Scissor test" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_scissor_test.c
+
+require 'raylib'
+
+
+-- [[ Initialization [[
+local screen_width <comptime> = 800
+local screen_height <comptime> = 450
+
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - scissor test")
+
+local scissor_area: Rectangle = { 0, 0, 300, 300 }
+local scissor_mode = true
+
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+-- ]] Initialization ]]
+
+-- [[ Main game loop [[
+while not Raylib.WindowShouldClose() do --  Detect window close button or ESC key
+  -- [[ Update [[
+  if Raylib.IsKeyPressed(KeyboardKey.KEY_S) then
+    scissor_mode = not scissor_mode
+  end
+
+  -- Centre the scissor area around the mouse position
+  scissor_area.x = Raylib.GetMouseX() - scissor_area.width / 2
+  scissor_area.y = Raylib.GetMouseY() - scissor_area.height / 2
+  -- ]] Update ]]
+
+  -- [[ Draw [[
+  Raylib.BeginDrawing()
+
+    Raylib.ClearBackground(RAYWHITE)
+
+    if scissor_mode then
+      Raylib.BeginScissorMode(scissor_area.x, scissor_area.y, scissor_area.width, scissor_area.height)
+    end
+
+    -- Draw full screen rectangle and some text
+    -- NOTE: Only part defined by scissor area will be rendered
+    Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), RED)
+    Raylib.DrawText("Move the mouse around to reveal this text!", 190, 200, 20, LIGHTGRAY)
+
+    if scissor_mode then
+      Raylib.EndScissorMode()
+    end
+
+    Raylib.DrawRectangleLinesEx(scissor_area, 1, BLACK)
+    Raylib.DrawText("Press S to toggle scissor test", 10, 10, 20, BLACK)
+
+  Raylib.EndDrawing()
+  -- ]] Draw ]]
+end
+-- ]] Main game loop ]]
+
+-- [[ De-Initialization [[
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ]] De-Initialization ]]
