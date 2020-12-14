@@ -11,7 +11,7 @@ require 'raylib'
 local screen_width: integer <comptime> = 800
 local screen_height: integer <comptime> = 450
 
-Raylib.InitWindow(screen_width, screen_height, "raylib [core] example - basic window")
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - basic window")
 
 Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- ]] Initialization ]]
