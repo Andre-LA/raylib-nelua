@@ -1,5 +1,7 @@
 # raylib-nelua
 
+![raylib-nelua-logo](raylib-nelualogo.svg)
+
 This is a [Raylib][raylib-website] binding for [Nelua language][nelua-website].
 
 ## How to use
