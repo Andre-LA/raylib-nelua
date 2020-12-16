@@ -1,0 +1,69 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "storage values" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/core/core_storage_values.c
+
+require 'raylib'
+
+-- NOTE: Storage positions must start with 0, directly related to file memory layout
+local StorageData = @enum{
+  PositionScore = 0,
+  PositionHiScore,
+}
+
+-- [[ Initialization [[
+local screen_width <comptime> = 800
+local screen_height <comptime> = 450
+
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - storage save/load values")
+
+local score = 0
+local hiscore = 0
+local frames_counter = 0
+
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+-- ]] Initialization ]]
+
+-- [[ Main game loop [[
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+  -- [[ Update [[
+  if Raylib.IsKeyPressed(KeyboardKey.KEY_R) then
+    score = Raylib.GetRandomValue(1000, 2000)
+    hiscore = Raylib.GetRandomValue(2000, 4000)
+  end
+
+  if Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER) then
+    Raylib.SaveStorageValue(StorageData.PositionScore, score)
+    Raylib.SaveStorageValue(StorageData.PositionHiScore, hiscore)
+  elseif Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) then
+    -- NOTE: If requested position could not be found, value 0 is returned
+    score = Raylib.LoadStorageValue(StorageData.PositionScore)
+    hiscore = Raylib.LoadStorageValue(StorageData.PositionHiScore)
+  end
+
+  frames_counter = frames_counter + 1
+  -- ]] Update ]]
+
+  -- [[ Draw [[
+  Raylib.BeginDrawing()
+    Raylib.ClearBackground(RAYWHITE)
+
+    Raylib.DrawText(Raylib.TextFormat("SCORE: %i", score), 280, 130, 40, MAROON)
+    Raylib.DrawText(Raylib.TextFormat("HI-SCORE: %i", hiscore), 210, 200, 50, BLACK)
+
+    Raylib.DrawText(Raylib.TextFormat("frames: %i", frames_counter), 10, 10, 20, LIME)
+
+    Raylib.DrawText("Press R to generate random numbers", 220, 40, 20, LIGHTGRAY)
+    Raylib.DrawText("Press ENTER to SAVE values", 250, 310, 20, LIGHTGRAY)
+    Raylib.DrawText("Press SPACE to LOAD values", 252, 350, 20, LIGHTGRAY)
+
+  Raylib.EndDrawing()
+  -- ]] Draw ]]
+end
+-- ]] Main game loop ]]
+
+-- [[ De-Initialization [[
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ]] De-Initialization ]]
