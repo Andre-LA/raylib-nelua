@@ -12,8 +12,8 @@ require 'raylib'
 local MAX_BUILDINGS: integer <comptime> = 100
 
 -- [[ Initialization [[
-local screen_width: integer <const> = 800
-local screen_height: integer <const> = 450
+local screen_width: integer <comptime> = 800
+local screen_height: integer <comptime> = 450
 
 Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - 2d camera")
 

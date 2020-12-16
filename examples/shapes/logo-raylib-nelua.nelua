@@ -13,8 +13,8 @@
 require 'raylib'
 
 -- [[ Initialization [[
-local screen_width: integer <const> = 800
-local screen_height: integer <const> = 450
+local screen_width: integer <comptime> = 800
+local screen_height: integer <comptime> = 450
 
 local nelua_color: Color = { 0x2f, 0x7a, 0xe5, 255 }
 
