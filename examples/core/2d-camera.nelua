@@ -18,8 +18,8 @@ local screen_height: integer <comptime> = 450
 Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [core] example - 2d camera")
 
 local player: Rectangle = { 400, 280, 40, 40 }
-local buildings: Rectangle[MAX_BUILDINGS];
-local build_colors: Color[MAX_BUILDINGS];
+local buildings: [MAX_BUILDINGS]Rectangle;
+local build_colors: [MAX_BUILDINGS]Color;
 
 local spacing: integer = 0
 

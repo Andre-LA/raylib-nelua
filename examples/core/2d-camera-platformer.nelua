@@ -27,7 +27,7 @@ local EnvItem = @record{
 }
 
 -- [[ functions [[
-local function update_player(player: Player*, env_items: EnvItem[ENV_ITEMS_LEN], delta: number)
+local function update_player(player: *Player, env_items: [ENV_ITEMS_LEN]EnvItem, delta: number)
   if Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) then
     player.position.x = player.position.x - PLAYER_HOR_SPD * delta
   end
@@ -42,8 +42,8 @@ local function update_player(player: Player*, env_items: EnvItem[ENV_ITEMS_LEN],
   local hit_obstacle: boolean = false
 
   for i: integer = 0, < ENV_ITEMS_LEN do
-    local ei: EnvItem* = env_items[i]
-    local p: Vector2* = player.position
+    local ei: *EnvItem = env_items[i]
+    local p: *Vector2 = player.position
 
     if ei.blocking and
       ei.rect.x <= p.x and
@@ -66,18 +66,18 @@ local function update_player(player: Player*, env_items: EnvItem[ENV_ITEMS_LEN],
   end
 end
 
-local function update_camera_center(camera: Camera2D*, player: Player*, env_items: EnvItem[ENV_ITEMS_LEN], delta: number, width: integer, height: integer)
+local function update_camera_center(camera: *Camera2D, player: *Player, env_items: [ENV_ITEMS_LEN]EnvItem, delta: number, width: integer, height: integer)
   camera.offset = { width / 2, height / 2 }
   camera.target = player.position
 end
 
-local function update_camera_center_inside_map(camera: Camera2D*, player: Player*, env_items: EnvItem[ENV_ITEMS_LEN], delta: number, width: integer, height: integer)
+local function update_camera_center_inside_map(camera: *Camera2D, player: *Player, env_items: [ENV_ITEMS_LEN]EnvItem, delta: number, width: integer, height: integer)
   camera.target = player.position
   camera.offset = { width / 2, height / 2 }
   local min_x: number, min_y: number, max_x: number, max_y: number = 1000, 1000, -1000, -1000
 
   for i: integer = 0, < ENV_ITEMS_LEN do
-    local ei: EnvItem* = env_items[i]
+    local ei: *EnvItem = env_items[i]
 
     min_x = math.min(ei.rect.x, min_x)
     max_x = math.max(ei.rect.x + ei.rect.width, max_x)
@@ -102,7 +102,7 @@ local function update_camera_center_inside_map(camera: Camera2D*, player: Player
   end
 end
 
-local function update_camera_center_smooth_follow(camera: Camera2D*, player: Player*, env_items: EnvItem[ENV_ITEMS_LEN], delta: number, width: integer, height: integer)
+local function update_camera_center_smooth_follow(camera: *Camera2D, player: *Player, env_items: [ENV_ITEMS_LEN]EnvItem, delta: number, width: integer, height: integer)
   local min_speed: number <static> = 30
   local min_effect_length: number <static> = 10
   local fraction_speed: number <static> = 0.8
@@ -118,7 +118,7 @@ local function update_camera_center_smooth_follow(camera: Camera2D*, player: Pla
   end
 end
 
-local function update_camera_even_out_on_landing(camera: Camera2D*, player: Player*, env_items: EnvItem[ENV_ITEMS_LEN], delta: number, width: integer, height: integer)
+local function update_camera_even_out_on_landing(camera: *Camera2D, player: *Player, env_items: [ENV_ITEMS_LEN]EnvItem, delta: number, width: integer, height: integer)
   local even_out_speed: number <static> = 700
   local evening_out: boolean <static> = false
   local even_out_target: number <static>;
@@ -150,7 +150,7 @@ local function update_camera_even_out_on_landing(camera: Camera2D*, player: Play
   end
 end
 
-local function update_camera_player_bounds_push(camera: Camera2D*, player: Player*, env_items: EnvItem[ENV_ITEMS_LEN], delta: number, width: integer, height: integer)
+local function update_camera_player_bounds_push(camera: *Camera2D, player: *Player, env_items: [ENV_ITEMS_LEN]EnvItem, delta: number, width: integer, height: integer)
   local bbox: Vector2 <const> = { 0.2, 0.2 }
 
   local bboxWorldMin: Vector2 = Raylib.GetScreenToWorld2D({ (1 - bbox.x) * 0.5 * width, (1 - bbox.y) * 0.5 * height }, camera)
@@ -185,7 +185,7 @@ local player: Player = {
   can_jump = false
 }
 
-local env_items: EnvItem[ENV_ITEMS_LEN] = {
+local env_items: [ENV_ITEMS_LEN]EnvItem = {
   { {   0,   0, 1000, 400 }, 0, LIGHTGRAY },
   { {   0, 400, 1000, 200 }, 1, GRAY },
   { { 300, 200,  400,  10 }, 1, GRAY },
@@ -201,7 +201,7 @@ local camera: Camera2D = {
 }
 
 -- Store pointers to the multiple update camera functions
-local camera_updaters: function(Camera2D*, Player*, EnvItem[ENV_ITEMS_LEN], number, integer, integer)[CAMERA_UPDATERS_LEN] = {
+local camera_updaters: [CAMERA_UPDATERS_LEN]function(*Camera2D, *Player, [ENV_ITEMS_LEN]EnvItem, number, integer, integer) = {
   update_camera_center,
   update_camera_center_inside_map,
   update_camera_center_smooth_follow,
@@ -211,7 +211,7 @@ local camera_updaters: function(Camera2D*, Player*, EnvItem[ENV_ITEMS_LEN], numb
 
 local camera_option: integer = 0
 
-local camera_descriptions: cstring[CAMERA_UPDATERS_LEN] = {
+local camera_descriptions: [CAMERA_UPDATERS_LEN]cstring = {
   "Follow player center",
   "Follow player center, but clamp to map edges",
   "Follow player center; smoothed",

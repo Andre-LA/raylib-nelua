@@ -25,9 +25,9 @@ local camera: Camera = {
 }
 
 -- Generates some random columns
-local heights: number[MAX_COLUMNS];
-local positions: Vector3[MAX_COLUMNS];
-local colors: Color[MAX_COLUMNS];
+local heights: [MAX_COLUMNS]number;
+local positions: [MAX_COLUMNS]Vector3;
+local colors: [MAX_COLUMNS]Color;
 
 for i: integer = 0, < MAX_COLUMNS do
   heights[i] = (@number)(Raylib.GetRandomValue(1, 12))
