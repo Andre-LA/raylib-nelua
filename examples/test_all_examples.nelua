@@ -4,7 +4,6 @@
 
 -- This code is based on the "input keys" example by raysan5, available at: https://www.raylib.com/examples.html
 
-
 require 'examples/core/2d-camera'
 require 'examples/core/2d-camera-platformer'
 require 'examples/core/3d-camera-first-person'
@@ -17,6 +16,11 @@ require 'examples/core/input-gamepad'
 require 'examples/core/input-keys'
 require 'examples/core/input-mouse'
 require 'examples/core/input-mouse_wheel'
---require 'examples/core/loading-thread'
+require 'examples/core/loading-thread'
+require 'examples/core/random-values'
+require 'examples/core/scissor-text'
+require 'examples/core/vr-simulator'
 require 'examples/core/window-letterbox'
 require 'examples/core/world-screen'
+
+require 'examples/shapes/logo-raylib-nelua'
