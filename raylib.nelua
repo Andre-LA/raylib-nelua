@@ -926,7 +926,7 @@ function Raylib.GetGesturePinchAngle(): float32 <cimport'GetGesturePinchAngle', 
 -- ------------------------------------------------------------------------------------
 function Raylib.SetCameraMode(camera: Camera, mode: cint): void <cimport'SetCameraMode', cinclude'<raylib.h>', nodecl> end -- Set camera mode (multiple camera modes available)
 function Raylib.UpdateCamera(camera: *Camera): void <cimport'UpdateCamera', cinclude'<raylib.h>', nodecl> end -- Update camera position for selected mode
-function Camera.UpdateCamera(camera: *Camera): void <cimport'UpdateCamera', cinclude'<raylib.h>', nodecl> end -- Update camera position for selected mode
+function Camera.Update(camera: *Camera): void <cimport'UpdateCamera', cinclude'<raylib.h>', nodecl> end -- Update camera position for selected mode
 
 
 function Raylib.SetCameraPanControl(panKey: cint): void <cimport'SetCameraPanControl', cinclude'<raylib.h>', nodecl> end -- Set camera pan key to combine with mouse movement (free camera)
@@ -1152,10 +1152,14 @@ function Raylib.GetScreenData(): Image <cimport'GetScreenData', cinclude'<raylib
 
 -- Texture configuration functions
 function Raylib.GenTextureMipmaps(texture: *Texture2D): void <cimport'GenTextureMipmaps', cinclude'<raylib.h>', nodecl> end -- Generate GPU mipmaps for a texture
-function Texture2D.GenTextureMipmaps(texture: *Texture2D): void <cimport'GenTextureMipmaps', cinclude'<raylib.h>', nodecl> end -- Generate GPU mipmaps for a texture
+function Texture2D.GenMipmaps(texture: *Texture2D): void <cimport'GenTextureMipmaps', cinclude'<raylib.h>', nodecl> end -- Generate GPU mipmaps for a texture
 
 function Raylib.SetTextureFilter(texture: Texture2D, filterMode: cint): void <cimport'SetTextureFilter', cinclude'<raylib.h>', nodecl> end -- Set texture scaling filter mode
+function Texture2D.SetFilter(texture: Texture2D, filterMode: cint): void <cimport'SetTextureFilter', cinclude'<raylib.h>', nodecl> end -- Set texture scaling filter mode
+
 function Raylib.SetTextureWrap(texture: Texture2D, wrapMode: cint): void <cimport'SetTextureWrap', cinclude'<raylib.h>', nodecl> end -- Set texture wrapping mode
+function Texture2D.SetWrap(texture: Texture2D, wrapMode: cint): void <cimport'SetTextureWrap', cinclude'<raylib.h>', nodecl> end -- Set texture wrapping mode
+
 
 -- Texture drawing functions
 function Raylib.DrawTexture(texture: Texture2D, posX: cint, posY: cint, tint: Color): void <cimport'DrawTexture', cinclude'<raylib.h>', nodecl> end -- Draw a Texture2D
@@ -1263,7 +1267,7 @@ function Raylib.LoadMaterials(fileName: cstring, materialCount: *cint): *[0]Mate
 function Raylib.LoadMaterialDefault(): Material <cimport'LoadMaterialDefault', cinclude'<raylib.h>', nodecl> end -- Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
 function Raylib.UnloadMaterial(material: Material): void <cimport'UnloadMaterial', cinclude'<raylib.h>', nodecl> end -- Unload material from GPU memory (VRAM)
 function Raylib.SetMaterialTexture(material: *Material, mapType: cint, texture: Texture2D): void <cimport'SetMaterialTexture', cinclude'<raylib.h>', nodecl> end -- Set texture for a material map type (MAP_DIFFUSE, MAP_SPECULAR...)
-function Texture2D.SetMaterialTexture(material: *Material, mapType: cint, texture: Texture2D): void <cimport'SetMaterialTexture', cinclude'<raylib.h>', nodecl> end -- Set texture for a material map type (MAP_DIFFUSE, MAP_SPECULAR...)
+function Texture2D.SetMaterial(material: *Material, mapType: cint, texture: Texture2D): void <cimport'SetMaterialTexture', cinclude'<raylib.h>', nodecl> end -- Set texture for a material map type (MAP_DIFFUSE, MAP_SPECULAR...)
 
 function Raylib.SetModelMeshMaterial(model: *Model, meshId: cint, materialId: cint): void <cimport'SetModelMeshMaterial', cinclude'<raylib.h>', nodecl> end -- Set material for a mesh
 function Texture2D.SetModelMeshMaterial(model: *Model, meshId: cint, materialId: cint): void <cimport'SetModelMeshMaterial', cinclude'<raylib.h>', nodecl> end -- Set material for a mesh
