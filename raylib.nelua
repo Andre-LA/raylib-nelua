@@ -1419,30 +1419,74 @@ function Raylib.GetWaveData(wave: Wave): *[0]float32 <cimport'GetWaveData', cinc
 -- Music management functions
 function Raylib.LoadMusicStream(fileName: cstring): Music <cimport'LoadMusicStream', cinclude'<raylib.h>', nodecl> end -- Load music stream from file
 function Raylib.UnloadMusicStream(music: Music): void <cimport'UnloadMusicStream', cinclude'<raylib.h>', nodecl> end -- Unload music stream
+function Music.UnloadStream(music: Music): void <cimport'UnloadMusicStream', cinclude'<raylib.h>', nodecl> end -- Unload music stream
+
 function Raylib.PlayMusicStream(music: Music): void <cimport'PlayMusicStream', cinclude'<raylib.h>', nodecl> end -- Start music playing
+function Music.PlayStream(music: Music): void <cimport'PlayMusicStream', cinclude'<raylib.h>', nodecl> end -- Start music playing
+
 function Raylib.UpdateMusicStream(music: Music): void <cimport'UpdateMusicStream', cinclude'<raylib.h>', nodecl> end -- Updates buffers for music streaming
+function Music.UpdateStream(music: Music): void <cimport'UpdateMusicStream', cinclude'<raylib.h>', nodecl> end -- Updates buffers for music streaming
+
 function Raylib.StopMusicStream(music: Music): void <cimport'StopMusicStream', cinclude'<raylib.h>', nodecl> end -- Stop music playing
+function Music.StopStream(music: Music): void <cimport'StopMusicStream', cinclude'<raylib.h>', nodecl> end -- Stop music playing
+
 function Raylib.PauseMusicStream(music: Music): void <cimport'PauseMusicStream', cinclude'<raylib.h>', nodecl> end -- Pause music playing
+function Music.PauseStream(music: Music): void <cimport'PauseMusicStream', cinclude'<raylib.h>', nodecl> end -- Pause music playing
+
 function Raylib.ResumeMusicStream(music: Music): void <cimport'ResumeMusicStream', cinclude'<raylib.h>', nodecl> end -- Resume playing paused music
+function Music.ResumeStream(music: Music): void <cimport'ResumeMusicStream', cinclude'<raylib.h>', nodecl> end -- Resume playing paused music
+
 function Raylib.IsMusicPlaying(music: Music): boolean <cimport'IsMusicPlaying', cinclude'<raylib.h>', nodecl> end -- Check if music is playing
+function Music.IsPlaying(music: Music): boolean <cimport'IsMusicPlaying', cinclude'<raylib.h>', nodecl> end -- Check if music is playing
+
 function Raylib.SetMusicVolume(music: Music, volume: float32): void <cimport'SetMusicVolume', cinclude'<raylib.h>', nodecl> end -- Set volume for music (1.0 is max level)
+function Music.SetVolume(music: Music, volume: float32): void <cimport'SetMusicVolume', cinclude'<raylib.h>', nodecl> end -- Set volume for music (1.0 is max level)
+
 function Raylib.SetMusicPitch(music: Music, pitch: float32): void <cimport'SetMusicPitch', cinclude'<raylib.h>', nodecl> end -- Set pitch for a music (1.0 is base level)
+function Music.SetPitch(music: Music, pitch: float32): void <cimport'SetMusicPitch', cinclude'<raylib.h>', nodecl> end -- Set pitch for a music (1.0 is base level)
+
 function Raylib.SetMusicLoopCount(music: Music, count: cint): void <cimport'SetMusicLoopCount', cinclude'<raylib.h>', nodecl> end -- Set music loop count (loop repeats)
+function Music.SetLoopCount(music: Music, count: cint): void <cimport'SetMusicLoopCount', cinclude'<raylib.h>', nodecl> end -- Set music loop count (loop repeats)
+
 function Raylib.GetMusicTimeLength(music: Music): float32 <cimport'GetMusicTimeLength', cinclude'<raylib.h>', nodecl> end -- Get music time length (in seconds)
+function Music.GetTimeLength(music: Music): float32 <cimport'GetMusicTimeLength', cinclude'<raylib.h>', nodecl> end -- Get music time length (in seconds)
+
 function Raylib.GetMusicTimePlayed(music: Music): float32 <cimport'GetMusicTimePlayed', cinclude'<raylib.h>', nodecl> end -- Get current music time played (in seconds)
+function Music.GetTimePlayed(music: Music): float32 <cimport'GetMusicTimePlayed', cinclude'<raylib.h>', nodecl> end -- Get current music time played (in seconds)
+
 
 -- AudioStream management functions
 function Raylib.InitAudioStream(sampleRate: cuint, sampleSize: cuint, channels: cuint): AudioStream <cimport'InitAudioStream', cinclude'<raylib.h>', nodecl> end -- Init audio stream (to stream raw audio pcm data)
 function Raylib.UpdateAudioStream(stream: AudioStream, data: pointer, samplesCount: cint): void <cimport'UpdateAudioStream', cinclude'<raylib.h>', nodecl> end -- Update audio stream buffers with data
+function AudioStream.Update(stream: AudioStream, data: pointer, samplesCount: cint): void <cimport'UpdateAudioStream', cinclude'<raylib.h>', nodecl> end -- Update audio stream buffers with data
+
 function Raylib.CloseAudioStream(stream: AudioStream): void <cimport'CloseAudioStream', cinclude'<raylib.h>', nodecl> end -- Close audio stream and free memory
+function AudioStream.Close(stream: AudioStream): void <cimport'CloseAudioStream', cinclude'<raylib.h>', nodecl> end -- Close audio stream and free memory
+
 function Raylib.IsAudioStreamProcessed(stream: AudioStream): boolean <cimport'IsAudioStreamProcessed', cinclude'<raylib.h>', nodecl> end -- Check if any audio stream buffers requires refill
+function AudioStream.IsProcessed(stream: AudioStream): boolean <cimport'IsAudioStreamProcessed', cinclude'<raylib.h>', nodecl> end -- Check if any audio stream buffers requires refill
+
 function Raylib.PlayAudioStream(stream: AudioStream): void <cimport'PlayAudioStream', cinclude'<raylib.h>', nodecl> end -- Play audio stream
+function AudioStream.Play(stream: AudioStream): void <cimport'PlayAudioStream', cinclude'<raylib.h>', nodecl> end -- Play audio stream
+
 function Raylib.PauseAudioStream(stream: AudioStream): void <cimport'PauseAudioStream', cinclude'<raylib.h>', nodecl> end -- Pause audio stream
+function AudioStream.Pause(stream: AudioStream): void <cimport'PauseAudioStream', cinclude'<raylib.h>', nodecl> end -- Pause audio stream
+
 function Raylib.ResumeAudioStream(stream: AudioStream): void <cimport'ResumeAudioStream', cinclude'<raylib.h>', nodecl> end -- Resume audio stream
+function AudioStream.Resume(stream: AudioStream): void <cimport'ResumeAudioStream', cinclude'<raylib.h>', nodecl> end -- Resume audio stream
+
 function Raylib.IsAudioStreamPlaying(stream: AudioStream): boolean <cimport'IsAudioStreamPlaying', cinclude'<raylib.h>', nodecl> end -- Check if audio stream is playing
+function AudioStream.IsPlaying(stream: AudioStream): boolean <cimport'IsAudioStreamPlaying', cinclude'<raylib.h>', nodecl> end -- Check if audio stream is playing
+
 function Raylib.StopAudioStream(stream: AudioStream): void <cimport'StopAudioStream', cinclude'<raylib.h>', nodecl> end -- Stop audio stream
+function AudioStream.Stop(stream: AudioStream): void <cimport'StopAudioStream', cinclude'<raylib.h>', nodecl> end -- Stop audio stream
+
 function Raylib.SetAudioStreamVolume(stream: AudioStream, volume: float32): void <cimport'SetAudioStreamVolume', cinclude'<raylib.h>', nodecl> end -- Set volume for audio stream (1.0 is max level)
+function AudioStream.SetVolume(stream: AudioStream, volume: float32): void <cimport'SetAudioStreamVolume', cinclude'<raylib.h>', nodecl> end -- Set volume for audio stream (1.0 is max level)
+
 function Raylib.SetAudioStreamPitch(stream: AudioStream, pitch: float32): void <cimport'SetAudioStreamPitch', cinclude'<raylib.h>', nodecl> end -- Set pitch for audio stream (1.0 is base level)
+function AudioStream.SetPitch(stream: AudioStream, pitch: float32): void <cimport'SetAudioStreamPitch', cinclude'<raylib.h>', nodecl> end -- Set pitch for audio stream (1.0 is base level)
+
 function Raylib.SetAudioStreamBufferSizeDefault(size: cint): void <cimport'SetAudioStreamBufferSizeDefault', cinclude'<raylib.h>', nodecl> end -- Default size for new audio streams
 
 
