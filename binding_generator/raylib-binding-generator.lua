@@ -197,9 +197,13 @@ local function apply_methods(func2find, methodfmt)
   for i, line in ipairs(final_result) do
     if not ignore_next then
       local _, _, method_postfix = string.find(line, func2find)
+      local caps = {string.find(line, func2find)}
+      caps = table.move(caps, 3, #caps, 1)
 
       if method_postfix then
-        table.insert(final_result, i+1, fmt('\nfunction %s\n', fmt(methodfmt, method_postfix)))
+        local method_result = fmt('\nfunction '..methodfmt..'\n', table.unpack(caps))
+        table.insert(final_result, i+1, method_result)
+
         ignore_next = true
       end
     else
@@ -208,16 +212,21 @@ local function apply_methods(func2find, methodfmt)
   end
 end
 
-apply_methods('Raylib.UpdateCamera(.+)', 'Camera.UpdateCamera%s')
-apply_methods('Raylib.UpdateVrTracking(.+)', 'Camera.UpdateVrTracking%s')
+apply_methods('Raylib.(Update)Camera(.+)', 'Camera.%s%s')
+apply_methods('Raylib.(UpdateVrTracking)(.+)', 'Camera.%s%s')
 
 apply_methods('Raylib.Image(.+)', 'Image.%s')
 
-apply_methods('Raylib.GenTextureMipmaps(.+)', 'Texture2D.GenTextureMipmaps%s')
-apply_methods('Raylib.SetMaterialTexture(.+)', 'Texture2D.SetMaterialTexture%s')
-apply_methods('Raylib.SetModelMeshMaterial(.+)', 'Texture2D.SetModelMeshMaterial%s')
+apply_methods('Raylib.(Gen)Texture(Mipmaps)(.+)', 'Texture2D.%s%s%s')
+apply_methods('Raylib.(Set)Texture(Filter)(.+)', 'Texture2D.%s%s%s')
+apply_methods('Raylib.(SetMaterial)Texture(.+)', 'Texture2D.%s%s')
+apply_methods('Raylib.(Set)Texture(Wrap)(.+)', 'Texture2D.%s%s%s')
+apply_methods('Raylib.(SetModelMeshMaterial)(.+)', 'Texture2D.%s%s')
 
 apply_methods('Raylib.Mesh(.+)', 'Mesh.%s')
+
+apply_methods('Raylib.(.-)Music(.-)(%(music: Music)(.+)', 'Music.%s%s%s%s')
+apply_methods('Raylib.(.-)AudioStream(.-)(%(stream: AudioStream)(.+)', 'AudioStream.%s%s%s%s')
 
 apply_methods('Raymath.Vector2(.+)', 'Vector2.%s')
 apply_methods('Raymath.Vector3(.+)', 'Vector3.%s')
@@ -229,8 +238,7 @@ apply_methods('Raylib.Wave(.+)', 'Wave.%s')
 -- specific replacements:
 
 for i, line in ipairs(final_result) do
-  print('line0', i, line)
-
+  --print('line0', i, line)
   local s1, e1 = string.find(line, "function Raylib.LoadShader(vsFileName: cstring, fsFileName: cstring)", 1, true)
   local s2, e2 = string.find(line, "function Raylib.LoadShaderCode(vsCode: cstring, fsCode: cstring)", 1, true)
 
