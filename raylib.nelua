@@ -1,5 +1,12 @@
 -- links: 
-## linklib 'raylib' 
+## linklib'raylib' 
+##[[ if RAYLIB_STATIC then
+  linklib'GL' 
+  linklib'pthread' 
+  linklib'dl' 
+  linklib'rt' 
+  linklib'X11' 
+end]] 
 
 -- raylib binding:
 global Raylib = @record{}

@@ -9,15 +9,20 @@ local bindgen = require 'binding_generator/generic-binding-generator'
 local converters = bindgen.converters
 local config = bindgen.config
 
-local linklibs = {'raylib'}
+local linklibs = {'GL', 'pthread', 'dl', 'rt', 'X11'}
 
 local final_result = {}
 
 table.insert(final_result, '-- links: \n')
 
+table.insert(final_result, "## linklib'raylib' \n")
+table.insert(final_result, "##[[ if RAYLIB_STATIC then\n")
+
 for i = 1, #linklibs do
-  table.insert(final_result, "## linklib '" .. linklibs[i] .. "' \n")
+  table.insert(final_result, "  linklib'" .. linklibs[i] .. "' \n")
 end
+
+table.insert(final_result, "end]] \n")
 
 -- [ raylib.h [
 config.record_in_use = 'Raylib'
