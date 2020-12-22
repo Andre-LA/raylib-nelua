@@ -35,22 +35,22 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.BeginMode3D(camera)
-
+    do
       Raylib.DrawCube(cube_position, 2.0, 2.0, 2.0, RED)
       Raylib.DrawCubeWires(cube_position, 2.0, 2.0, 2.0, MAROON)
 
       Raylib.DrawGrid(10, 1.0)
-
+    end
     Raylib.EndMode3D()
 
     Raylib.DrawText("Welcome to the third dimension!", 10, 40, 20, DARKGRAY)
 
     Raylib.DrawFPS(10, 10)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

@@ -35,13 +35,12 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.DrawCircleV(ball_position, 40, ball_color)
-
     Raylib.DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, DARKGRAY)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

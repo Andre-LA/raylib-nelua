@@ -7,13 +7,6 @@
 
 require 'raylib'
 
--- little hack
-local function text_format_1(str: cstring, vl: auto)
-  local result: cstring;
-  ## cemit 'result = TextFormat(str, vl);'
-  return result
-end
-
 -- [[ Initialization [[
 local screen_width: integer <comptime> = 800
 local screen_height: integer <comptime> = 450
@@ -34,13 +27,14 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ECS key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.DrawRectangle(screen_width // 2 - 40, box_position_y, 80, 80, MAROON)
 
     Raylib.DrawText('Use mouse wheel to move the cube up and down!', 10, 10, 20, GRAY)
-    Raylib.DrawText(text_format_1('Box position Y: %03i', box_position_y), 10, 40, 20, LIGHTGRAY)
-
+    Raylib.DrawText(Raylib.TextFormat('Box position Y: %03i', box_position_y), 10, 40, 20, LIGHTGRAY)
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

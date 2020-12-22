@@ -101,7 +101,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     switch state do
@@ -118,7 +118,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
     end
 
     Raylib.DrawRectangleLines(150, 200, 500, 60, DARKGRAY)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

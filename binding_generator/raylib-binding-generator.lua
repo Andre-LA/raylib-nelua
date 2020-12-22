@@ -213,6 +213,7 @@ local function apply_methods(func2find, methodfmt)
 end
 
 apply_methods('Raylib.(Update)Camera(.+)', 'Camera.%s%s')
+apply_methods('Raylib.(Set)Camera(Mode)(.+)', 'Camera.%s%s%s')
 apply_methods('Raylib.(UpdateVrTracking)(.+)', 'Camera.%s%s')
 
 apply_methods('Raylib.Image(.+)', 'Image.%s')

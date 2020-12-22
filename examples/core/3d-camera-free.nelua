@@ -32,7 +32,7 @@ Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- [[ Main game loop [[
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
   -- [[ Update [[
-  Raylib.UpdateCamera(&camera) -- Update camera
+  camera:Update() -- Update camera
 
   if Raylib.IsKeyDown(KeyboardKey.KEY_Z) then
     camera.target = {0, 0, 0}
@@ -41,16 +41,16 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.BeginMode3D(camera)
-
+    do
       Raylib.DrawCube(cube_position, 2, 2, 2, RED)
       Raylib.DrawCubeWires(cube_position, 2, 2, 2, MAROON)
 
       Raylib.DrawGrid(10, 1)
-
+    end
     Raylib.EndMode3D()
 
     Raylib.DrawRectangle(10, 10, 320, 133, Raylib.Fade(SKYBLUE, 0.5))
@@ -62,7 +62,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
     Raylib.DrawText("- Alt + Mouse Wheel Pressed to Rotate", 40, 80, 10, DARKGRAY)
     Raylib.DrawText("- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom", 40, 100, 10, DARKGRAY)
     Raylib.DrawText("- Z to zoom to (0, 0, 0)", 40, 120, 10, DARKGRAY)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

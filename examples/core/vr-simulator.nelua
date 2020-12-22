@@ -72,7 +72,7 @@ local camera: Camera = {
 
 local cube_position: Vector3 = { 0, 0, 0 }
 
-Raylib.SetCameraMode(camera, CameraMode.CAMERA_FIRST_PERSON) -- Set first person camera mode
+camera:SetMode(CameraMode.CAMERA_FIRST_PERSON) -- Set first person camera mode
 
 Raylib.SetTargetFPS(90) -- Set our game to run at 90 frames-per-second
 -- ]] Initialization ]]
@@ -80,7 +80,7 @@ Raylib.SetTargetFPS(90) -- Set our game to run at 90 frames-per-second
 -- [[ Main game loop [[
 while not Raylib.WindowShouldClose() do --Detect window close button or ESC key
   -- [[ Update [[
-  Raylib.UpdateCamera(camera) -- Update camera (simulator mode)
+  camera:Update() -- Update camera (simulator mode)
 
   if Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE) then
     Raylib.ToggleVrMode() -- Toggle VR mode
@@ -89,24 +89,24 @@ while not Raylib.WindowShouldClose() do --Detect window close button or ESC key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.BeginVrDrawing()
-
+    do
       Raylib.BeginMode3D(camera)
-
+      do
         Raylib.DrawCube(cube_position, 2.0, 2.0, 2.0, RED)
         Raylib.DrawCubeWires(cube_position, 2.0, 2.0, 2.0, MAROON)
 
         Raylib.DrawGrid(40, 1.0)
-
+      end
       Raylib.EndMode3D()
-
+    end
     Raylib.EndVrDrawing()
 
     Raylib.DrawFPS(10, 10)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

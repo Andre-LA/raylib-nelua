@@ -43,16 +43,16 @@ Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- [[ Main game loop [[
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
   -- [[ Update [[
-  Raylib.UpdateCamera(&camera) -- Update camera
+  camera:Update() -- Update camera
   -- ]] Update ]]
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.BeginMode3D(camera)
-
+    do
       Raylib.DrawPlane({ 0, 0.0,  0}, {32, 32}, LIGHTGRAY) -- Draw ground
       Raylib.DrawCube({-16, 2.5,  0},  1, 5, 32, BLUE)     -- Draw a blue wall
       Raylib.DrawCube({ 16, 2.5,  0},  1, 5, 32, LIME)     -- Draw a green wall
@@ -63,7 +63,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
         Raylib.DrawCube(positions[i], 2, heights[i], 2, colors[i])
         Raylib.DrawCubeWires(positions[i], 2, heights[i], 2, MAROON)
       end
-
+    end
     Raylib.EndMode3D()
 
     Raylib.DrawRectangle( 10, 10, 220, 70, Raylib.Fade(SKYBLUE, 0.5))
@@ -72,7 +72,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
     Raylib.DrawText("First person camera default controls:", 20, 20, 10, BLACK)
     Raylib.DrawText("- Move with keys: W, A, S, D", 40, 40, 10, DARKGRAY)
     Raylib.DrawText("- Mouse move to look around", 40, 60, 10, DARKGRAY)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

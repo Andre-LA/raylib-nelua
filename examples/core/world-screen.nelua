@@ -26,7 +26,7 @@ local camera: Camera = {
 local cube_position: Vector3 = { 0, 0, 0 }
 local cube_screen_position: Vector2 = { 0, 0 }
 
-Raylib.SetCameraMode(camera, CameraMode.CAMERA_FREE) -- Set a free camera mode
+camera:SetMode(CameraMode.CAMERA_FREE) -- Set a free camera mode
 
 Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- ]] Initialization ]]
@@ -34,7 +34,7 @@ Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- [[ Main game loop [[
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
   -- [[ Update [[
-  Raylib.UpdateCamera(camera) -- Update camera
+  camera:Update() -- Update camera
 
   -- Calculate cube screen space position (with a little offset to be in top)
   cube_screen_position = Raylib.GetWorldToScreen( {cube_position.x, cube_position.y + 2.5, cube_position.z}, camera)
@@ -42,21 +42,21 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.BeginMode3D(camera)
-
+    do
       Raylib.DrawCube(cube_position, 2, 2, 2, RED)
       Raylib.DrawCubeWires(cube_position, 2, 2, 2, MAROON)
 
       Raylib.DrawGrid(10, 1)
-
+    end
     Raylib.EndMode3D()
 
     Raylib.DrawText("Enemy: 100 / 100", math.ifloor(cube_screen_position.x - Raylib.MeasureText("Enemy: 100/100", 20) / 2), math.ifloor(cube_screen_position.y), 20, BLACK)
     Raylib.DrawText("Text is always on top of the cube", math.ifloor((screen_width - Raylib.MeasureText("Text is always on top of the cube", 20)) / 2), 25, 20, GRAY)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

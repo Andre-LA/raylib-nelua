@@ -37,12 +37,11 @@ require 'raylib'
 -- [[ Main game loop [[
 while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
   -- [[ Update [[
-  Raylib.UpdateCamera(camera) -- Update camera
+  camera:Update() -- Update camera
 
   if Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) then
     if not collision then
       ray = Raylib.GetMouseRay(Raylib.GetMousePosition(), camera)
-
 
        -- Check collision between ray and box
       collision = Raylib.CheckCollisionRayBox(
@@ -58,11 +57,12 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
   end
   -- ]] Update ]]
 
-
   -- [[ Draw [[
   Raylib.BeginDrawing()
+  do
     Raylib.ClearBackground(RAYWHITE)
     Raylib.BeginMode3D(camera)
+    do
       if collision then
         Raylib.DrawCube(cube_position, cube_size.x, cube_size.y, cube_size.z, RED)
         Raylib.DrawCubeWires(cube_position, cube_size.x, cube_size.y, cube_size.z, MAROON)
@@ -75,7 +75,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
       Raylib.DrawRay(ray, MAROON)
       Raylib.DrawGrid(10, 1.0)
-
+    end
     Raylib.EndMode3D()
 
     Raylib.DrawText("Try selecting the box with mouse!", 240, 10, 20, DARKGRAY)
@@ -85,6 +85,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
     end
 
     Raylib.DrawFPS(10, 10)
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

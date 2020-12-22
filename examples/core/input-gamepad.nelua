@@ -9,19 +9,6 @@
 
 require 'raylib'
 
-local function text_format_2(str: cstring, vl: auto)
-  local result: cstring;
-  ## cemit 'result = TextFormat(str, vl);'
-  return result
-end
-
-local function text_format_3(str: cstring, vl1: auto, vl2: auto)
-  local result: cstring;
-  ## cemit 'result = TextFormat(str, vl1, vl2);'
-  return result
-end
-
-
 ##[=[ cemitdef([[
 // NOTE: Gamepad name ID depends on drivers and OS
 #if defined(PLATFORM_RPI)
@@ -45,8 +32,8 @@ Raylib.SetConfigFlags(ConfigFlag.FLAG_MSAA_4X_HINT) -- Set MSAA 4X hint before w
 
 Raylib.InitWindow(screen_width, screen_height, 'raylib-nelua [core] example - gamepad input')
 
-local tex_ps3_pad = Raylib.LoadTexture 'resources/ps3.png'
-local tex_xbox_pad = Raylib.LoadTexture 'resources/xbox.png'
+local tex_ps3_pad = Raylib.LoadTexture'resources/ps3.png'
+local tex_xbox_pad = Raylib.LoadTexture'resources/xbox.png'
 
 Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
 -- ]] Initialization ]]
@@ -59,11 +46,11 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     if Raylib.IsGamepadAvailable(GamepadNumber.GAMEPAD_PLAYER1) then
-      Raylib.DrawText(text_format_2("GP1: %s", Raylib.GetGamepadName(GamepadNumber.GAMEPAD_PLAYER1)), 10, 10, 10, BLACK)
+      Raylib.DrawText(Raylib.TextFormat("GP1: %s", Raylib.GetGamepadName(GamepadNumber.GAMEPAD_PLAYER1)), 10, 10, 10, BLACK)
 
       if Raylib.IsGamepadName(GamepadNumber.GAMEPAD_PLAYER1, XBOX360_NAME_ID) then
         Raylib.DrawTexture(tex_xbox_pad, 0, 0, DARKGRAY)
@@ -208,14 +195,14 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
         -- TODO: Draw generic gamepad
       end
 
-      Raylib.DrawText(text_format_2("DETECTED AXIS [%i]:", Raylib.GetGamepadAxisCount(GamepadNumber.GAMEPAD_PLAYER1)), 10, 50, 10, MAROON)
+      Raylib.DrawText(Raylib.TextFormat("DETECTED AXIS [%i]:", Raylib.GetGamepadAxisCount(GamepadNumber.GAMEPAD_PLAYER1)), 10, 50, 10, MAROON)
 
       for i = 0, < Raylib.GetGamepadAxisCount(GamepadNumber.GAMEPAD_PLAYER1) do
-        Raylib.DrawText(text_format_3("AXIS %i: %.02f", i, Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, i)), 20, 70 + 20 * i, 10, DARKGRAY)
+        Raylib.DrawText(Raylib.TextFormat("AXIS %i: %.02f", i, Raylib.GetGamepadAxisMovement(GamepadNumber.GAMEPAD_PLAYER1, i)), 20, 70 + 20 * i, 10, DARKGRAY)
       end
 
       if Raylib.GetGamepadButtonPressed() ~= -1 then
-        Raylib.DrawText(text_format_2("DETECTED BUTTON: %i", Raylib.GetGamepadButtonPressed()), 10, 430, 10, RED)
+        Raylib.DrawText(Raylib.TextFormat("DETECTED BUTTON: %i", Raylib.GetGamepadButtonPressed()), 10, 430, 10, RED)
       else
         Raylib.DrawText("DETECTED BUTTON: NONE", 10, 430, 10, GRAY)
       end
@@ -224,7 +211,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
       Raylib.DrawTexture(tex_xbox_pad, 0, 0, LIGHTGRAY)
     end
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

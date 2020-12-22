@@ -23,12 +23,12 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
   -- ]] Update ]]
 
   -- [[ Draw [[
-  Raylib.BeginDrawing() --[
-
+  Raylib.BeginDrawing()
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
-
+  end
   Raylib.EndDrawing() --]
   -- ]] Draw ]]
 end

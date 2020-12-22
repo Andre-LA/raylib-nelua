@@ -252,18 +252,18 @@ while not Raylib.WindowShouldClose() do
 
   -- [[ Draw [[
   Raylib.BeginDrawing();
-
+  do
     Raylib.ClearBackground(LIGHTGRAY);
 
     Raylib.BeginMode2D(camera);
-
+    do
       for i: integer = 0, < ENV_ITEMS_LEN do
         Raylib.DrawRectangleRec(env_items[i].rect, env_items[i].color)
       end
 
       local player_rect: Rectangle = { player.position.x - 20, player.position.y - 40, 40, 40 }
       Raylib.DrawRectangleRec(player_rect, RED)
-
+    end
     Raylib.EndMode2D()
 
     Raylib.DrawText("Controls:", 20, 20, 10, BLACK)
@@ -273,7 +273,7 @@ while not Raylib.WindowShouldClose() do
     Raylib.DrawText("- C to change camera mode", 40, 100, 10, DARKGRAY)
     Raylib.DrawText("Current camera mode:", 20, 120, 10, BLACK)
     Raylib.DrawText(camera_descriptions[camera_option], 40, 140, 10, DARKGRAY)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

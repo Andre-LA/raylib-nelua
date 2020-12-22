@@ -925,6 +925,8 @@ function Raylib.GetGesturePinchAngle(): float32 <cimport'GetGesturePinchAngle', 
 -- Camera System Functions (Module: camera)
 -- ------------------------------------------------------------------------------------
 function Raylib.SetCameraMode(camera: Camera, mode: cint): void <cimport'SetCameraMode', cinclude'<raylib.h>', nodecl> end -- Set camera mode (multiple camera modes available)
+function Camera.SetMode(camera: Camera, mode: cint): void <cimport'SetCameraMode', cinclude'<raylib.h>', nodecl> end -- Set camera mode (multiple camera modes available)
+
 function Raylib.UpdateCamera(camera: *Camera): void <cimport'UpdateCamera', cinclude'<raylib.h>', nodecl> end -- Update camera position for selected mode
 function Camera.Update(camera: *Camera): void <cimport'UpdateCamera', cinclude'<raylib.h>', nodecl> end -- Update camera position for selected mode
 

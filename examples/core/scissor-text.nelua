@@ -7,7 +7,6 @@
 
 require 'raylib'
 
-
 -- [[ Initialization [[
 local screen_width <comptime> = 800
 local screen_height <comptime> = 450
@@ -34,7 +33,7 @@ while not Raylib.WindowShouldClose() do --  Detect window close button or ESC ke
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
-
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     if scissor_mode then
@@ -52,7 +51,7 @@ while not Raylib.WindowShouldClose() do --  Detect window close button or ESC ke
 
     Raylib.DrawRectangleLinesEx(scissor_area, 1, BLACK)
     Raylib.DrawText("Press S to toggle scissor test", 10, 10, 20, BLACK)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

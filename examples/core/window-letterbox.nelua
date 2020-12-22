@@ -32,7 +32,7 @@ local game_screen_height <comptime> = 480
 
 -- Render texture initialization, used to hold the rendering result so we can easily resize it
 local target: RenderTexture2D = Raylib.LoadRenderTexture(game_screen_width, game_screen_height)
-Raylib.SetTextureFilter(target.texture, TextureFilterMode.FILTER_BILINEAR)  -- Texture scale filter to use
+target.texture:SetFilter(TextureFilterMode.FILTER_BILINEAR)  -- Texture scale filter to use
 
 local colors: [10]Color;
 for i = 0, < 10 do
@@ -66,11 +66,12 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
     -- [[ Draw [[
     Raylib.BeginDrawing()
+    do
       Raylib.ClearBackground(BLACK)
 
       -- Draw everything in the render texture, note this will not be rendered on screen, yet
       Raylib.BeginTextureMode(target)
-
+      do
         Raylib.ClearBackground(RAYWHITE)         -- Clear render texture background color
 
         for i = 0, < 10 do
@@ -81,7 +82,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
         Raylib.DrawText(Raylib.TextFormat("Default Mouse: [%i , %i]", (@cint)(mouse.x), (@cint)(mouse.y)), 350, 25, 20, GREEN)
         Raylib.DrawText(Raylib.TextFormat("Virtual Mouse: [%i , %i]", (@cint)(virtual_mouse.x), (@cint)(virtual_mouse.y)), 350, 55, 20, YELLOW)
-
+      end
       Raylib.EndTextureMode()
 
       -- Draw RenderTexture2D to window, properly scaled
@@ -95,7 +96,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
         },
         { 0, 0 }, 0, WHITE
       )
-
+    end
     Raylib.EndDrawing()
     -- ]] Draw ]]
 end

@@ -48,6 +48,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.DrawText(Raylib.TextFormat("SCORE: %i", score), 280, 130, 40, MAROON)
@@ -58,7 +59,7 @@ while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
     Raylib.DrawText("Press R to generate random numbers", 220, 40, 20, LIGHTGRAY)
     Raylib.DrawText("Press ENTER to SAVE values", 250, 310, 20, LIGHTGRAY)
     Raylib.DrawText("Press SPACE to LOAD values", 252, 350, 20, LIGHTGRAY)
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end

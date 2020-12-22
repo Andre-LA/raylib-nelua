@@ -30,8 +30,8 @@ while not Raylib.WindowShouldClose() do
   -- ]] Update ]]
 
   -- [[ Draw [[
-  Raylib.BeginDrawing() --[
-
+  Raylib.BeginDrawing()
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     Raylib.DrawRectangle(screen_width // 2 - 128, screen_height // 2 - 128, 256, 256, nelua_color)
@@ -40,8 +40,8 @@ while not Raylib.WindowShouldClose() do
     Raylib.DrawText("Nelua", screen_width // 2 - 31, screen_height // 2 + 64, 50, nelua_color)
 
     Raylib.DrawText("this is NOT a texture!", 350, 370, 10, GRAY)
-
-  Raylib.EndDrawing() --]
+  end
+  Raylib.EndDrawing()
   -- ]] Draw ]]
 end
 -- ]] Main game loop ]]

@@ -31,6 +31,7 @@ while not Raylib.WindowShouldClose() do
 
   -- [[ Draw [[
   Raylib.BeginDrawing()
+  do
     Raylib.ClearBackground(RAYWHITE)
 
     if count == 0 then
@@ -50,7 +51,7 @@ while not Raylib.WindowShouldClose() do
 
       Raylib.DrawText("Drop new files...", 100, 110 + 40 * count, 20, DARKGRAY)
     end
-
+  end
   Raylib.EndDrawing()
   -- ]] Draw ]]
 end
