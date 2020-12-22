@@ -1,0 +1,91 @@
+--[[ This Source Code Form is subject to the terms of the Mozilla Public
+     License, v. 2.0. If a copy of the MPL was not distributed with this
+     file, You can obtain one at https://mozilla.org/MPL/2.0/. ]]
+
+-- This code is based on the "raylib fonts" example by raysan5,
+-- available at: https://github.com/raysan5/raylib/blob/master/examples/text/text_raylib_fonts.c
+
+require 'raylib'
+
+local MAX_FONTS <comptime> = 8
+
+-- [[ Initialization [[
+local screen_width <comptime> = 800
+local screen_height <comptime> = 450
+
+Raylib.InitWindow(screen_width, screen_height, "raylib-nelua [text] example - raylib fonts")
+
+-- NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
+local fonts: [MAX_FONTS]Font = {}
+
+fonts[0] = Raylib.LoadFont('resources/fonts/alagard.png')
+fonts[1] = Raylib.LoadFont('resources/fonts/pixelplay.png')
+fonts[2] = Raylib.LoadFont('resources/fonts/mecha.png')
+fonts[3] = Raylib.LoadFont('resources/fonts/setback.png')
+fonts[4] = Raylib.LoadFont('resources/fonts/romulus.png')
+fonts[5] = Raylib.LoadFont('resources/fonts/pixantiqua.png')
+fonts[6] = Raylib.LoadFont('resources/fonts/alpha_beta.png')
+fonts[7] = Raylib.LoadFont('resources/fonts/jupiter_crash.png')
+
+local messages: [MAX_FONTS]stringview = {
+  "ALAGARD FONT designed by Hewett Tsoi",
+  "PIXELPLAY FONT designed by Aleksander Shevchuk",
+  "MECHA FONT designed by Captain Falcon",
+  "SETBACK FONT designed by Brian Kent (AEnigma)",
+  "ROMULUS FONT designed by Hewett Tsoi",
+  "PIXANTIQUA FONT designed by Gerhard Grossmann",
+  "ALPHA_BETA FONT designed by Brian Kent (AEnigma)",
+  "JUPITER_CRASH FONT designed by Brian Kent (AEnigma)"
+}
+
+local spacings: [MAX_FONTS]integer = { 2, 4, 8, 4, 3, 4, 4, 1 }
+
+local positions: [MAX_FONTS]Vector2 = {}
+
+for i = 0, < MAX_FONTS do
+  positions[i].x = screen_width / 2 - Raylib.MeasureTextEx(fonts[i], messages[i], fonts[i].baseSize*2, spacings[i]).x / 2
+  positions[i].y = 60 + fonts[i].baseSize + 45 * i
+end
+
+-- Small Y position corrections
+positions[3].y = positions[3].y + 8
+positions[4].y = positions[4].y + 2
+positions[7].y = positions[7].y - 8
+
+local colors: [MAX_FONTS]Color = { MAROON, ORANGE, DARKGREEN, DARKBLUE, DARKPURPLE, LIME, GOLD, RED }
+
+Raylib.SetTargetFPS(60) -- Set our game to run at 60 frames-per-second
+-- ]] Initialization ]]
+
+-- [[ Main game loop [[
+while not Raylib.WindowShouldClose() do -- Detect window close button or ESC key
+  -- [[ Update [[
+  -- TODO: Update your variables here
+  -- ]] Update ]]
+
+  -- [[ Draw [[
+  Raylib.BeginDrawing()
+  do
+    Raylib.ClearBackground(RAYWHITE)
+
+    Raylib.DrawText("free fonts included with raylib", 250, 20, 20, DARKGRAY)
+    Raylib.DrawLine(220, 50, 590, 50, DARKGRAY)
+
+    for i = 0, < MAX_FONTS do
+      Raylib.DrawTextEx(fonts[i], messages[i], positions[i], fonts[i].baseSize*2, spacings[i], colors[i])
+    end
+  end
+  Raylib.EndDrawing()
+  -- ]] Draw ]]
+end
+-- ]] Main game loop ]]
+
+-- [[ De-Initialization [[
+
+-- Fonts unloading
+for i = 0, < MAX_FONTS do
+  Raylib.UnloadFont(fonts[i])
+end
+
+Raylib.CloseWindow() -- Close window and OpenGL context
+-- ]] De-Initialization ]]

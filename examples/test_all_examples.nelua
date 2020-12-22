@@ -25,3 +25,5 @@ require 'examples/core/window-letterbox'
 require 'examples/core/world-screen'
 
 require 'examples/shapes/logo-raylib-nelua'
+
+require 'examples/text/raylib-fonts'
