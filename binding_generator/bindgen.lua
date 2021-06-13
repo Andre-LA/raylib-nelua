@@ -1,6 +1,9 @@
 local c11parser = require 'c11' -- from: https://github.com/edubart/lpegrex/blob/main/parsers/c11.lua
 local astutil = require 'astutil' -- from: https://github.com/edubart/lpegrex/blob/main/parsers/astutil.lua
 local inspect = require 'nelua.thirdparty.inspect'
+local function insprint(t, d)
+  print(inspect(t, d and {depth = d} or nil))
+end
 
 local ctypes = {
   ['int64_t'] = 'integer',
