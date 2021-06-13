@@ -38,7 +38,7 @@ global Rectangle: type <cimport, nodecl> = @record{
 }
 
 global Image: type <cimport, nodecl> = @record{
-  data: nil,
+  data: pointer,
   width: cint,
   height: cint,
   mipmaps: cint,
@@ -55,12 +55,12 @@ global Texture: type <cimport, nodecl> = @record{
 
 global RenderTexture: type <cimport, nodecl> = @record{
   id: cuint,
-  texture: nil,
-  depth: nil,
+  texture: Texture,
+  depth: Texture,
 }
 
 global NPatchInfo: type <cimport, nodecl> = @record{
-  source: nil,
+  source: Rectangle,
   left: cint,
   top: cint,
   right: cint,
@@ -73,29 +73,29 @@ global CharInfo: type <cimport, nodecl> = @record{
   offsetX: cint,
   offsetY: cint,
   advanceX: cint,
-  image: nil,
+  image: Image,
 }
 
 global Font: type <cimport, nodecl> = @record{
   baseSize: cint,
   charsCount: cint,
   charsPadding: cint,
-  texture: nil,
-  recs: nil,
-  chars: nil,
+  texture: Texture2D,
+  recs: *Rectangle,
+  chars: *CharInfo,
 }
 
 global Camera3D: type <cimport, nodecl> = @record{
-  position: nil,
-  target: nil,
-  up: nil,
+  position: Vector3,
+  target: Vector3,
+  up: Vector3,
   fovy: float32,
   projection: cint,
 }
 
 global Camera2D: type <cimport, nodecl> = @record{
-  offset: nil,
-  target: nil,
+  offset: Vector2,
+  target: Vector2,
   rotation: float32,
   zoom: float32,
 }
@@ -103,42 +103,42 @@ global Camera2D: type <cimport, nodecl> = @record{
 global Mesh: type <cimport, nodecl> = @record{
   vertexCount: cint,
   triangleCount: cint,
-  vertices: float32,
-  texcoords: float32,
-  texcoords2: float32,
-  normals: float32,
-  tangents: float32,
-  colors: cuchar,
-  indices: cushort,
-  animVertices: float32,
-  animNormals: float32,
-  boneIds: cint,
-  boneWeights: float32,
+  vertices: *float32,
+  texcoords: *float32,
+  texcoords2: *float32,
+  normals: *float32,
+  tangents: *float32,
+  colors: *cuchar,
+  indices: *cushort,
+  animVertices: *float32,
+  animNormals: *float32,
+  boneIds: *cint,
+  boneWeights: *float32,
   vaoId: cuint,
-  vboId: cuint,
+  vboId: *cuint,
 }
 
 global Shader: type <cimport, nodecl> = @record{
   id: cuint,
-  locs: cint,
+  locs: *cint,
 }
 
 global MaterialMap: type <cimport, nodecl> = @record{
-  texture: nil,
-  color: nil,
+  texture: Texture2D,
+  color: Color,
   value: float32,
 }
 
 global Material: type <cimport, nodecl> = @record{
-  shader: nil,
-  maps: nil,
+  shader: Shader,
+  maps: *MaterialMap,
   params: float32,
 }
 
 global Transform: type <cimport, nodecl> = @record{
-  translation: nil,
-  rotation: nil,
-  scale: nil,
+  translation: Vector3,
+  rotation: Quaternion,
+  scale: Vector3,
 }
 
 global BoneInfo: type <cimport, nodecl> = @record{
@@ -147,39 +147,39 @@ global BoneInfo: type <cimport, nodecl> = @record{
 }
 
 global Model: type <cimport, nodecl> = @record{
-  transform: nil,
+  transform: Matrix,
   meshCount: cint,
   materialCount: cint,
-  meshes: nil,
-  materials: nil,
-  meshMaterial: cint,
+  meshes: *Mesh,
+  materials: *Material,
+  meshMaterial: *cint,
   boneCount: cint,
-  bones: nil,
-  bindPose: nil,
+  bones: *BoneInfo,
+  bindPose: *Transform,
 }
 
 global ModelAnimation: type <cimport, nodecl> = @record{
   boneCount: cint,
   frameCount: cint,
-  bones: nil,
-  framePoses: nil,
+  bones: *BoneInfo,
+  framePoses: **Transform,
 }
 
 global Ray: type <cimport, nodecl> = @record{
-  position: nil,
-  direction: nil,
+  position: Vector3,
+  direction: Vector3,
 }
 
 global RayHitInfo: type <cimport, nodecl> = @record{
-  hit: nil,
+  hit: boolean,
   distance: float32,
-  position: nil,
-  normal: nil,
+  position: Vector3,
+  normal: Vector3,
 }
 
 global BoundingBox: type <cimport, nodecl> = @record{
-  min: nil,
-  max: nil,
+  min: Vector3,
+  max: Vector3,
 }
 
 global Wave: type <cimport, nodecl> = @record{
@@ -187,7 +187,7 @@ global Wave: type <cimport, nodecl> = @record{
   sampleRate: cuint,
   sampleSize: cuint,
   channels: cuint,
-  data: nil,
+  data: pointer,
 }
 
 global rAudioBuffer: type <cimport, nodecl> = @record{
@@ -195,23 +195,23 @@ global rAudioBuffer: type <cimport, nodecl> = @record{
 }
 
 global AudioStream: type <cimport, nodecl> = @record{
-  buffer: nil,
+  buffer: *rAudioBuffer,
   sampleRate: cuint,
   sampleSize: cuint,
   channels: cuint,
 }
 
 global Sound: type <cimport, nodecl> = @record{
-  stream: nil,
+  stream: AudioStream,
   sampleCount: cuint,
 }
 
 global Music: type <cimport, nodecl> = @record{
-  stream: nil,
+  stream: AudioStream,
   sampleCount: cuint,
-  looping: nil,
+  looping: boolean,
   ctxType: cint,
-  ctxData: nil,
+  ctxData: pointer,
 }
 
 global VrDeviceInfo: type <cimport, nodecl> = @record{
@@ -228,8 +228,8 @@ global VrDeviceInfo: type <cimport, nodecl> = @record{
 }
 
 global VrStereoConfig: type <cimport, nodecl> = @record{
-  projection: nil,
-  viewOffset: nil,
+  projection: Matrix,
+  viewOffset: Matrix,
   leftLensCenter: float32,
   rightLensCenter: float32,
   leftScreenCenter: float32,
