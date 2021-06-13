@@ -26,6 +26,9 @@ local ctypes = {
   ['double'] = 'float64',
   ['_Float128'] = 'float128',
 
+  ['bool'] = 'boolean',
+  ['_Bool'] = 'boolean',
+
   ['short'] = 'cshort',
   ['int'] = 'cint',
   ['long'] = 'clong',
