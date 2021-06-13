@@ -41,6 +41,8 @@ local ctypes = {
   ['size'] = 'csize',
   ['long double'] = 'clongdouble',
   ['char*'] = 'cstring',
+
+  ['void*'] = 'pointer',
 }
 
 local function map(tbl, fn)
@@ -117,8 +119,8 @@ end
 --   tag = 'struct',
 --   identifier = 'Vector2',
 --   fields = {
---     {identifier = {'x'}, type = 'float'},
---     {identifier = {'y'}, type = 'float'},
+--     {identifiers = {'x'}, type = 'float', pointers = 0},
+--     {identifiers = {'y'}, type = 'float', pointers = 0},
 --   },
 -- }
 local ast_converters = {}
@@ -127,7 +129,7 @@ function ast_converters.struct(struct_ast, result)
   local struct_node = {
     tag = 'struct',
     identifier = 'struct-name',
-    fields = {}, -- { {identifiers = {'field-name'}, type = 'ctype-name' }, --[[...]] }
+    fields = {}, -- { { identifiers = {'fieldname', --[[...]]}, type = 'cTypeName', pointers = 0 }, --[[...]] }
   }
 
   local identifier = collect_child_nodes(struct_ast, 'identifier', nil, 1)[1]
@@ -142,6 +144,7 @@ function ast_converters.struct(struct_ast, result)
     local identifiers_from_type_specifiers = collect_child_nodes(type_specifiers, 'identifier')
 
     local field_identifiers = collect_child_nodes(specifier_declarator_list, 'identifier')
+    local field_is_pointer = collect_child_nodes(specifier_declarator_list, 'pointer')
 
     local ctype
     if #identifiers_from_type_specifiers > 0 then
@@ -156,8 +159,14 @@ function ast_converters.struct(struct_ast, result)
 
     local struct_field = {
       identifiers = field_names,
-      type = ctype
+      type = ctype,
+      pointers = #field_is_pointer
     }
+
+    if struct_field.type == 'void' and struct_field.pointers then
+      struct_field.pointers = struct_field.pointers - 1
+      struct_field.type = 'void*'
+    end
 
     table.insert(struct_node.fields, struct_field)
   end
@@ -202,7 +211,8 @@ function simpleast2nelua.struct(struct_ast)
   local fields = map(struct_ast.fields, function(field)
     local fields_tbl = {}
     for i, field_id in ipairs(field.identifiers) do
-      fields_tbl[i] = string.format('%s: %s,', field_id, ctypes[field.type])
+      local nltype = ctypes[field.type] and ctypes[field.type] or field.type
+      fields_tbl[i] = string.format('%s: %s%s,', field_id, string.rep('*', field.pointers), nltype)
     end
     return '  ' .. table.concat(fields_tbl, ' ')
   end)
