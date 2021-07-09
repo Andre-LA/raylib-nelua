@@ -194,19 +194,67 @@ function ast_converters.struct(struct_ast, result)
   return result
 end
 
-function ast_converters.struct_or_union_specifier(ast, result)
+function ast_converters.struct_or_union_specifier(ast, result, declaration_ast)
   if ast[1] == 'struct' then
     ast_converters.struct(ast, result)
   end
 end
 
-function ast_converters.declaration(ast, result)
-  -- try get different types of node
+function ast_converters.enum(ast, result, declaration_ast)
+  local enum_node = {
+    tag = 'enum',
+    identifier = 'enum-name',
+    fields = {} -- { { identifier = 'field_name', constant = '0' or nil}, ... }
+  }
 
-  -- struct or union
-  local possible_struct_or_union_node = collect_child_nodes(ast, 'struct-or-union-specifier')
-  for i, struct_or_union_node in ipairs(possible_struct_or_union_node) do
-    ast_converters.struct_or_union_specifier(struct_or_union_node, result)
+  -- get enum name
+  local typedef_id = collect_child_nodes(declaration_ast, 'typedef-identifier')
+  local id = collect_child_nodes(typedef_id, 'identifier') -- returns for example { { 'id_value',  } }
+  enum_node.identifier = id[1][1] -- using id[1][1] to get 'id_value' of the example above
+
+  -- get enum fields
+  local enum_list = collect_child_nodes(ast, 'enumerator-list')
+  local enumerators = collect_child_nodes(enum_list, 'enumerator')
+
+  for i, enumerator in ipairs(enumerators) do
+    local enumerator_id = collect_child_nodes(enumerator, 'identifier')
+    local enumerator_int_const = collect_child_nodes(enumerator, 'integer-constant')
+
+    local field_tbl = {
+      identifier = enumerator_id[1][1],
+      constant = nil, -- added just for code clarity
+    }
+
+    if #enumerator_int_const > 0 then -- enumerator contains constant value
+      field_tbl.constant = enumerator_int_const[1][1]
+    end
+
+    table.insert(enum_node.fields, field_tbl)
+  end
+
+  table.insert(result, enum_node)
+end
+
+function ast_converters.declaration(ast, result)
+  -- "macro" for each conversion try
+  -- if found, the resulting node will always return 1 node, since we're inspecting a declaration
+  -- also, it will returns true, otherwise (if the node isn't found), returns false
+  local function find_and_convert(target_tag, converter)
+    local possible_node = collect_child_nodes(ast, target_tag)
+    if #possible_node > 0 then
+      converter(possible_node[1], result, ast)
+      return true
+    end
+  end
+
+  -- try convert a struct or union
+  if find_and_convert('struct-or-union-specifier', ast_converters.struct_or_union_specifier) then
+    return
+  end
+
+  -- try convert a enum
+  if find_and_convert('enum-specifier', ast_converters.enum) then
+    return
   end
 end
 
@@ -224,8 +272,6 @@ end
 local simpleast2nelua = {}
 
 function simpleast2nelua.struct(struct_ast)
-  local result = {}
-
   local fields = map(struct_ast.fields, function(field)
     local fields_tbl = {}
 
@@ -247,7 +293,22 @@ function simpleast2nelua.struct(struct_ast)
     struct_ast.identifier,
     table.concat(fields, '\n')
   )
+end
 
+function simpleast2nelua.enum(enum_ast)
+  local fields = map(enum_ast.fields, function(field)
+    if field.constant then
+      return string.format('  %s = %s,', field.identifier, field.constant)
+    else
+      return string.format('  %s,', field.identifier)
+    end
+  end)
+
+  return string.format(
+    "global %s = @enum{\n%s\n}",
+    enum_ast.identifier,
+    table.concat(fields, '\n')
+  )
 end
 
 function simplified_ast_2_nelua(ast)
