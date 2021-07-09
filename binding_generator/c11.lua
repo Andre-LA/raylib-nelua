@@ -653,7 +653,7 @@ function Defs.set_typedef(_, _, node)
 end
 
 -- Compile grammar.
-local lpegrex = require 'nelua.thirdparty.lpegrex'
+local lpegrex = require 'lpegrex'
 local patt = lpegrex.compile(Grammar, Defs)
 
 --[[
