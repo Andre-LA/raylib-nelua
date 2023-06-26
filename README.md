@@ -1,3 +1,10 @@
+# UNMAINTAINED
+
+This library it's really important to me, however I've been focusing on [my own game framework](https://github.com/Andre-LA/nene/) and thus this library got unmaintained.
+
+If you need bindings of raylib for Nelua, you should check out Kenta's one, it's updated and covers more of raylib stack:
+https://github.com/Its-Kenta/Raylib.nelua
+
 # raylib-nelua
 
 ![raylib-nelua-logo](raylib-nelualogo.svg)
